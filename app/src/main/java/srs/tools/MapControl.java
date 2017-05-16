@@ -621,12 +621,16 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		super.onLayout(changed, l, t, r, b);
-		Log.i("MapControl.onLayout","onLayout");
+		if(!changed){
+			return;
+		}
+		int width = r - l;
+		int height = b - t;
 		//测量地图尺寸
-		if(misFirst&&mwidthold!=r&&mheightold!=b){
-			mwidthold=r;
-			mheightold=b;
-			Log.i("device", "width:"+ mwidthold +";height:"+mheightold+";");
+		if(misFirst&&mwidthold!=width&&mheightold!=height){
+			mwidthold=width;
+			mheightold=height;
+			Log.i("MapControl.onLayout", "width:"+ mwidthold +";height:"+mheightold+";");
 			IMap mMap=mActiveView.FocusMap();
 			mMap.setDeviceExtent(new Envelope(0,0,mwidthold,mheightold));
 			/*bqzf 20150608

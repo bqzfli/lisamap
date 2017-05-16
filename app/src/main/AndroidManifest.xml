@@ -18,7 +18,7 @@
         android:icon="@drawable/iconfont"
         android:label="@string/app_name" >
         <activity
-            android:name="com.lisa.map.app.TileLayerTestActivity"
+            android:name="com.lisa.map.app.ShapeLayerTestActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
