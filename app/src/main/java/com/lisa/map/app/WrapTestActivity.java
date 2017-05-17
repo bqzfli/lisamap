@@ -49,7 +49,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class WrapTestActivity extends Activity 
+public class WrapTestActivity extends Activity
 implements View.OnClickListener, 
 MultipleItemChangedListener {
 	private long exitTime = 0;
@@ -203,7 +203,12 @@ MultipleItemChangedListener {
 		layerWorld_Terrain_Base = TDTLayerFactory.World_Terrain_BaseLayer();
 		Log.println(Log.ASSERT,"Theard" ,"initail" + ": " + layerWorld_Terrain_Base.getName());
 	}
-	
+
+	/**
+	 * @param dbPath
+	 * @param tableName
+	 * @throws Exception
+	 */
 	private void loadDBLayer(String dbPath,String tableName) throws Exception{
 		mDBLAYER = new DBLayer(tableName);
 		mDBLAYER.initInfos( 
