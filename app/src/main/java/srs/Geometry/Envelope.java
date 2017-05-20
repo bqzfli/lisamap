@@ -97,6 +97,38 @@ public class Envelope extends Geometry implements IEnvelope {
 	}
 
 	/* (non-Javadoc)
+	 * @see Geometry.IEnvelope#XMin()
+	 */
+	@Override
+	public void XMin(double value) {
+		_xMin = value ;
+	}
+
+	/* (non-Javadoc)
+	 * @see Geometry.IEnvelope#YMin()
+	 */
+	@Override
+	public void YMin(double value) {
+		 _yMin  = value ;;
+	}
+
+	/* (non-Javadoc)
+	 * @see Geometry.IEnvelope#XMax()
+	 */
+	@Override
+	public void XMax(double value) {
+		_xMax = value ;;
+	}
+
+	/* (non-Javadoc)
+	 * @see Geometry.IEnvelope#YMax()
+	 */
+	@Override
+	public void YMax(double value) {
+		 _yMax = value ;
+	}
+
+	/* (non-Javadoc)
 	 * @see Geometry.IEnvelope#LowerLeft()
 	 */
 	@Override

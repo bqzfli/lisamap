@@ -220,7 +220,7 @@ MultipleItemChangedListener {
 		mDBLAYER.initData(MapUtil.FIELD_YFZRDK_TBLXMC, null/*"高粱"*/);
 
 		/*} catch (sRSException e) {
-            ((CommonRenderer) mLAYER.getRenderer()).setSymbol(MapUtil.SYMBOLCBJ);
+            ((CommonRenderer) mLAYER.getRenderer()).setSymbol(MapsUtil.SYMBOLCBJ);
             System.out.println("地块图层唯一值渲染有误！");
             Log.e(UTILTAG.TAGDB,"地块图层唯一值渲染有误！");
             e.printStackTrace();
@@ -493,10 +493,8 @@ MultipleItemChangedListener {
 
 	@Override
 	public void onClick(View v) {
-
 		/*setWMTSCacheLocation(this.mDirWMTSLayers);
 		setWMTSLayers();*/
-
 		int id = v.getId();
 		if (id == R.id.ChinaOnlineCommunity) {
 			try {

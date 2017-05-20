@@ -661,7 +661,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 			Log.i("RECYCLE","MyIamgeView -> onDraw() Canvas:trying to use a recycled bitmap");
 		}
 		try {
-			Log.i("onDraw", "重画屏幕");
+			/*Log.i("onDraw", "重画屏幕");*/
 			if(mZoomPan!=null&&((ZoomPan)mZoomPan).isMAGNIFY()){
 				super.onDraw(canvas);
 				((ZoomPan)mZoomPan).drawMagnify(canvas);
@@ -686,7 +686,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 			this.mTVRules.setText("1:"+String.valueOf(d));
 
 		} catch (Exception e1) {
-			Log.e("mBitScreen", "MapControl onDraw :451    终于抓到你了！");
+			Log.e("mBitScreen", "MapControl onDraw :451    特殊异常");
 			/*System.out.println("终于抓到你了！"); 
 			e1.printStackTrace();*/
 		}

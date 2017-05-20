@@ -157,16 +157,16 @@ public class DBLayer  extends Layer implements IDBLayer{
 										&&mDBSourceManager.getLabelValues() != null
 										&&mDBSourceManager.getLabelValues().size() > 0) {
 									// 画Label
-									Log.i("LEVEL-ROW-COLUMN", mName + "开始绘制Label");
+									Log.i("DBLAYER_DRAW", mName + "开始绘制Label");
 									mLabel.DrawLabel(mDBSourceManager, canvas, extent,
 											mDisplayList, Delegate);
-									Log.i("LEVEL-ROW-COLUMN", mName + "结束绘制Label");
+									Log.i("DBLAYER_DRAW", mName + "结束绘制Label");
 								}else{
-									Log.i("LEVEL-ROW-COLUMN", mName + "不绘制Label");
+									Log.i("DBLAYER_DRAW", mName + "不绘制Label");
 								}
 
 							} catch (java.lang.Exception e) {
-								Log.println(maxi, e.getLocalizedMessage(), e.getMessage());
+								Log.e("DBLAYER_DRAW", e.getMessage());
 								throw new sRSException("在绘制Label过程中发生不可预知的错误.在"+"maxi");
 							}
 							mDisplayList.clear();
