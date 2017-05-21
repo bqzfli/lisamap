@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/popupwindow_background" >
+
+    <RelativeLayout
+        android:id="@+id/popupinside"
+        android:layout_width="640px"
+        android:layout_height="200px"
+        android:layout_centerInParent="true"
+        android:background="@drawable/popupwindowsinside_background" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="4px"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/popup_line_topbottom" />
+
+        <RelativeLayout
+            android:id="@+id/infoinside"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="36px"
+            android:layout_marginTop="14px"
+            android:background="@drawable/popupwindowsinsideinfo_background" >
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2px"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/popup_line_topbottom" />
+
+            <TextView
+                android:id="@+id/tv_tcct_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="删除后无法恢复，您确定要删除该相片么？ "
+                android:textColor="#ffffff"
+                android:textSize="16px" android:isScrollContainer="true"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2px"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/popup_line_topbottom" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="fill_parent"
+            android:layout_height="4px"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/popup_line_topbottom" />
+
+        <ProgressBar
+            android:id="@+id/pb"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/bt_deletephoto_cancel"
+        android:layout_width="56px"
+        android:layout_height="56px"
+        android:layout_alignLeft="@+id/popupinside"
+        android:layout_below="@+id/popupinside"
+        android:layout_marginLeft="64px"
+        android:layout_marginTop="-42px"
+        android:background="@drawable/makecancel" />
+
+    <ImageButton
+        android:id="@+id/bt_deletephoto_isture"
+        android:layout_width="56px"
+        android:layout_height="56px"
+        android:layout_alignRight="@+id/popupinside"
+        android:layout_below="@+id/popupinside"
+        android:layout_marginRight="64px"
+        android:layout_marginTop="-42px"
+        android:background="@drawable/makesure" />
+
+</RelativeLayout>
