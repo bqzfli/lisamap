@@ -1,6 +1,7 @@
 package com.example.haha.maptest;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -14,9 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Factory.FactoryGPS;
 import com.lisa.datamanager.map.MapDBManager;
+import com.lisa.datamanager.map.MapLocationManager;
 import com.lisa.datamanager.map.MapRasterManager;
 import com.lisa.datamanager.map.MapShapeManager;
 import com.lisa.datamanager.map.MapWMTSManager;
@@ -87,6 +91,8 @@ public class WrapTActivity extends Activity
 			e.printStackTrace();
 		}
 
+		//设置GPS相关
+		setGPSConfig();
 	}
 
 
@@ -139,8 +145,8 @@ public class WrapTActivity extends Activity
 	 *                                      		统计   若需要显示CUNMC 为“立新村委会”的数据，则设置为“立新村委会”
 	 *                                     			浙江
 	 *                                      				1.每次点击列表，先提取点击记录的F_CODE值，标记为 a
-															2.将 MapsUtil.FIELD_DB_FILTER_VALUE 的值设置为   a
-															则地图上会显示所有 PID 为 a 的对象 *
+	2.将 MapsUtil.FIELD_DB_FILTER_VALUE 的值设置为   a
+	则地图上会显示所有 PID 为 a 的对象 *
 	 */
 	private void refreshDBData(String FIELD_DB_FILTER_VALUE) throws Exception {
 		/*
@@ -197,6 +203,29 @@ public class WrapTActivity extends Activity
 		return super.onKeyDown(keyCode, event);
 	}
 
+	/**
+	 * 设置GPS自动刷新
+	 */
+	private void setGPSConfig(){
+		//设置GPS刷新
+		TextView tv_info = new TextView(this);
+		tv_info.setBackgroundColor(Color.argb(128, 255, 255, 255));
+		tv_info.setTextColor(Color.BLACK);
+		RelativeLayout.LayoutParams sp_params1 = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		sp_params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		mMapControl.addView(tv_info,sp_params1);
+		//启动并设置GPS
+		try {
+			FactoryGPS factory = new FactoryGPS(tv_info, null, null, null,
+					mMapControl);
+			FactoryGPS.NaviStart = false;
+			factory.StartStopGPS(this,tv_info);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 设置缩放、当前位置剧中的按钮
@@ -294,7 +323,10 @@ public class WrapTActivity extends Activity
 			ivLocationCenter.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View arg0, MotionEvent arg1) {
-					/*SetLocationCenter(mMapControl);*/
+					boolean isLocation = MapLocationManager.SetLocationCenter(mMapControl);
+					if(!isLocation){
+						Toast.makeText(WrapTActivity.this,"未收到定位信号",Toast.LENGTH_SHORT).show();
+					}
 					return true;
 				}
 			});

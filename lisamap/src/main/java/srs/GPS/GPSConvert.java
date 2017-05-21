@@ -16,6 +16,9 @@ public final class GPSConvert {
 	 * @return
 	 */
 	public static double[] GEO2PROJECT(double lon,double lat,ProjCSType type){
+		if(type == null){
+			return new double[]{lon,lat};
+		}
 		switch(type){
 		case ProjCS_WGS1984_Albers_BJ:	
 			return GPSMethod.Longitude2Albers(lat, lon);

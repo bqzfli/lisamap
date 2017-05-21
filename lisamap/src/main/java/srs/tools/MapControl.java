@@ -682,8 +682,8 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 				}
 			}*/
 
-			int d = (int) Math.round((this.getMap().getScale()*densityDpi/60*100)/100);
-			this.mTVRules.setText("1:"+String.valueOf(d));
+			/*int d = (int) Math.round((this.getMap().getScale()*densityDpi/60*100)/100);
+			this.mTVRules.setText("1:"+String.valueOf(d));*/
 
 		} catch (Exception e1) {
 			Log.e("mBitScreen", "MapControl onDraw :451    特殊异常");

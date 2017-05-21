@@ -1,6 +1,7 @@
 package com.lisa.map.app;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lisa.datamanager.map.MapDBManager;
@@ -83,7 +85,6 @@ public class WrapTestActivity extends Activity
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 

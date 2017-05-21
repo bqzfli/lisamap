@@ -93,20 +93,23 @@
 
         <Button
             android:id="@+id/btn_lh"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="邵北村委会" />
 
         <Button
             android:id="@+id/btn_lx"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="立新村委会" /> -->
+            android:layout_weight="1"
+            android:text="立新村委会" />
 
         <Button
             android:id="@+id/btn_yq"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="余桥村委会" />
     </LinearLayout>
 

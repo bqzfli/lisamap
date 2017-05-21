@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.lisa.map.app.R;
+
 
 public class FactoryGPS {
 	public static String conGPSInfo;
@@ -348,8 +350,8 @@ public class FactoryGPS {
 							Bitmap bitmap = null;
 							try {
 								float dir = gpscontrol.GPSDirect;
-								if(BITMAPLocationYOU==null){
-									BITMAPLocationYOU = BitmapFactory.decodeResource(mMapControl.getResources(), android.R.drawable.ic_menu_myplaces);
+								if(BITMAPLocationYOU == null){
+									BITMAPLocationYOU = BitmapFactory.decodeResource(mMapControl.getResources(), R.drawable.location_you);
 								}
 								bitmap = rotateImg(BITMAPLocationYOU, dir);
 							} catch (Exception e) {
