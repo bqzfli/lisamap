@@ -195,7 +195,7 @@ public class MapDBManager {
      * @return 				提取调查对象的范围
      */
     public IEnvelope getEnvelope(double defaultDistance){
-        return mLAYER.getDBSourceManager().getEnvelop(20);
+        return mLAYER.getDBSourceManager().getEnvelop(defaultDistance);
     }
 
     /** Extract the DK's data from Shapefile to the Table in the DB file

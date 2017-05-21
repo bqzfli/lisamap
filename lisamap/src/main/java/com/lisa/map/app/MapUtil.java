@@ -3,10 +3,13 @@ package com.lisa.map.app;
 import android.graphics.Color;
 import android.os.Environment;
 import srs.Display.Symbol.ISymbol;
+import srs.Display.Symbol.PointSymbol;
 import srs.Display.Symbol.SimpleFillStyle;
 import srs.Display.Symbol.SimpleFillSymbol;
 import srs.Display.Symbol.SimpleLineStyle;
 import srs.Display.Symbol.SimpleLineSymbol;
+import srs.Display.Symbol.SimplePointStyle;
+import srs.Display.Symbol.SimplePointSymbol;
 
 public class MapUtil {
 
@@ -48,7 +51,7 @@ public class MapUtil {
      */
     public static String[] FIELDS_DB_YFZRDK = {
     		"COMPLETE",
-    		"CUNMC", 
+    		"CUNMC",
     		"CUNDM", 
     		"YFBH", 
     		"YFBHU",

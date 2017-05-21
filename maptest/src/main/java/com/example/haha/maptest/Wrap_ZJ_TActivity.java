@@ -31,6 +31,9 @@ import com.lisa.map.app.MapUtil;
 import java.io.IOException;
 import java.util.List;
 
+import srs.CoordinateSystem.ProjCSType;
+import srs.Display.Symbol.SimplePointStyle;
+import srs.Display.Symbol.SimplePointSymbol;
 import srs.Geometry.IEnvelope;
 import srs.Geometry.srsGeometryType;
 import srs.Rendering.CommonUniqueRenderer;
@@ -39,7 +42,7 @@ import srs.tools.MapControl;
 import srs.tools.ZoomInCommand;
 import srs.tools.ZoomOutCommand;
 
-public class WrapTActivity extends Activity
+public class Wrap_ZJ_TActivity extends Activity
 		implements View.OnClickListener,MultipleItemChangedListener {
 	private long exitTime = 0;
 	private MapControl mMapControl = null;
@@ -54,9 +57,9 @@ public class WrapTActivity extends Activity
 		//全屏显示
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		Button btnYQ = (Button)findViewById(com.lisa.map.app.R.id.btn_yq);
-		Button btnLX = (Button)findViewById(com.lisa.map.app.R.id.btn_lx);
-		Button btnGH = (Button)findViewById(com.lisa.map.app.R.id.btn_lh);
+		Button btnYQ = (Button)findViewById(com.lisa.map.app.R.id.btn_yq);btnYQ.setText("4772");
+		Button btnLX = (Button)findViewById(com.lisa.map.app.R.id.btn_lx);btnLX.setText("4773");
+		Button btnGH = (Button)findViewById(com.lisa.map.app.R.id.btn_lh);btnGH.setText("1892");
 
 		btnYQ.setOnClickListener(this);
 		btnLX.setOnClickListener(this);
@@ -76,6 +79,7 @@ public class WrapTActivity extends Activity
 			e.printStackTrace();
 		}
 		mMapControl.setMap(MapsManager.getMap());
+		MapsManager.getMap().setGeoProjectType(ProjCSType.ProjCS_WGS1984_WEBMERCATOR);
 
 		try {
 			//设置地图数据
@@ -86,7 +90,9 @@ public class WrapTActivity extends Activity
 
 		try {
 			//刷新DB数据
-			refreshDBData(null);
+			refreshDBData("-1");
+			IEnvelope env = MapDBManager.getInstance().getEnvelope(20);
+			MapsManager.getMap().setExtent(env);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -102,13 +108,13 @@ public class WrapTActivity extends Activity
 	 */
 	private void configMapData() throws Exception {
 		//任务包路径
-		String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SurveyPlus/2017青铜峡（培训用）/";
+		String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/测试_数据_浙江/";
 
 		//设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-//		MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "/WMTS";				//wmts缓存路径
+		MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "/IMAGE/WMTS";				//wmts缓存路径
 		MapsUtil.DIR_RASTER 	= dirWorkSpace + "/IMAGE";				//raster文件路径
-//		MapsUtil.PATH_TCF_SHAPE = dirWorkSpace + "/TASK/RENDER.tcf";	//SHAPE数据路径
+		MapsUtil.PATH_TCF_SHAPE = null;	//SHAPE数据路径
 
 		//获取不可操作数据内容
 		MapWMTSManager.loadMap();										//获取WMTS数据
@@ -116,17 +122,28 @@ public class WrapTActivity extends Activity
 		MapShapeManager.loadDataFromTCF();								//获取SHAPE数据
 
 		//DB中地图数据设置
-		MapsUtil.PATH_DB_NAME 	= dirWorkSpace + "/TASK/TRANSPORT//DATA.db";	//DB数据库路径
-		MapsUtil.TABLENAME_DB 	= "样方自然地块QD";						//调查对象表名称
-		MapsUtil.FIELDS_DB_TARGET 		=  MapUtil.FIELDS_DB_YFZRDK;	//调查对象表字段
-		MapsUtil.FIELD_DB_LABEL			=  new String[]{"YFDKBH"};		//需要显示为LABEL的字段
-		MapsUtil.FIELD_DB_EXTRACT_LATER =  new String[]{"YFDKBH"};		//作为唯一值、分段渲染所需要的字段，如COMPLETE等
-		MapsUtil.FEILD_DB_GEO			= "GEO";						//作为矢量（空间）信息的字段名
-		MapsUtil.TYPE_GEO_DB_TABLE		= srsGeometryType.Polygon;		//矢量的数据类型：点、线、面
-		MapsUtil.FIELD_DB_FILTER 		= "CUNMC";						/*设置通过哪个字段控在数据表中过滤出需要显示的内容
+		MapsUtil.PATH_DB_NAME 	= dirWorkSpace + "/DATA.db";	//DB数据库路径
+		MapsUtil.TABLENAME_DB 	= "VW_BIZ_SURVEY_DATA";					//调查对象表名称
+		MapsUtil.FIELDS_DB_TARGET 		=  new String[]{
+				"PK_ID",
+				"F_PID",
+				"F_CODE",
+				"F_CAPTION",
+				"FK_SURVEY",
+				"FK_SURVEY_NAME",
+				"FK_SURVEY_LEVEL",
+				"F_CENTER",
+				"F_MIN_SCALE",
+				"F_MAX_SCALE"
+		};	//调查对象表字段
+		MapsUtil.FIELD_DB_LABEL			=  new String[]{"F_CAPTION"};		//需要显示为LABEL的字段
+		MapsUtil.FIELD_DB_EXTRACT_LATER =  new String[]{"FK_SURVEY_NAME"};		//作为唯一值、分段渲染所需要的字段，如COMPLETE等
+		MapsUtil.FEILD_DB_GEO			= "F_CENTER";						//作为矢量（空间）信息的字段名
+		MapsUtil.TYPE_GEO_DB_TABLE		= srsGeometryType.Point;			//矢量的数据类型：点、线、面
+		MapsUtil.FIELD_DB_FILTER 		= "F_PID";							/*设置通过哪个字段控在数据表中过滤出需要显示的内容
 																		浙江项目建议：对应浙江项目的"PID"*/
 		//DB数据的渲染方式设置
-		MapsUtil.RENDER_DB = GetZRDKRender();
+		MapsUtil.RENDER_DB = GetTargetRender();
 		MapDBManager.getInstance().addLayerToMap();
 		MapDBManager.getInstance().setLayerConfig();
 		MapDBManager.getInstance().setTouchTool(
@@ -164,22 +181,20 @@ public class WrapTActivity extends Activity
 	/**获取唯一值渲染的方法
 	 * @return
 	 */
-	public static CommonUniqueRenderer GetZRDKRender (){
+	public static CommonUniqueRenderer GetTargetRender (){
 		//实例化对象
-		CommonUniqueRenderer renderZRDKCommon = new CommonUniqueRenderer();
+		CommonUniqueRenderer renderRargetCommon = new CommonUniqueRenderer();
 		//设置默认样式
-		renderZRDKCommon.setDefaultSymbol(MapUtil.SYMBOLCBJ);
+		renderRargetCommon.setDefaultSymbol(new SimplePointSymbol(Color.DKGRAY, 64, SimplePointStyle.Square	));
 		/*FIXME
 		针对数据，设置每种特殊颜色样式
 		若MapUtil中的样式不满足需求，可自行定义
 		*/
-		renderZRDKCommon.AddUniqValue("1", "1", MapUtil.SYMBOLYM);
-		renderZRDKCommon.AddUniqValue("2", "2", MapUtil.SYMBOLGL);
-		renderZRDKCommon.AddUniqValue("3", "3", MapUtil.SYMBOLST);
-		renderZRDKCommon.AddUniqValue("4", "4", MapUtil.SYMBOLLD);
-		renderZRDKCommon.AddUniqValue("5", "6", MapUtil.SYMBOLXM);
-		renderZRDKCommon.AddUniqValue("", "", MapUtil.SYMBOLCBJ);
-		return  renderZRDKCommon;
+		renderRargetCommon.AddUniqValue("自然村", "自然村", new SimplePointSymbol(Color.YELLOW, 64, SimplePointStyle.Square	));
+		renderRargetCommon.AddUniqValue("农户", "农户", new SimplePointSymbol(Color.GREEN, 48, SimplePointStyle.Circle	));
+		renderRargetCommon.AddUniqValue("农户房屋", "农户房屋", new SimplePointSymbol(Color.BLUE, 32, SimplePointStyle.Diamond));
+		renderRargetCommon.AddUniqValue("村民小组", "村民小组", new SimplePointSymbol(Color.BLUE, 32, SimplePointStyle.Cross));
+		return  renderRargetCommon;
 	};
 
 	@Override
@@ -326,7 +341,7 @@ public class WrapTActivity extends Activity
 				public boolean onTouch(View arg0, MotionEvent arg1) {
 					boolean isLocation = MapLocationManager.SetLocationCenter(mMapControl);
 					if(!isLocation){
-						Toast.makeText(WrapTActivity.this,"未收到定位信号",Toast.LENGTH_SHORT).show();
+						Toast.makeText(Wrap_ZJ_TActivity.this,"未收到定位信号",Toast.LENGTH_SHORT).show();
 					}
 					return true;
 				}
@@ -344,7 +359,12 @@ public class WrapTActivity extends Activity
 			try {
 				refreshDBData(value);
 				IEnvelope env = MapDBManager.getInstance().getEnvelope(20);
-				MapsManager.getMap().setExtent(env);
+				if(env!=null) {
+					MapsManager.getMap().setExtent(env);
+				}else{
+					Log.i("WrapTest","无数据");
+					Toast.makeText(this,"未找到数据！",Toast.LENGTH_SHORT).show();
+				}
 				mMapControl.Refresh();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -360,7 +380,7 @@ public class WrapTActivity extends Activity
 	@Override
 	public void doEventSettingsChanged(List<Integer> indexs) throws IOException {
 		//
-		List<String> data =  MapDBManager.getInstance().getSelectInfoByIndex(indexs,"DKBHU");
+		List<String> data =  MapDBManager.getInstance().getSelectInfoByIndex(indexs,"F_CODE");
 		String strResult = "";
 		for(String result:data){
 			strResult += ";"+result;

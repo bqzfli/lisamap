@@ -18,8 +18,8 @@ public class MapWMTSManager {
         int addedLayerCount = -1;
         //添加wmts瓦片服务
         try {
-            if(MapsUtil.URLs_WMTS != null && MapsUtil.URLs_WMTS.length>0
-                    && MapsUtil.DIR_WMTS_CACHE != null
+            if(/*MapsUtil.URLs_WMTS != null && MapsUtil.URLs_WMTS.length>0
+                    && */MapsUtil.DIR_WMTS_CACHE != null
                     && !MapsUtil.DIR_WMTS_CACHE.trim().equalsIgnoreCase("")) {
                 ImageUtils.CacheDir = MapsUtil.DIR_WMTS_CACHE;
                 TileLayer wmtsLayer = srs.Layer.Factory.TDTLayerFactory.TDTSat();

@@ -5,19 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.lisa.map.app.R;
+
 import srs.DataSource.Vector.SearchType;
 import srs.Display.IScreenDisplay;
 import srs.Element.FillElement;
 import srs.Element.IElement;
 import srs.Element.IFillElement;
-import srs.GPS.GPSControl;
+import srs.Element.IPicElement;
+import srs.Element.PicElement;
 import srs.Geometry.IGeometry;
 import srs.Geometry.IPoint;
+import srs.Geometry.IPolygon;
 import srs.Geometry.srsGeometryType;
 import srs.Layer.IDBLayer;
 import srs.tools.Event.MultipleItemChangedListener;
@@ -60,7 +66,6 @@ public class TouchLongToolMultipleDB extends BaseTool {
      * 此属性也可通过系统配置设置，系统设置修改时，调用此属性进行修改
      */
     public static float Dis = 10;
-    /* private Bitmap mbitmap; */
     private static String mTitleStr = "详细信息";
     /**
      * MapControl输出的底图
@@ -205,6 +210,7 @@ public class TouchLongToolMultipleDB extends BaseTool {
                         if (mCurrentPoint != null
                                 && Math.abs(mCurrentPoint.x - pF.x) < Dis
                                 && Math.abs(mCurrentPoint.y - pF.y) < Dis) {
+
                             // 在一个点位，此时才算“长点击”
                             List<Integer> sels = mLayer.getDBSourceManager().selectOnlyOne(
                                     selGeo,
@@ -237,11 +243,24 @@ public class TouchLongToolMultipleDB extends BaseTool {
                                 currentIndex = index;
 
                                 mBuddyControl.getElementContainer().ClearElement();
-                                for (int i = 0; i < indexs.size(); i++) {
-                                    IFillElement fillElement = new FillElement();
-                                    fillElement.setGeometry(geos.get(i));
-                                    fillElement.setSymbol(srs.Display.Setting.SelectPolygonFeatureStyle);
-                                    mBuddyControl.getElementContainer().AddElement(fillElement);
+                                if(geo!=null&&geo instanceof IPolygon) {
+                                    for (int i = 0; i < indexs.size(); i++) {
+                                        IFillElement fillElement = new FillElement();
+                                        fillElement.setGeometry(geos.get(i));
+                                        fillElement.setSymbol(srs.Display.Setting.SelectPolygonFeatureStyle);
+                                        mBuddyControl.getElementContainer().AddElement(fillElement);
+                                    }
+                                }else if(geo!=null&&geo instanceof IPoint){
+                                    Bitmap bit = BitmapFactory.decodeResource(
+                                            mBuddyControl.getContext().getResources(),R.drawable.target);
+                                    for (int i = 0; i < indexs.size(); i++) {
+                                        IPicElement picElement = new PicElement();
+                                        picElement.setGeometry(geos.get(i));
+                                        picElement.setPic(bit,
+                                                -bit.getWidth()/2,
+                                                -bit.getHeight());
+                                        mBuddyControl.getElementContainer().AddElement(picElement);
+                                    }
                                 }
                                 if (zoom2Selected != null) {
                                     zoom2Selected.doEventSettingsChanged(indexs);

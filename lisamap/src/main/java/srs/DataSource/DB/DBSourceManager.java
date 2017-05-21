@@ -300,7 +300,13 @@ public class DBSourceManager {
 					}
 					String wkt = map.get(FeildNameGeo);
 					if (StringUtil.isNotEmpty(wkt)) {
-						geo = FormatConvert.WKTToPolygon(wkt);
+						if (mGeoType ==srsGeometryType.Point) {
+							geo = FormatConvert.WKTToPoint(wkt);
+						}else if(mGeoType ==srsGeometryType.Polygon) {
+							geo = FormatConvert.WKTToPolygon(wkt);
+						}else{
+							break;
+						}
 						mGeometries.add(geo);
 					}
 					if(mFeildNamesLabels.length>0){
