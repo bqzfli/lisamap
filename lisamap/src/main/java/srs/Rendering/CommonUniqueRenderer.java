@@ -8,6 +8,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.os.Handler;
 import android.util.Log;
 import srs.DataSource.DB.DBSourceManager;
@@ -26,16 +27,16 @@ import srs.Layer.wmts.ImageDownLoader;
 import srs.Utility.sRSException;
 
 /**
-* @ClassName: CommonUniqueRenderer
-* @Description: TODO(这里用一句话描述这个类的作用)
-* @Version: V1.0.0.0
-* @author lisa
-* @date 2016年12月24日 下午2:52:07
-***********************************
-* @editor lisa 
-* @data 2016年12月24日 下午2:52:07
-* @todo TODO
-*/
+ * @ClassName: CommonUniqueRenderer
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @Version: V1.0.0.0
+ * @author lisa
+ * @date 2016年12月24日 下午2:52:07
+ ***********************************
+ * @editor lisa
+ * @data 2016年12月24日 下午2:52:07
+ * @todo TODO
+ */
 public class CommonUniqueRenderer extends CommonRenderer {
 	private String _defaultLabel; //默认标注
 	private ISymbol _defaultSymbol = Setting.SYMBOLZRDK; //默认渲染方式
@@ -70,14 +71,14 @@ public class CommonUniqueRenderer extends CommonRenderer {
 	public String[] getUniqFeilds(){
 		return mUniqueFeilds;
 	}
-	
+
 	/**设置唯一值字段
 	 * @param uniqueFeilds
 	 */
 	public void setUniqFeilds(String[] uniqueFeilds){
 		mUniqueFeilds = uniqueFeilds;
 	}
-	
+
 	/**获取用来渲染的值
 	 * @return
 	 */
@@ -93,7 +94,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 	}
 
 	///#region 公共属性
-	/** 
+	/**
 	 默认标注
 
 	 */
@@ -105,7 +106,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		_defaultLabel = value;
 	}
 
-	/** 
+	/**
 	 默认渲染方式
 
 	 */
@@ -127,7 +128,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		_useDefaultSymbol = value;
 	}
 
-	/** 
+	/**
 	 值的数量
 
 	 */
@@ -139,7 +140,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		}
 	}
 
-	/** 
+	/**
 	 头标注
 
 	 */
@@ -151,7 +152,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		_headingText = value;
 	}
 
-	/** 
+	/**
 	 添加唯一值
 
 	 @param Value 值(多字段用","隔开)
@@ -173,7 +174,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		}
 	}
 
-	/** 
+	/**
 	 修改值
 
 	 @param Value 值
@@ -196,7 +197,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		}
 	}
 
-	/** 
+	/**
 	 删除值
 
 	 @param Value 值
@@ -217,7 +218,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		}
 	}
 
-	/** 
+	/**
 	 去掉所有值
 
 	 */
@@ -227,7 +228,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		_UniSymbolList.clear();
 	}
 
-	/** 
+	/**
 	 根据索引获取值
 	 @param index 索引
 	 @return 值
@@ -258,7 +259,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		return _UniLabelList.get(index);
 	}
 
-	/** 
+	/**
 	 根据值得到对应的渲染风格
 
 	 @param Value 值
@@ -269,7 +270,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 			String val = _UniValueList.get(i);
 			if(val.equalsIgnoreCase(Value.trim()))
 				return _UniSymbolList.get(i);
-		}		
+		}
 		return _defaultSymbol;
 	}
 
@@ -288,9 +289,9 @@ public class CommonUniqueRenderer extends CommonRenderer {
 	 */
 	public boolean draw(
 			DBSourceManager dbSourceManager,
-			IEnvelope extent, 
-			Bitmap canvas, 
-			List<Integer> draws, 
+			IEnvelope extent,
+			Bitmap canvas,
+			List<Integer> draws,
 			FromMapPointDelegate Delegate,
 			Handler handler) throws sRSException, IOException{
 		try {
@@ -307,12 +308,12 @@ public class CommonUniqueRenderer extends CommonRenderer {
 			if (draws == null || draws.size() == 0){
 				return false;
 			}
-			drawMethod(dbSourceManager, draws, draw, handler);
+			drawMethod(dbSourceManager, draws, draw, handler,Delegate);
 
 		} catch (sRSException e) {
 			Log.e("RENDER", this.getClass().getName()+":DRAW");
 			throw e;
-		} 
+		}
 		return true;
 	}
 
@@ -322,32 +323,40 @@ public class CommonUniqueRenderer extends CommonRenderer {
 	 * @param ids 需要绘制的要素id集合
 	 * @param draw 绘制管理的对象
 	 * @param handler
+	 * @param Delegate 空间运算代理
 	 * @throws sRSException
 	 * @throws IOException
 	 */
 	private void drawMethod(
 			DBSourceManager dbSourceManager,
-			List<Integer> ids, 
+			List<Integer> ids,
 			Drawing draw,
-			Handler handler)throws sRSException, IOException{
+			Handler handler,
+			FromMapPointDelegate Delegate)throws sRSException, IOException{
 		/*  FIXME
 		 *  多线程渲染大数据量时，可以考虑使用
-		 * long dateStart = System.currentTimeMillis();		*/		
+		 * long dateStart = System.currentTimeMillis();		*/
 		String uniqueValue = "";
 		ISymbol symbol = null;
 		/* FIXME
 		 * 中心点绘制使用图标时，可以考虑使用
 		 * Bitmap bp = null;*/
 		switch (dbSourceManager.getGeoType()){
-		case Polygon:{
-			for (int i = 0; i < ids.size(); i++){
-				// 取得分段值				
-				uniqueValue = mUniqueData.get(ids.get(i));
-				symbol = GetSymbol(uniqueValue);	
-				if (ImageDownLoader.IsStop()){
-					return;
-				}
-				draw.DrawPolygon((IPolygon) dbSourceManager.getGeoByIndex(ids.get(i)), (IFillSymbol) symbol);
+			case Polygon:{
+				for (int i = 0; i < ids.size(); i++){
+					// 取得分段值
+					uniqueValue = mUniqueData.get(ids.get(i));
+					symbol = GetSymbol(uniqueValue);
+					if (ImageDownLoader.IsStop()){
+						return;
+					}
+					IPolygon polygonC = (IPolygon) dbSourceManager.getGeoByIndex(ids.get(i));
+					draw.DrawPolygon(polygonC, (IFillSymbol) symbol);
+					//绘制对象中心点
+					if(symbol.getPic()!= null){
+						PointF center = Delegate.FromMapPoint((IPoint) polygonC.CenterPoint());
+						draw.DrawImage(symbol.getPic(),new PointF(center.x + symbol.getOffSetHorizontal(),center.y + symbol.getOffSetVertical()));
+					}
 
 				/*if (System.currentTimeMillis() - dateStart > 500){
 					// 每绘制一个图层发送一次消息
@@ -360,29 +369,20 @@ public class CommonUniqueRenderer extends CommonRenderer {
 				} catch (InterruptedException e){
 					e.printStackTrace();
 				}*/
-			}
-			break;
-		}case Point:{
-			IPoint point = null;				
-			for (int i = 0; i < ids.size(); i++){
-				// 取得分段值
-				uniqueValue = mUniqueData.get(ids.get(i));
-				symbol = GetSymbol(uniqueValue);
+				}
+				break;
+			}case Point:{
+				IPoint point = null;
+				for (int i = 0; i < ids.size(); i++){
+					// 取得分段值
+					uniqueValue = mUniqueData.get(ids.get(i));
+					symbol = GetSymbol(uniqueValue);
 				/*bp = _bitmaps.get(ids.get(i));*/
-				if (ImageDownLoader.IsStop()){
-					return;
-				}
-
-				float xmove = 0;
-				float ymove = 0;
-				/*if (bp != null){
-					xmove = -bp.getWidth() / 2;
-					ymove = -bp.getHeight();
-				}*/
-
-				point = (IPoint) dbSourceManager.getGeoByIndex(ids.get(i));
-				draw.DrawPoint(point, (IPointSymbol) symbol,null, xmove, ymove);
-
+					if (ImageDownLoader.IsStop()){
+						return;
+					}
+					point = (IPoint) dbSourceManager.getGeoByIndex(ids.get(i));
+					draw.DrawPoint(point, (IPointSymbol) symbol,symbol.getPic(), symbol.getOffSetHorizontal(), symbol.getOffSetVertical());
 				/*if (System.currentTimeMillis() - dateStart > 500)
 					{
 						// 每绘制一个图层发送一次消息
@@ -398,19 +398,19 @@ public class CommonUniqueRenderer extends CommonRenderer {
 					{
 						e.printStackTrace();
 					}*/
-			}
-			break;
-		}case Polyline:{
-			for (int i = 0; i < ids.size(); i++){				
-				uniqueValue = mUniqueData.get(ids.get(i));
-				symbol = GetSymbol(uniqueValue);	
-				if (ImageDownLoader.IsStop()){
-					return;
 				}
-				if (ImageDownLoader.IsStop()){
-					return;
-				}
-				//draw.DrawPolyline((IPolyline) mGeometries.get(ids.get(i)), (ILineSymbol) msymbol);
+				break;
+			}case Polyline:{
+				for (int i = 0; i < ids.size(); i++){
+					uniqueValue = mUniqueData.get(ids.get(i));
+					symbol = GetSymbol(uniqueValue);
+					if (ImageDownLoader.IsStop()){
+						return;
+					}
+					if (ImageDownLoader.IsStop()){
+						return;
+					}
+					//draw.DrawPolyline((IPolyline) mGeometries.get(ids.get(i)), (ILineSymbol) msymbol);
 				/*if (System.currentTimeMillis() - dateStart > 500)
 					{
 						// 每绘制一个图层发送一次消息
@@ -426,11 +426,11 @@ public class CommonUniqueRenderer extends CommonRenderer {
 					{
 						e.printStackTrace();
 					}*/
+				}
+				break;
+			}default:{
+				throw new sRSException("1022");
 			}
-			break;
-		}default:{
-			throw new sRSException("1022");
-		}
 		}
 	}
 
@@ -453,7 +453,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 	}
 
 
-	/** 
+	/**
 	 克隆方法
 
 	 @return 与本实例完全相同的新实例
@@ -498,28 +498,28 @@ public class CommonUniqueRenderer extends CommonRenderer {
 	}
 
 
-	/** 
+	/**
 	 加载XML数据
 
 	 @param node
-	 * @throws ClassNotFoundException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws NoSuchMethodException 
-	 * @throws sRSException 
-	 * @throws IllegalArgumentException 
-	 * @throws SecurityException 
+	  * @throws ClassNotFoundException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws NoSuchMethodException
+	 * @throws sRSException
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
 	 */
 	@Override
-	public void LoadXMLData(org.dom4j.Element node) throws SecurityException, 
-	IllegalArgumentException, 
-	sRSException, 
-	NoSuchMethodException, 
-	InstantiationException, 
-	IllegalAccessException, 
-	InvocationTargetException, 
-	ClassNotFoundException{
+	public void LoadXMLData(org.dom4j.Element node) throws SecurityException,
+			IllegalArgumentException,
+			sRSException,
+			NoSuchMethodException,
+			InstantiationException,
+			IllegalAccessException,
+			InvocationTargetException,
+			ClassNotFoundException{
 		/*FIXME 这是shape的解析方式，需要重新设计
 		 * 
 		 * if (node == null)
@@ -563,7 +563,7 @@ public class CommonUniqueRenderer extends CommonRenderer {
 		}*/
 	}
 
-	/** 
+	/**
 	 保存XML数据
 
 	 @param node

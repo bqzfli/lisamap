@@ -1,6 +1,7 @@
 package srs.Display.Symbol;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -88,5 +89,29 @@ public class SimpleLineSymbol  extends LineSymbol implements ISimpleLineSymbol {
 		XmlFunction.AppendAttribute(node, "SimpleLineStyle", (new Integer(mStyle.getValue())).toString());
 	}
 
+
+	@Override
+	/**
+	 * @param pic 标注图片
+	 * @param horizantolMove 水平偏移量：左负，右正
+	 * @param verticalMove 垂直偏移量：上负，下正
+	 */
+	public ISymbol setPic(Bitmap pic, int horizantolMove, int verticalMove) {
+		this.mPICLabel = pic;
+		this.mOffSet_Vertical = verticalMove;
+		this.mOffSet_Horizontal = horizantolMove;
+		return this;
+	}
+
+	@Override
+	public Bitmap getPic() {
+		return mPICLabel;
+	}
+
+	@Override
+	public int getOffSetHorizontal() {return mOffSet_Horizontal;}
+
+	@Override
+	public int getOffSetVertical() {return mOffSet_Vertical;}
 
 }

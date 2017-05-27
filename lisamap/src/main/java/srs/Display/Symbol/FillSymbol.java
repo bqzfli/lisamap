@@ -5,9 +5,11 @@ import java.util.Iterator;
 
 import srs.Core.XmlFunction;
 import srs.Utility.sRSException;
+
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
-public class FillSymbol extends Symbol implements IFillSymbol{
+public abstract class FillSymbol extends Symbol implements IFillSymbol{
 
 	private ILineSymbol mOutLineSymbol;	
 

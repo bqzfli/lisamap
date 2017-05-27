@@ -1,6 +1,8 @@
 package srs.Display.Symbol;
 
 import srs.Utility.sRSException;
+
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.Color;
 
@@ -84,6 +86,26 @@ public class TextSymbol extends Symbol implements ITextSymbol {
 	@Override
 	public void setVertical(boolean value) {
 		mVertical = value;
+	}
+
+	@Override
+	public ISymbol setPic(Bitmap pic, int horizantolMove, int verticalMove) {
+		return null;
+	}
+
+	@Override
+	public Bitmap getPic() {
+		return null;
+	}
+
+	@Override
+	public int getOffSetHorizontal() {
+		return 0;
+	}
+
+	@Override
+	public int getOffSetVertical() {
+		return 0;
 	}
 
 	@Override

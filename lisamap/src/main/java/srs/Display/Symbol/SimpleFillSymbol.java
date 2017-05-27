@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import srs.Core.XmlFunction;
 import srs.Utility.sRSException;
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 public class SimpleFillSymbol extends FillSymbol implements ISimpleFillSymbol{
@@ -49,6 +50,31 @@ public class SimpleFillSymbol extends FillSymbol implements ISimpleFillSymbol{
 	public void setForeColor(int value) {
 		mForeColor = value; 
 	}
+
+
+	@Override
+	/**
+	 * @param pic 标注图片
+	 * @param horizantolMove 水平偏移量：左负，右正
+	 * @param verticalMove 垂直偏移量：上负，下正
+	 */
+	public ISymbol setPic(Bitmap pic, int horizantolMove, int verticalMove) {
+		this.mPICLabel = pic;
+		this.mOffSet_Vertical = verticalMove;
+		this.mOffSet_Horizontal = horizantolMove;
+		return this;
+	}
+
+	@Override
+	public Bitmap getPic() {
+		return mPICLabel;
+	}
+
+	@Override
+	public int getOffSetHorizontal() {return mOffSet_Horizontal;}
+
+	@Override
+	public int getOffSetVertical() {return mOffSet_Vertical;}
 
 	@Override
 	public ISymbol Clone(){

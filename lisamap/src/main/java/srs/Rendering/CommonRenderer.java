@@ -58,7 +58,7 @@ public class CommonRenderer extends Renderer {
 	
 
 	/**
-	 * @param msymbol
+	 * @param symbol
 	 *            the msymbol to set
 	 */
 	public void setSymbol(ISymbol symbol){

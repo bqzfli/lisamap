@@ -1,5 +1,6 @@
 package srs.Display.Symbol;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +18,20 @@ public abstract class Symbol implements ISymbol {
 	private int mColor;
 	/**透明度 */
 	private int mTransparent;
+
+	/**
+	 * 图形标注
+	 */
+	protected Bitmap mPICLabel = null;
+
+	/**
+	 * 垂直偏移量：上负，下正
+	 */
+	protected int mOffSet_Vertical = 0;
+	/**
+	 * 水平偏移量：左负，右正
+	 */
+	protected int mOffSet_Horizontal = 0;
 
 	protected Symbol(){
 		mColor = GetRandomColor();

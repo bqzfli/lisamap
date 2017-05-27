@@ -1,6 +1,8 @@
 package com.example.haha.maptest;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,6 +48,10 @@ public class Wrap_ZJ_TActivity extends Activity
 		implements View.OnClickListener,MultipleItemChangedListener {
 	private long exitTime = 0;
 	private MapControl mMapControl = null;
+	private static Bitmap PicVillage = null;
+	private static Bitmap PicPeople = null;
+	private static Bitmap PicHouse = null;
+	private static Bitmap PicPerson = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -59,13 +65,20 @@ public class Wrap_ZJ_TActivity extends Activity
 
 		Button btnYQ = (Button)findViewById(com.lisa.map.app.R.id.btn_yq);btnYQ.setText("4772");
 		Button btnLX = (Button)findViewById(com.lisa.map.app.R.id.btn_lx);btnLX.setText("4773");
-		Button btnGH = (Button)findViewById(com.lisa.map.app.R.id.btn_lh);btnGH.setText("1892");
+		Button btnGH = (Button)findViewById(com.lisa.map.app.R.id.btn_lh);btnGH.setText("4781");
 
 		btnYQ.setOnClickListener(this);
 		btnLX.setOnClickListener(this);
 		btnGH.setOnClickListener(this);
 
 		LinearLayout mWtask = (LinearLayout)findViewById(com.lisa.map.app.R.id.ll);
+
+
+		PicVillage = BitmapFactory.decodeResource(getResources(),R.drawable.pic_village_32_green);
+		PicPeople = BitmapFactory.decodeResource(getResources(),R.drawable.pic_people_32_green);
+		PicHouse = BitmapFactory.decodeResource(getResources(),R.drawable.pic_house_32_blue);
+		PicPerson = BitmapFactory.decodeResource(getResources(),R.drawable.pic_person_32_blue);
+
 		//创建地图控件
 		mMapControl = new MapControl(this);
 		mWtask.addView(mMapControl,LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
@@ -190,10 +203,26 @@ public class Wrap_ZJ_TActivity extends Activity
 		针对数据，设置每种特殊颜色样式
 		若MapUtil中的样式不满足需求，可自行定义
 		*/
-		renderRargetCommon.AddUniqValue("自然村", "自然村", new SimplePointSymbol(Color.YELLOW, 64, SimplePointStyle.Square	));
-		renderRargetCommon.AddUniqValue("农户", "农户", new SimplePointSymbol(Color.GREEN, 48, SimplePointStyle.Circle	));
-		renderRargetCommon.AddUniqValue("农户房屋", "农户房屋", new SimplePointSymbol(Color.BLUE, 32, SimplePointStyle.Diamond));
-		renderRargetCommon.AddUniqValue("村民小组", "村民小组", new SimplePointSymbol(Color.BLUE, 32, SimplePointStyle.Cross));
+		renderRargetCommon.AddUniqValue(
+				"自然村",
+				"自然村",
+				(new SimplePointSymbol(Color.YELLOW, 8, SimplePointStyle.Square))
+						.setPic(PicVillage,-PicVillage.getWidth()/2,-PicVillage.getHeight()));
+		renderRargetCommon.AddUniqValue(
+				"农户",
+				"农户",
+				(new SimplePointSymbol(Color.GREEN, 8, SimplePointStyle.Circle	))
+						.setPic(PicPerson,-PicPerson.getWidth()/2,-PicPerson.getHeight()));
+		renderRargetCommon.AddUniqValue(
+				"农户房屋",
+				"农户房屋",
+				(new SimplePointSymbol(Color.BLUE, 8, SimplePointStyle.Diamond))
+						.setPic(PicHouse,-PicHouse.getWidth()/2,-PicHouse.getHeight()));
+		renderRargetCommon.AddUniqValue(
+				"村民小组",
+				"村民小组",
+				(new SimplePointSymbol(Color.BLUE, 8, SimplePointStyle.Cross))
+						.setPic(PicPeople,-PicPeople.getWidth()/2,-PicPeople.getHeight()));
 		return  renderRargetCommon;
 	};
 
