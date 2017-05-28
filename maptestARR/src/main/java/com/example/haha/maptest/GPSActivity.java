@@ -17,15 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lisa.datamanager.map.MapDBManager;
-import com.lisa.datamanager.map.MapsManager;
-
 import java.util.HashMap;
 
-import srs.CoordinateSystem.ProjCSType;
 import srs.GPS.GPSControl;
-import srs.Geometry.IEnvelope;
-import srs.tools.MapControl;
 
 /**
  * All rights Reserved, Designed By lisa ^_^

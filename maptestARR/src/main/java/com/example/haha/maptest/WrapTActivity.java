@@ -136,7 +136,8 @@ public class WrapTActivity extends Activity
 				mMapControl,			//地图控件
 				true,					//是否为连续选择
 				true,					//是否为单选
-				this					//选中对象后要触发的监听
+				this,					//选中对象后要触发的监听
+				30f
 		);
 
 	}
