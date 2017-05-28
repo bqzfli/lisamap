@@ -1,22 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camera" android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
+    <item android:title="Show DB DATA">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/db_all"
+                    android:icon="@drawable/pic_china_64_gray"
+                    android:title="全部资源" />
+                <item
+                    android:id="@+id/village"
+                    android:icon="@drawable/pic_village_32_green"
+                    android:title="自然村" />
+                <item
+                    android:id="@+id/people"
+                    android:icon="@drawable/pic_people_32_green"
+                    android:title="村民小组" />
+                <item
+                    android:id="@+id/house"
+                    android:icon="@drawable/pic_house_32_blue"
+                    android:title="农户房屋" />
+                <item
+                    android:id="@+id/person"
+                    android:icon="@drawable/pic_person_32_blue"
+                    android:title="农户" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="BASEMAP">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/TDT"
+                    android:icon="@drawable/pic_china_64_gray"
+                    android:title="TDT" />
+                <item
+                    android:id="@+id/ChinaOnlineCommunity"
+                    android:icon="@drawable/pic_china_64_gray"
+                    android:title="ChinaOnlineCommunity" />
+
+                <item
+                    android:id="@+id/World_Physical_Map"
+                    android:icon="@drawable/pic_world_64_gray"
+                    android:title="World_Physical_Map" />
+                <item
+                    android:id="@+id/World_Imagery"
+                    android:icon="@drawable/pic_world_64_gray"
+                    android:title="World_Imagery" />
+
+                <item
+                    android:id="@+id/World_Shaded_Relief"
+                    android:icon="@drawable/pic_world_64_gray"
+                    android:title="World_Shaded_Relief" />
+                <item
+                    android:id="@+id/World_Terrain_Base"
+                    android:icon="@drawable/pic_world_64_gray"
+                    android:title="World_Terrain_Base" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="FUNCTION">
+        <menu>
+            <item
+                android:id="@+id/touch_location"
+                android:icon="@drawable/pic_active_location_64_gray"
+                android:title="点选位置" />
+            <item
+                android:id="@+id/nav_camera"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Import" />
+            <item
+                android:id="@+id/nav_gallery"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Gallery" />
+            <item
+                android:id="@+id/nav_slideshow"
+                android:icon="@drawable/ic_menu_slideshow"
+                android:title="Slideshow" />
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Tools" />
+        </menu>
+    </item>
 
     <item android:title="Communicate">
         <menu>
-            <item android:id="@+id/nav_share" android:icon="@drawable/ic_menu_share"
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@drawable/ic_menu_send"
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
                 android:title="Send" />
         </menu>
     </item>

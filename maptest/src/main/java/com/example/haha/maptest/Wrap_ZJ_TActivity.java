@@ -28,7 +28,6 @@ import com.lisa.datamanager.map.MapShapeManager;
 import com.lisa.datamanager.map.MapWMTSManager;
 import com.lisa.datamanager.map.MapsManager;
 import com.lisa.datamanager.map.MapsUtil;
-import com.lisa.map.app.MapUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,9 +62,9 @@ public class Wrap_ZJ_TActivity extends Activity
 		//全屏显示
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		Button btnYQ = (Button)findViewById(com.lisa.map.app.R.id.btn_yq);btnYQ.setText("4772");
-		Button btnLX = (Button)findViewById(com.lisa.map.app.R.id.btn_lx);btnLX.setText("4773");
-		Button btnGH = (Button)findViewById(com.lisa.map.app.R.id.btn_lh);btnGH.setText("4781");
+		Button btnYQ = (Button)findViewById(com.lisa.map.app.R.id.btn_yq);btnYQ.setText("207");
+		Button btnLX = (Button)findViewById(com.lisa.map.app.R.id.btn_lx);btnLX.setText("168");
+		Button btnGH = (Button)findViewById(com.lisa.map.app.R.id.btn_lh);btnGH.setText("3");
 
 		btnYQ.setOnClickListener(this);
 		btnLX.setOnClickListener(this);
@@ -121,12 +120,12 @@ public class Wrap_ZJ_TActivity extends Activity
 	 */
 	private void configMapData() throws Exception {
 		//任务包路径
-		String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/测试_数据_浙江/";
+		String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Immigrant/dibinbin/247/01013302831030101排溪自然村V6/";
 
 		//设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-		MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "/IMAGE/WMTS";				//wmts缓存路径
-		MapsUtil.DIR_RASTER 	= dirWorkSpace + "/IMAGE";				//raster文件路径
+		MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "/Img/WMTS";				//wmts缓存路径
+		MapsUtil.DIR_RASTER 	= dirWorkSpace + "/Img";				//raster文件路径
 		MapsUtil.PATH_TCF_SHAPE = null;	//SHAPE数据路径
 
 		//获取不可操作数据内容
@@ -146,12 +145,13 @@ public class Wrap_ZJ_TActivity extends Activity
 				"FK_SURVEY_NAME",
 				"FK_SURVEY_LEVEL",
 				"F_CENTER",
+				"F_WKT",
 				"F_MIN_SCALE",
 				"F_MAX_SCALE"
 		};	//调查对象表字段
 		MapsUtil.FIELD_DB_LABEL			=  new String[]{"F_CAPTION"};		//需要显示为LABEL的字段
 		MapsUtil.FIELD_DB_EXTRACT_LATER =  new String[]{"FK_SURVEY_NAME"};		//作为唯一值、分段渲染所需要的字段，如COMPLETE等
-		MapsUtil.FEILD_DB_GEO			= "F_CENTER";						//作为矢量（空间）信息的字段名
+		MapsUtil.FEILD_DB_GEO			= "F_WKT";						//作为矢量（空间）信息的字段名
 		MapsUtil.TYPE_GEO_DB_TABLE		= srsGeometryType.Point;			//矢量的数据类型：点、线、面
 		MapsUtil.FIELD_DB_FILTER 		= "F_PID";							/*设置通过哪个字段控在数据表中过滤出需要显示的内容
 																		浙江项目建议：对应浙江项目的"PID"*/
@@ -163,7 +163,8 @@ public class Wrap_ZJ_TActivity extends Activity
 				mMapControl,			//地图控件
 				true,					//是否为连续选择
 				true,					//是否为单选
-				this					//选中对象后要触发的监听
+				this,					//选中对象后要触发的监听
+				60.0f
 		);
 
 	}
