@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp" 
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_weight="1"
+        android:gravity="right|center_vertical"
+        android:text="TextView"
+        android:textColor="#000"
+        android:textSize="24sp" />
+    
+ 	<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="4dp"
+        android:gravity="right|center_vertical"
+        android:text="("
+        android:textColor="#000"
+        android:textSize="24sp"  />
+    
+    <TextView
+        android:id="@+id/tv_id"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical"
+        android:text="TextView"
+        android:textColor="#000"
+        android:textSize="24sp"  />
+    
+     <TextView
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:gravity="left|center_vertical"
+        android:text=")"
+        android:textColor="#000"
+        android:textSize="24sp"  />
+    
+    <!--
+    <View
+        android:layout_width="1dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="3dp"
+        android:background="#aaaaaa" />
+
+    <buttons.Text_trans
+        android:id="@+id/tv_py"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="left|center_vertical"
+        android:layout_marginLeft="4dp"
+        android:text="TextView"/>
+    -->
+
+</LinearLayout>

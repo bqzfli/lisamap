@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp" >
+        
+        <Button
+            android:id="@+id/TDTLayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="天地图数据" />
+        
+        <!-- <Button
+            android:id="@+id/zoomin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="放大" />
+
+        <Button
+            android:id="@+id/zoomout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="缩小" /> -->
+        
+        <Button
+            android:id="@+id/ChinaOnlineCommunity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="街区图" />
+        
+        <Button
+            android:id="@+id/World_Terrain_Base"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地形图" />
+        
+        <Button
+            android:id="@+id/World_Physical_Map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自然地图" />
+        
+        <Button
+            android:id="@+id/World_Imagery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="影像图" />
+        
+        <Button
+            android:id="@+id/World_Shaded_Relief"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="山影图" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp" >
+        
+        <Button
+            android:id="@+id/btn_YFBH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样方编号" />
+
+        <Button
+            android:id="@+id/btn_YFDKBH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样方地块编号" /> -->
+        
+        <Button
+            android:id="@+id/btn_DWLX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地物类型" />
+        
+        <Button
+            android:id="@+id/btn_TBMJ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="面积" />
+        
+
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp" >
+        
+        
+        <TextView
+            android:id="@+id/tv_YFBHU"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样方唯一编号：" />
+
+        <EditText
+            android:id="@+id/edit_YFBHU"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:ems="10" >
+            <requestFocus />
+        </EditText>
+        
+        <TextView
+            android:id="@+id/tv_DWMC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:text="地物名称：" />
+
+        <EditText
+            android:id="@+id/edit_DWMC"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:ems="10" >
+            <requestFocus />
+        </EditText>
+        
+        <TextView
+            android:id="@+id/tv_DWDM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:text="地物编码：" />
+        
+        <EditText
+            android:id="@+id/edit_DWDM"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="101"
+            android:ems="10" >
+        </EditText>
+        
+        <Button
+            android:id="@+id/btn_XGSJ"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_weight="2"
+            android:text="数据修改" />
+
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp" >
+        
+        
+        <TextView
+            android:id="@+id/tv_DKBH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rowid：" />
+
+        <EditText
+            android:id="@+id/edit_ROWIDS"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:ems="10" >
+            <requestFocus />
+        </EditText>
+        
+        <Button
+            android:id="@+id/btn_XGSJ_BYSELECT"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_weight="2"
+            android:text="修改选中数据" />
+
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
+</LinearLayout>

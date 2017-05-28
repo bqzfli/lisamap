@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\wraptest.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\wraptest.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\activity_draw.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\activity_draw.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\duidi_pop_determine_cancel.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\duidi_pop_determine_cancel.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\input_popupwindow.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\input_popupwindow.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\activity_wkttest.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\activity_wkttest.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\dbftest.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\dbftest.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\tabletest.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\tabletest.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\main.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\main.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\poplist.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\poplist.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\item_popupwindows_source.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\item_popupwindows_source.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\tiletest.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\tiletest.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\maintest.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\layout\\maintest.xml"
+    }
+]
