@@ -64,6 +64,22 @@ public interface IMap{
 	void setActiveLayer(ILayer value) throws sRSException;
 	boolean AddLayer(ILayer layer) throws IOException;
 	boolean AddLayers(ArrayList<ILayer> layers) throws IOException;
+
+	/**
+	 * @param index 插入位置
+	 * @param layer
+	 * @return
+	 * @throws IOException
+	 */
+	int AddLayer(int index,ILayer layer) throws IOException;
+
+	/**
+	 * @param index 替换layer的位置
+	 * @param layer
+	 * @return
+	 * @throws IOException
+	 */
+	boolean ChangeLayer(int index,ILayer layer) throws IOException;
 	ILayer GetLayer(int index) throws sRSException;
 	ILayer GetLayer(String name);
 	void MoveLayer(int fromIndex, int toIndex) throws sRSException;

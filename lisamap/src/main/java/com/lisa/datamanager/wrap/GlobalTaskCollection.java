@@ -113,7 +113,7 @@ public class GlobalTaskCollection {
 	public static void AddWholeConfig(String filePath){
 		File file=new File(filePath);
 
-		if (file.exists() && filePath.substring(filePath.indexOf(".")).equalsIgnoreCase(".tcf")){
+		if (file.exists() && filePath.substring(filePath.indexOf("")).equalsIgnoreCase(".tcf")){
 			WholeTask task = new WholeTask();
 			try {
 				task.LoadFromFile(filePath);
@@ -134,7 +134,7 @@ public class GlobalTaskCollection {
 	public static void AddWholeTask(String filePath){
 		File file=new File(filePath);
 
-		if (file.exists() && filePath.substring(filePath.indexOf(".")).equalsIgnoreCase(".TCF")){
+		if (file.exists() && filePath.substring(filePath.indexOf("")).equalsIgnoreCase(".TCF")){
 			WholeTask task = new WholeTask();
 			try {
 				task.LoadFromFile(filePath);

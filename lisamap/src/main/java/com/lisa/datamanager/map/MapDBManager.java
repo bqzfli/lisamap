@@ -132,20 +132,22 @@ public class MapDBManager {
      * @param isOnlyOneTime         是否为一次选择
      * @param isOnlyOneSelect       是否为单选
      * @param listener              选中对象后要触发的监听
+     * @param distanceBuffer        捕捉距离
      */
     public void setTouchTool(
             MapControl mapControl,
             boolean isOnlyOneTime,
             boolean isOnlyOneSelect,
-            MultipleItemChangedListener listener){
+            MultipleItemChangedListener listener,
+            float distanceBuffer){
         /** 增加地图点选事件 */
         /** CommenLayer的点击事件 */
-
         mToolMultipleDB = MapBaseTool.getTouchLongToolMultipleDB(
                 mapControl,
                 mLAYER,
                 isOnlyOneTime,
-                isOnlyOneSelect);
+                isOnlyOneSelect,
+                distanceBuffer);
         mToolMultipleDB.zoom2Selected = listener;
 
     }

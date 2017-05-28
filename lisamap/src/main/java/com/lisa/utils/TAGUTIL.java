@@ -19,4 +19,5 @@ public class TAGUTIL {
     public static final String SETTING_BASE = "SETTING_BASE" ; //底图设置相关
 
     public static final String TestStr="";
+    public static final String BASEMAP_WMTS = "BASEMAP_WMTS"; //WMTS地图服务
 }

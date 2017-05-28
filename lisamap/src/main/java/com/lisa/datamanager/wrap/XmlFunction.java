@@ -45,7 +45,7 @@ public class XmlFunction {
 		if(type==null){
 			throw new Exception("Renderer璁剧疆閿欒锛�");
 		}
-		String name=type.getPackage().getName()+"."+node.attributeValue("Type");
+		String name=type.getPackage().getName()+ "" +node.attributeValue("Type");
 		Class<?> rendererType=Class.forName(name); 
 		IRenderer renderer = (IRenderer)rendererType.newInstance();
 		renderer.LoadXMLData(node);
@@ -94,7 +94,7 @@ public class XmlFunction {
 		}
 
 		Class<?> type=Class.forName("Display.Symbol.Symbol");
-		String name=type.getPackage().getName()+"."+node.attributeValue("Type");
+		String name=type.getPackage().getName()+ "" +node.attributeValue("Type");
 		Class<?>  symbolType=Class.forName(name);
 		if(symbolType==null){
 			throw new Exception("Symbol璁剧疆閿欒锛�");

@@ -236,7 +236,8 @@ MultipleItemChangedListener {
 				mMapControl, 
 				mDBLAYER, 
 				false, 
-				false);
+				false,
+				60f);
 		mToolMultipleDB.zoom2Selected = this; 
 	}
 
@@ -279,7 +280,7 @@ MultipleItemChangedListener {
 		if(dir.isDirectory()&&dir.list().length>0){
 			File[] files = dir.listFiles();
 			for (int i = 0; i < files.length; i++) {
-				if(files[i].isFile()&&files[i].getName().endsWith(".tif")&&files[i].getName().contains(".")){
+				if(files[i].isFile()&&files[i].getName().endsWith(".tif")&&files[i].getName().contains("")){
 					try {
 						IRasterLayer layer = new RasterLayer(files[i].getAbsolutePath());
 						/*layer.setMaximumScale(6000);*/

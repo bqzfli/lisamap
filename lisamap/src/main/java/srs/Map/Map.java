@@ -53,9 +53,9 @@ import android.os.Message;
 import android.util.Log;
 
 public class Map implements IMap,
-LayerActiveChangedListener,
-SelectionChangedListener,
-ElementListener/* , IXMLPersist */{
+		LayerActiveChangedListener,
+		SelectionChangedListener,
+		ElementListener/* , IXMLPersist */{
 	private String mName;
 	private IScreenDisplay mScreenDisplay;
 	private IElementContainer mElementContainer;
@@ -76,20 +76,20 @@ ElementListener/* , IXMLPersist */{
 	private String mMid;
 	public static int INDEXDRAWLAYER = -1;
 	/**是否为开始编辑后的第一次刷新屏幕
-	 * 
+	 *
 	 *//*
 	private boolean mIsFirstEdit=false;*/
 
 	/**是否为编辑模式
-	 * @throws Exception 
-	 * 
+	 * @throws Exception
+	 *
 	 *//*
 	private boolean mIsEdit=false;*/
 
 
 	public void dispose() throws Exception{
 		mName = null;
-		/*mScreenDisplay只能在Map中释放资源*/ 
+		/*mScreenDisplay只能在Map中释放资源*/
 		if(mScreenDisplay!=null){
 			mScreenDisplay.dispose();
 			mScreenDisplay = null;
@@ -105,7 +105,7 @@ ElementListener/* , IXMLPersist */{
 			mFullExtent.dispose();mFullExtent = null;
 		}
 		if(newDeviceEnv!=null){
-			newDeviceEnv.dispose();newDeviceEnv = null; 
+			newDeviceEnv.dispose();newDeviceEnv = null;
 		}
 		if(newDisplayEnv!=null){
 			newDisplayEnv.dispose();newDisplayEnv = null;
@@ -469,13 +469,13 @@ ElementListener/* , IXMLPersist */{
 			//添加
 			if(layer.getUseAble()){
 				mAllExtents.add(CaculateFullExtent());
-				mCurrentExtent = mAllExtents.size() - 1;		
+				mCurrentExtent = mAllExtents.size() - 1;
 				OnLayerAdded(new LayerEventArgs(layer));
 				OnLayerChanged(new LayerChangedEventArgs(mLayers.toArray(new ILayer[]{})));
 
 				if (layer instanceof IFeatureLayer) {
 					((IFeatureLayer)((layer instanceof IFeatureLayer) ? layer :
-						null)).getFeatureClass().getSelectionSetChanged().addListener(this);
+							null)).getFeatureClass().getSelectionSetChanged().addListener(this);
 				}
 				layer.getLayerActiveChanged().addListener(this);
 				// layer.SetActive();
@@ -496,13 +496,13 @@ ElementListener/* , IXMLPersist */{
 				//添加
 				if(layer.getUseAble()){
 					mAllExtents.add(CaculateFullExtent());
-					mCurrentExtent = mAllExtents.size() - 1;		
+					mCurrentExtent = mAllExtents.size() - 1;
 					OnLayerAdded(new LayerEventArgs(layer));
 					OnLayerChanged(new LayerChangedEventArgs(mLayers.toArray(new ILayer[]{})));
 
 					if (layer instanceof IFeatureLayer) {
 						((IFeatureLayer)((layer instanceof IFeatureLayer) ? layer :
-							null)).getFeatureClass().getSelectionSetChanged().addListener(this);
+								null)).getFeatureClass().getSelectionSetChanged().addListener(this);
 					}
 					layer.getLayerActiveChanged().addListener(this);
 					// layer.SetActive();
@@ -510,6 +510,25 @@ ElementListener/* , IXMLPersist */{
 			}
 			return true;
 		}
+		return false;
+	}
+
+	@Override
+	public int AddLayer(int index, ILayer layer) throws IOException {
+		if(index<=mLayers.size()&&layer!=null) {
+			this.mLayers.add(index, layer);
+			return index;
+		}else{
+			return -1;
+		}
+	}
+
+	@Override
+	public boolean ChangeLayer(int index, ILayer layer) throws IOException {
+		if(index<mLayers.size()&&layer!=null){
+			this.mLayers.remove(index);
+		}
+		this.mLayers.add(index,layer);
 		return false;
 	}
 
@@ -712,7 +731,7 @@ ElementListener/* , IXMLPersist */{
 
 	/**
 	 * 刷新视图，显示范围未发生变化时调用
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	/* (non-Javadoc)
 	 * @see srs.Map.IMap#PartialRefresh()
@@ -737,7 +756,7 @@ ElementListener/* , IXMLPersist */{
 			Log.w("LEVEL-ROW-COLUMN", "Map.PartialRefresh"+" 将图层缓存绘制于画布地图上，准备绘制临时要素");
 			mScreenDisplay.ResetPartCaches();
 			this.mElementContainer.Refresh();
-			this.mSelectionSet.Refresh();	
+			this.mSelectionSet.Refresh();
 			this.mGpsContainer.Refresh();
 		}catch(Exception e){
 			Log.e("地图渲染错误", e.getMessage());
@@ -799,9 +818,8 @@ ElementListener/* , IXMLPersist */{
 
 	/**绘制某图层
 	 * @param handler
-	 * @param indexLayer
 	 */
-	public void drawLayer(Handler handler){		  
+	public void drawLayer(Handler handler){
 		if(INDEXDRAWLAYER<mLayers.size()
 				&&!ImageDownLoader.IsStop()){
 			ILayer layer = mLayers.get(INDEXDRAWLAYER);
@@ -809,8 +827,8 @@ ElementListener/* , IXMLPersist */{
 					&& mScreenDisplay.getScale() > layer.getMinimumScale()
 					&& mScreenDisplay.getScale() < layer.getMaximumScale()) {
 				try {
-					((srs.Layer.Layer) ((layer instanceof srs.Layer.Layer) ? 
-							layer : null)).DrawLayer(mScreenDisplay,handler);					
+					((srs.Layer.Layer) ((layer instanceof srs.Layer.Layer) ?
+							layer : null)).DrawLayer(mScreenDisplay,handler);
 				} catch (Exception e) {
 					Log.e("LEVEL-ROW-COLUMN","Map.drawLayer:图层 815  "+ e.getMessage() + layer.getName()+" ");
 					e.printStackTrace();
@@ -881,21 +899,21 @@ ElementListener/* , IXMLPersist */{
 
 	/**
 	 * 刷新视图，显示范围变化时调用（重新读数据）
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void Refresh(Handler handler,Bitmap bitmap) throws Exception {
 		//非编辑状态下
 		mScreenDisplay.ResetCaches(bitmap);
 		INDEXDRAWLAYER = 0;
 		ImageDownLoader.StartThread();
-		drawLayer(handler);		
+		drawLayer(handler);
 	}
 
 	/**
-	 * 
-	 * 
-	 * @param deviceExtent
-	 * @throws Exception 
+	 *
+	 *
+	 * @param
+	 * @throws Exception
 	 */
 	public final void Refresh(Bitmap bitmap) throws Exception {
 
@@ -917,7 +935,7 @@ ElementListener/* , IXMLPersist */{
 
 	/** 刷新指定范围内的视图内容
 	 * @param deviceExtent
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void Refresh(IEnvelope deviceExtent,Bitmap bitmap) throws Exception {
 		IPoint tl = mScreenDisplay.ToMapPoint(new PointF(
@@ -937,7 +955,7 @@ ElementListener/* , IXMLPersist */{
 			if (mLayers.get(i).getVisible()) {
 				((srs.Layer.Layer) ((mLayers.get(i) instanceof srs.Layer.Layer) ? mLayers
 						.get(i) : null)).DrawLayer(mScreenDisplay, mScreenDisplay.getCache(), env,
-								Delegate,null);
+						Delegate,null);
 			}
 		}
 
@@ -996,9 +1014,9 @@ ElementListener/* , IXMLPersist */{
 
 	/**
 	 * 计算Map的全域范围
-	 * 
+	 *
 	 * @return Map的全域范围
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private IEnvelope CaculateFullExtent() throws IOException {
 		if (mLayers.isEmpty()) {
@@ -1024,7 +1042,7 @@ ElementListener/* , IXMLPersist */{
 								.get(mCurrentExtent));
 					}
 					mCoordinateSystem = mLayers.get(i).getCoordinateSystem();
-				} else {					
+				} else {
 
 					Object layerExtent = mFullExtent.ConvertToPolygon().Extent();
 					//editor by lzy 20120223
@@ -1106,21 +1124,21 @@ ElementListener/* , IXMLPersist */{
 	 加载XML数据
 
 	 @param node
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws NoSuchMethodException 
-	 * @throws sRSException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalArgumentException 
-	 * @throws SecurityException 
-	 * @throws IOException 
+	  * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws NoSuchMethodException
+	 * @throws sRSException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws IOException
 	 */
-	public final void LoadXMLData(org.dom4j.Element node) throws SecurityException, 
-	IllegalArgumentException, ClassNotFoundException, 
-	sRSException, NoSuchMethodException, 
-	InstantiationException, IllegalAccessException, 
-	InvocationTargetException, IOException{
+	public final void LoadXMLData(org.dom4j.Element node) throws SecurityException,
+			IllegalArgumentException, ClassNotFoundException,
+			sRSException, NoSuchMethodException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException, IOException{
 		if (node == null)
 			return;
 

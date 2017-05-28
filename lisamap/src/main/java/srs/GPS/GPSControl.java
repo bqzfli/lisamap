@@ -256,7 +256,7 @@ public class GPSControl implements LocationListener {
 		if (direction.contains("正"))
 			return direction;
 		else
-			return direction +String.valueOf(angle).substring(0,String.valueOf(angle).indexOf(".")+2) + "°";
+			return direction +String.valueOf(angle).substring(0,String.valueOf(angle).indexOf("")+2) + "°";
 	}	
 
     /**计算GPS偏差两

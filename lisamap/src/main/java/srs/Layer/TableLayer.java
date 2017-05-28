@@ -36,7 +36,7 @@ public class TableLayer  extends Layer implements ITableLayer  {
 	private void OpenTable(String filePath){
 		String fileName = super.getSource();
 		if (new File(fileName).exists()&&
-				fileName.substring(fileName.indexOf(".") + 1).toUpperCase()
+				fileName.substring(fileName.indexOf("") + 1).toUpperCase()
 				.equalsIgnoreCase("DBF")){
 			try {
 				mDataInfo=DBFTable.OpenDbf(filePath);

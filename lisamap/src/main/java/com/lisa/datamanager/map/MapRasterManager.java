@@ -65,7 +65,7 @@ public class MapRasterManager {
     public static void loadDataFromTCF(String taskPath) throws Exception {
         File file = new File(taskPath);
         if (file.exists()
-                && taskPath.substring(taskPath.indexOf(".")).equalsIgnoreCase(
+                && taskPath.substring(taskPath.indexOf("")).equalsIgnoreCase(
                 ".TCF")) {
             mTASK = new WholeTask();
             try {

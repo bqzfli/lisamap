@@ -21,14 +21,17 @@ public class MapBaseTool {
      * @param LayerId
      * @param isOnlyOneTime
      * @param isOnlyOneSelect
+     * @param distanceBuffer        捕捉缓冲区距离
      * @return TouchLongToolMultiple
      */
     public static TouchLongToolMultipleDB getTouchLongToolMultipleDB(
     		MapControl mapControl,
     		IDBLayer layer, 
     		boolean isOnlyOneTime, 
-    		boolean isOnlyOneSelect){
+    		boolean isOnlyOneSelect,
+            float distanceBuffer){
         mapControl.ClearDrawTool();
+        TouchLongToolMultipleDB.DIS_DEFAULT = distanceBuffer;
         TouchLongToolMultipleDB toolMultiple = new TouchLongToolMultipleDB(layer);
         toolMultiple.setBuddyControl(mapControl);// mapControl为操作的地图控件
         toolMultiple.onClick(mapControl);

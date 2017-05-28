@@ -450,7 +450,7 @@ public class DBSourceManager {
 			return searchResult;
 		}
 
-		Collection<Integer> objectlist = mIndexTree.Search(geometry.Extent());
+		Collection<Integer> objectlist = mIndexTree.Search(geometry.Extent().Buffer(distance).Extent());
 		switch (type) {
 			case Intersect: {
 				Iterator<Integer> it ; // 获得一个迭代子
@@ -667,14 +667,16 @@ public class DBSourceManager {
 			return searchResult;
 		}
 
-		Collection<Integer> objectlist = mIndexTree.Search(geometry.Extent());
+
+		Collection<Integer> objectlist = mIndexTree.Search(geometry.Extent().Buffer(distance).Extent());
 		switch (type) {
 			case Intersect: {
 				Iterator<Integer> it; // 获得一个迭代子
 				int c_index;
 				// 添加 lzy 20130703
 				if (getGeoType() == srsGeometryType.Point
-						&& geometry.GeometryType() == srsGeometryType.Polyline) {
+						&& (geometry.GeometryType() == srsGeometryType.Polyline || geometry
+						.GeometryType() == srsGeometryType.Point)) {
 					// 当该类型为点，而选择形状为线时，缓冲区距离将点扩充成Envelope
 					it = objectlist.iterator();
 					IGeometry buffer;

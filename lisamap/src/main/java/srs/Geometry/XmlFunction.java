@@ -46,7 +46,7 @@ public class XmlFunction
 		Class<IGeometry> type = IGeometry.class;
 		String nameSpace = type.getPackage().getName();
 		
-		Class<?> geoType = Class.forName(nameSpace + "." + node.attributeValue("Type"));
+		Class<?> geoType = Class.forName(nameSpace + "" + node.attributeValue("Type"));
 		if (geoType == null)
 		{
 			throw new sRSException("00300001");

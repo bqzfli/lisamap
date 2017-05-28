@@ -29,16 +29,16 @@ import srs.Layer.IDBLayer;
 import srs.tools.Event.MultipleItemChangedListener;
 
 /**
-* @ClassName: TouchLongToolMultipleDB
-* @Description: TODO(这里用一句话描述这个类的作用)
-* @Version: V1.0.0.0
-* @author lisa
-* @date 2016年12月26日 下午4:30:42
-***********************************
-* @editor lisa 
-* @data 2016年12月26日 下午4:30:42
-* @todo TODO
-*/
+ * @ClassName: TouchLongToolMultipleDB
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @Version: V1.0.0.0
+ * @author lisa
+ * @date 2016年12月26日 下午4:30:42
+ ***********************************
+ * @editor lisa
+ * @data 2016年12月26日 下午4:30:42
+ * @todo TODO
+ */
 
 public class TouchLongToolMultipleDB extends BaseTool {
 
@@ -65,7 +65,12 @@ public class TouchLongToolMultipleDB extends BaseTool {
      * 点选距离控制，触摸点与目标点最远相聚多少时，可视为选中 可根据业务需要，手动设置此项属性
      * 此属性也可通过系统配置设置，系统设置修改时，调用此属性进行修改
      */
-    public static float Dis = 10;
+    public static float DIS_DEFAULT = -1;
+    private static float Dis = 10;
+    /**
+     * 长点击选择的范围，默认为60
+     */
+    public static float DisLongTouch = 60;
     private static String mTitleStr = "详细信息";
     /**
      * MapControl输出的底图
@@ -108,11 +113,11 @@ public class TouchLongToolMultipleDB extends BaseTool {
      * @throws IOException
      */
     public void ClearSelect() throws IOException{
-    	mBuddyControl.getElementContainer().ClearElement();
-    	indexs.clear();
-    	geos.clear();
+        mBuddyControl.getElementContainer().ClearElement();
+        indexs.clear();
+        geos.clear();
     }
-    
+
     public TouchLongToolMultipleDB(IDBLayer TargetLayer) {
         zoom2Selected = null;
         mLayer = TargetLayer;
@@ -125,7 +130,9 @@ public class TouchLongToolMultipleDB extends BaseTool {
 
         super.setRate();
         if (mLayer != null) {
-            if (mLayer.getDBSourceManager().getGeoType() == srsGeometryType.Point) {
+            if(DIS_DEFAULT>-1){
+                Dis = DIS_DEFAULT;
+            }else if (mLayer.getDBSourceManager().getGeoType() == srsGeometryType.Point) {
                 Dis = 30; // 若目标类型为“点”，则缓冲距离为30
             } else {
                 Dis = 10; // 若目标类型为“线、面”缓冲距离为10
@@ -208,11 +215,11 @@ public class TouchLongToolMultipleDB extends BaseTool {
 
 
                         if (mCurrentPoint != null
-                                && Math.abs(mCurrentPoint.x - pF.x) < Dis
-                                && Math.abs(mCurrentPoint.y - pF.y) < Dis) {
+                                && Math.abs(mCurrentPoint.x - pF.x) < DisLongTouch
+                                && Math.abs(mCurrentPoint.y - pF.y) < DisLongTouch) {
 
                             // 在一个点位，此时才算“长点击”
-                            List<Integer> sels = mLayer.getDBSourceManager().selectOnlyOne(
+                            List<Integer> sels = mLayer.getDBSourceManager().selectOnly(
                                     selGeo,
                                     SearchType.Intersect,
                                     mScreenDisplay.ToMapDistance(Dis),
@@ -221,24 +228,29 @@ public class TouchLongToolMultipleDB extends BaseTool {
                             Integer index = -1;
                             if (sels != null && sels.size() > 0) {
                                 mExtTime = -1;
-                                index = sels.get(0);
-                                // 查询图层中选中点所对应的geo
-                                IGeometry geo = mLayer.getDBSourceManager().getGeoByIndex(index);
-                                if (indexs !=null&&indexs.size()>0) {
-                                    if (IsOnlyOneTime){
-                                        geos.clear();
-                                        indexs.clear();
-                                    }
-                                    if (indexs.contains(sels.get(0))) {
-                                        indexs.remove(sels.get(0));
-                                        geos.remove(geo);
-                                    }else {
-                                        indexs.add(sels.get(0));
+                                IGeometry geo  = null;
+                                if (IsOnlyOneTime) {
+                                    geos.clear();
+                                    indexs.clear();
+                                }
+                                for(int i=0;i<sels.size();i++) {
+                                    index = sels.get(i);
+                                    // 查询图层中选中点所对应的geo
+                                    geo = mLayer.getDBSourceManager().getGeoByIndex(index);
+                                    if (indexs != null && indexs.size() > 0) {
+                                        if (indexs.contains(sels.get(i))) {
+                                            indexs.remove(sels.get(i));
+                                            geos.remove(geo);
+                                        } else {
+                                            indexs.add(sels.get(i));
+                                            geos.add(geo);
+                                        }
+                                    } else {
+                                        indexs.add(sels.get(i));
                                         geos.add(geo);
                                     }
-                                }else {
-                                    indexs.add(sels.get(0));
-                                    geos.add(geo);
+                                    if(IsOnlyOneSelect)
+                                        break;//如果仅仅选择一个，则直接跳出
                                 }
                                 currentIndex = index;
 

@@ -136,7 +136,7 @@ public final class Utils{
 		}
 
 		if (sizeDecimalPart > 0){
-			format.append(".");
+			format.append("");
 
 			for (int i = 0; i < sizeDecimalPart; ++i){
 				format.append("0");
