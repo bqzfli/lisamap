@@ -156,7 +156,7 @@ public class TouchForLocation extends BaseTool {
 
                             ClearSelect(mBuddyControl.getActiveView().FocusMap());
                             Bitmap bit = BitmapFactory.decodeResource(
-                                    mBuddyControl.getContext().getResources(),R.drawable.pic_touch_location_64_blue);
+                                    mBuddyControl.getContext().getResources(),R.drawable.pic_touch_location_64_yellow);
                             PicElment = new PicElement();
                             PicElment.setGeometry(selGeo);
                             PicElment.setPic(bit,
