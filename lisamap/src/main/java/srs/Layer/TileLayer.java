@@ -1,6 +1,7 @@
 package srs.Layer;
 
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ import android.util.Log;
 public class TileLayer extends Layer implements ITileLayer {
 
 	/**机身瓦片缓存的总key
-	 * 
+	 *
 	 */
 	public static String SDCARDIMAGE = "00000000";
 	public String URLGetCapabilitis="";
@@ -42,13 +43,13 @@ public class TileLayer extends Layer implements ITileLayer {
 	protected TileInfo mTileInfo;
 
 	private static List<String> mURLs = new ArrayList<String>();
-	private static List<String> mSDCardFiles = new ArrayList<String>();	
+	private static List<String> mSDCardFiles = new ArrayList<String>();
 	private static HashMap<String,RectF> mURLRect = new HashMap<String,RectF>();
 
 	protected ImageDownLoader mImages = null;
 
 	/**获取到瓦片的实际尺寸
-	 * 
+	 *
 	 */
 	protected static Rect RectTileSize = new Rect();
 	private static Canvas G = null;
@@ -85,7 +86,7 @@ public class TileLayer extends Layer implements ITileLayer {
 
 
 	/**删除瓦片要素
-	 * @param key 
+	 * @param key
 	 * @return
 	 */
 	public static void removeKey(String key){
@@ -127,18 +128,18 @@ public class TileLayer extends Layer implements ITileLayer {
 	 */
 	@Override
 	public boolean DrawLayer(srs.Display.IScreenDisplay display,
-			Handler handler)throws sRSException, Exception{
+							 Handler handler)throws sRSException, Exception{
 		if (display.getScale() > this.getMinimumScale()
 				&& display.getScale() < this.getMaximumScale()){
-			IPoint BR = display.ToMapPoint(new PointF((float)display.getDeviceExtent().XMax(), 
+			IPoint BR = display.ToMapPoint(new PointF((float)display.getDeviceExtent().XMax(),
 					(float)display.getDeviceExtent().YMax()));
-			IPoint TL = display.ToMapPoint(new PointF((float)display.getDeviceExtent().XMin(), 
+			IPoint TL = display.ToMapPoint(new PointF((float)display.getDeviceExtent().XMin(),
 					(float)display.getDeviceExtent().YMin()));
 			IEnvelope extent = new Envelope(TL.X(), TL.Y(), BR.X(), BR.Y());
 			FromMapPointDelegate Delegate = new FromMapPointDelegate((ScreenDisplay)display);
 			DrawLayer(display,display.getCache(), extent, Delegate,handler);
 		}
-		return true;	
+		return true;
 	}
 
 	/* 画图层
@@ -146,12 +147,12 @@ public class TileLayer extends Layer implements ITileLayer {
 	 */
 	@Override
 	public boolean DrawLayer(IScreenDisplay display,
-			Bitmap canvas,
-			IEnvelope extent, 
-			FromMapPointDelegate Delegate,
-			Handler handler) throws IOException{
+							 Bitmap canvas,
+							 IEnvelope extent,
+							 FromMapPointDelegate Delegate,
+							 Handler handler) throws IOException{
 		MergeImage(display.getCache(),display,
-				extent.XMin(),extent.YMax(), extent.XMax(),extent.YMin(), 
+				extent.XMin(),extent.YMax(), extent.XMax(),extent.YMin(),
 				(int)display.getDeviceExtent().Width(),(int)display.getDeviceExtent().Height(),
 				handler);
 		return true;
@@ -176,11 +177,11 @@ public class TileLayer extends Layer implements ITileLayer {
 
 		for (LOD lod:mTileInfo.LODs){
 			calculateURL2LOD(lod, XMin, YMax, XMax, YMin, imgWidth, imgHeight);
-		}		
+		}
 		Log.i("WMTSLOAD", "需要下载" + String.valueOf(mURLs.size()) + "个瓦片");
-		
+
 		Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "开始下载瓦片");
-		mImages.downloadTiles2SDCRAD(ImageUtils.DOWNLOAD_THREAD_COUNT, mURLs, mSDCardFiles, null);		
+		mImages.downloadTiles2SDCRAD(ImageUtils.DOWNLOAD_THREAD_COUNT, mURLs, mSDCardFiles, null);
 	}
 
 	/**计算lod级别需要下载的全部url
@@ -228,7 +229,7 @@ public class TileLayer extends Layer implements ITileLayer {
 					Log.println(Log.INFO, "WMTSLOAD", "瓦片已经下载：" + catheKey + " LEVEL"
 							+ String.valueOf(lod.Level)
 							+"，ROW"+ String.valueOf(row)
-							+"，COL"+ String.valueOf(col));		
+							+"，COL"+ String.valueOf(col));
 					countExist ++;
 				}
 			}
@@ -245,14 +246,14 @@ public class TileLayer extends Layer implements ITileLayer {
 	 * @param YMin 底
 	 * @param imgWidth 像素宽度
 	 * @param imgHeight 像素高度
-	 * @return 
+	 * @return
 	 * @throws IOException
 	 */
 	@SuppressLint("UseValueOf")
 	public final Bitmap MergeImage(Bitmap canvas,IScreenDisplay display,
-			double XMin, double YMax, double XMax, double YMin,
-			int imgWidth,int imgHeight,
-			Handler handler) throws IOException{
+								   double XMin, double YMax, double XMax, double YMin,
+								   int imgWidth,int imgHeight,
+								   Handler handler) throws IOException{
 		mSDCardFiles.clear();
 		mURLs.clear();
 		mURLRect.clear();
@@ -267,7 +268,7 @@ public class TileLayer extends Layer implements ITileLayer {
 		LOD rLod = new LOD();
 		rLod.Resolution = 0;
 		for (LOD lod:mTileInfo.LODs){
-			if (rLod.Resolution > 0 
+			if (rLod.Resolution > 0
 					&& Math.abs(dRes - rLod.Resolution) > Math.abs(dRes - lod.Resolution)){
 				rLod = lod;
 			}else if (rLod.Resolution <= 0){
@@ -302,7 +303,7 @@ public class TileLayer extends Layer implements ITileLayer {
 
 		//创建合并的bitmap，将瓦片画在其上
 		G = new Canvas(canvas);
-		Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level));		
+		Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level));
 		drawFromSDCARD(left,top, rate,
 				rLod, vertImgCount, horzImgCount,
 				startRowCol,
@@ -327,9 +328,9 @@ public class TileLayer extends Layer implements ITileLayer {
 	 * @param handler
 	 */
 	private void drawFromSDCARD(int left,int top, float rate,
-			LOD rLod, int vertImgCount, int horzImgCount,
-			int[] startRowCol,
-			Handler handler){
+								LOD rLod, int vertImgCount, int horzImgCount,
+								int[] startRowCol,
+								Handler handler){
 
 		Bitmap tileBmp = null;
 		String catheKey = "";
@@ -349,43 +350,47 @@ public class TileLayer extends Layer implements ITileLayer {
 				col = startRowCol[1] + j;
 				catheKey = tileName + "_" +String.valueOf(rLod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
 				tileBmp = ImageUtils.getBitmap(catheKey);
-				if(tileBmp!=null&&tileBmp.isRecycled()){
-					Log.println(Log.ASSERT, "LEVEL-ROW-COLUMN", "drawFromSDCARD"+"缓存瓦片已回收" 
-							+ catheKey + " LEVEL"
-							+String.valueOf(rLod.Level)
-							+"，ROW"+ String.valueOf(row)
-							+"，COL"+ String.valueOf(col));
-				}
 				rectTileDraw = new RectF();
 				if(tileBmp == null){
-					Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片需要下载：" + catheKey + " LEVEL"
+					Log.i("LEVEL-ROW-COLUMN", "drawFromSDCARD:" + "本地无瓦片：" + catheKey + " LEVEL"
 							+String.valueOf(rLod.Level)
 							+"，ROW"+ String.valueOf(row)
-							+"，COL"+ String.valueOf(col));
+							+"，COL"+ String.valueOf(col)
+							+"-------需要下载");
+					tileURL = getTileUrl(row, col, rLod);
+					mURLs.add(tileURL);
+					mSDCardFiles.add(catheKey);
+					mURLRect.put(catheKey,setDrawEnvelope(rLod,rectTileDraw,rate,left,top,i,j));
+				}else if(tileBmp!=null&&tileBmp.isRecycled()) {
+					Log.i("LEVEL-ROW-COLUMN", "drawFromSDCARD:" + "jni中已经将缓存瓦片回收，需要重新获取"
+							+ catheKey + " LEVEL"
+							+ String.valueOf(rLod.Level)
+							+ "，ROW" + String.valueOf(row)
+							+ "，COL" + String.valueOf(col));
 					tileURL = getTileUrl(row, col, rLod);
 					mURLs.add(tileURL);
 					mSDCardFiles.add(catheKey);
 					mURLRect.put(catheKey,setDrawEnvelope(rLod,rectTileDraw,rate,left,top,i,j));
 				}else{
-					Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "drawFromSDCARD" + "瓦片开始绘制，来源于机身存储：" + catheKey + " LEVEL"
+					Log.i( "LEVEL-ROW-COLUMN", "drawFromSDCARD:" + "瓦片开始绘制，来源于机身存储：" + catheKey + " LEVEL"
 							+String.valueOf(rLod.Level)
 							+"，ROW"+ String.valueOf(row)
 							+"，COL"+ String.valueOf(col));
 					try{
-						G.drawBitmap(tileBmp, 
-								RectTileSize, 
-								setDrawEnvelope(rLod,rectTileDraw,rate,left,top,i,j), 
+						G.drawBitmap(tileBmp,
+								RectTileSize,
+								setDrawEnvelope(rLod,rectTileDraw,rate,left,top,i,j),
 								null);
 					}catch(Exception e){
-						Log.println(Log.ASSERT, "LEVEL-ROW-COLUMN", catheKey +" "+e.getMessage());
+						Log.e("LEVEL-ROW-COLUMN", "drawFromSDCARD" + catheKey +" "+e.getMessage());
 					}
 					/*已经下载到机身存储中的瓦片，无需内存缓存了
-					ImageUtils.Caches.put(catheKey, tileBmp);*/			
+					ImageUtils.Caches.put(catheKey, tileBmp);*/
 					tileBmp.recycle();
-					Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "drawFromSDCARD" + "瓦片绘制完毕，来源于机身存储：" + catheKey + " LEVEL"
+					Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "drawFromSDCARD:" + "瓦片绘制完毕，来源于机身存储：" + catheKey + " LEVEL"
 							+String.valueOf(rLod.Level)
 							+"，ROW"+ String.valueOf(row)
-							+"，COL"+ String.valueOf(col));
+							+"，CO1L"+ String.valueOf(col));
 				}
 			}
 		}
@@ -412,8 +417,8 @@ public class TileLayer extends Layer implements ITileLayer {
 	 * @return 瓦片的绘制范围
 	 */
 	private RectF setDrawEnvelope(LOD rLod,RectF rectTileDraw,
-			float rate,int left,int top,
-			int rowIndex,int colIndex){
+								  float rate,int left,int top,
+								  int rowIndex,int colIndex){
 		rectTileDraw.left = -left+colIndex*rLod.Width*rate;
 		rectTileDraw.top = -top+rowIndex*rLod.Height*rate;
 		rectTileDraw.right = -left+(colIndex+1)*rLod.Width*rate;
@@ -426,7 +431,7 @@ public class TileLayer extends Layer implements ITileLayer {
 	 * @param handler
 	 */
 	private void getURLTiles(RectF rectTileDraw,
-			Handler handler){
+							 Handler handler){
 
 		String catheKey = "";
 		String tileURL = "";
@@ -457,7 +462,7 @@ public class TileLayer extends Layer implements ITileLayer {
 
 	/**绘制指定的瓦片
 	 * @param key 瓦片名
-	 * @param handler 
+	 * @param handler
 	 */
 	public static void DrawImageFromURL(String key,Handler handler){
 		if(key!=null&&key.equalsIgnoreCase(SDCARDIMAGE)){
@@ -465,9 +470,12 @@ public class TileLayer extends Layer implements ITileLayer {
 		}else if(key!=null){
 			Bitmap tileBmp = ImageUtils.Caches.get(key);
 			RectF rect = mURLRect.get(key);
-			if(tileBmp!=null&&rect!=null){
-				G.drawBitmap(tileBmp, RectTileSize, rect, null);
-				Log.println(Log.INFO, "LEVEL-ROW-COLUMN", " 机身存储的瓦片已经绘制完毕！ " + key);
+			if(tileBmp!=null){
+				if(rect!=null) {
+					G.drawBitmap(tileBmp, RectTileSize, rect, null);
+					Log.println(Log.INFO, "LEVEL-ROW-COLUMN", " 机身存储的瓦片已经绘制完毕！ " + key);
+				}
+				tileBmp.recycle();
 			}else if(tileBmp==null&&rect!=null){
 				//此处无图，不做处理
 				Log.i("LEVEL-ROW-COLUMN", "此处无图，不做处理！:"+key);
@@ -495,7 +503,7 @@ public class TileLayer extends Layer implements ITileLayer {
 		double ymax = lod.Origin.Y() - rowIndex * hSize;
 		double xmax = lod.Origin.X() + (colIndex + 1) * wSize;
 		double ymin = lod.Origin.Y() - (rowIndex + 1) * hSize;
-		env = new Envelope(xmin, ymin, xmax, ymax); 
+		env = new Envelope(xmin, ymin, xmax, ymax);
 
 		return env;
 	}
@@ -570,7 +578,7 @@ public class TileLayer extends Layer implements ITileLayer {
 
 
 	/**设置TileInfo
-	 * @param url 服务URL
+	 * @param urlGetCatability 服务URL
 	 */
 	public void setTileInfo(String urlGetCatability,String urlGetTile){
 		/*this.setLods(urlGetCatability);*/
@@ -662,7 +670,7 @@ public class TileLayer extends Layer implements ITileLayer {
 			//处理UI
 		}
 	};*/
-	
+
 
 
 
@@ -703,7 +711,7 @@ public class TileLayer extends Layer implements ITileLayer {
 	}*/
 
 	/**设置默认级别
-	 * 
+	 *
 	 */
 	private void setLods(String Url){
 		/*mTileInfo.Height = 256;

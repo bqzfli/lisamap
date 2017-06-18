@@ -22,6 +22,7 @@ public class MapWMTSManager {
     public static ITileLayer LAYER_World_Shaded_Relief = TDTLayerFactory.World_Shaded_Relief_Layer();
     public static ITileLayer LAYER_World_Terrain_Base = TDTLayerFactory.World_Terrain_BaseLayer();
 
+
     /**
      * 测试用 加载测试数据
      * @throws Exception
@@ -34,6 +35,7 @@ public class MapWMTSManager {
                     && */MapsUtil.DIR_WMTS_CACHE != null
                     && !MapsUtil.DIR_WMTS_CACHE.trim().equalsIgnoreCase("")) {
                 ImageUtils.CacheDir = MapsUtil.DIR_WMTS_CACHE;
+                ImageUtils.createImageSDdir();
                 /*wmtsLayer.setVisible(false);*/
                 MapsManager.getMap().AddLayer(LAYER_TDT);
                 addedLayerCount += 1;

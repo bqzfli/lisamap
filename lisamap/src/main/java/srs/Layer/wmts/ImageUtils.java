@@ -63,15 +63,11 @@ public class ImageUtils {
 	 * @param bitmap   
 	 * @throws IOException
 	 */
-	public static void SaveBitmap(Bitmap bitmap,String fileName) throws IOException{
-		try {
+	public static void SaveBitmap(Bitmap bitmap,String fileName) throws Exception{
 			FileOutputStream outStream = new FileOutputStream(CacheDir + File.separator + fileName);
 			bitmap.compress(CompressFormat.JPEG, 75, outStream);
 			outStream.flush();
 			outStream.close();
-		}  catch (IOException e) {
-			e.printStackTrace();
-		}		
 	}
 
 	/**判断 bitmap 是否已经下载过

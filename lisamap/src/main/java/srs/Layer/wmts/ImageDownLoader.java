@@ -21,7 +21,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-public class ImageDownLoader {	
+public class ImageDownLoader {
 
 	protected static boolean IsStop = false;
 
@@ -42,7 +42,7 @@ public class ImageDownLoader {
 	 */
 	private static ExecutorService ImageThreadPool = null;
 
-	public ImageDownLoader(){}	
+	public ImageDownLoader(){}
 
 	public static void creatThreadPool(int count){
 		synchronized(ExecutorService.class){
@@ -50,7 +50,9 @@ public class ImageDownLoader {
 				ImageThreadPool.shutdownNow();
 				ImageThreadPool = null;
 			}
-			ImageThreadPool = Executors.newFixedThreadPool(count);
+			if(count>0) {
+				ImageThreadPool = Executors.newFixedThreadPool(count);
+			}
 		}
 	}
 
@@ -61,7 +63,7 @@ public class ImageDownLoader {
 	public static ExecutorService getThreadPool(){
 		if(ImageThreadPool == null){
 			creatThreadPool(30);
-		}	
+		}
 		return ImageThreadPool;
 
 	}
@@ -71,23 +73,23 @@ public class ImageDownLoader {
 	 * @param key
 	 * @param bitmap
 	 */
-	public void addBitmapToMemoryCache(String key, Bitmap bitmap) {  
-		if (getBitmapFromMemCache(key) == null && bitmap != null) {  
-			ImageUtils.Caches.put(key, bitmap);  
-		}  
-	}  
+	public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+		if (getBitmapFromMemCache(key) == null && bitmap != null) {
+			ImageUtils.Caches.put(key, bitmap);
+		}
+	}
 
 	/**
 	 * 从内存缓存中获取一个Bitmap
 	 * @param key
 	 * @return
 	 */
-	public Bitmap getBitmapFromMemCache(String key) {  
-		return ImageUtils.Caches.get(key);  
-	} 
+	public Bitmap getBitmapFromMemCache(String key) {
+		return ImageUtils.Caches.get(key);
+	}
 
 	/**多线程下载矢量 
-	 * 
+	 *
 	 */
 	public void downloadTiles2SDCRAD(final int IndexOfThread,final List<String> urls,final List<String> keys, final Handler handler){
 		getThreadPool().execute(new Runnable() {
@@ -98,7 +100,7 @@ public class ImageDownLoader {
 					String url = "";
 					String key = "";
 					int i = IndexOfThread;
-					while(i<urls.size()){		
+					while(i<urls.size()){
 						url = urls.get(i);
 						key = keys.get(i);
 						bitmap = getBitmapFormUrl(url,0);
@@ -203,7 +205,7 @@ public class ImageDownLoader {
 	 * 获取Bitmap, 内存中没有就去手机或者sd卡中获取，这一步在getView中会调用，比较关键的一步
 	 * @param url
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 *//*
 	public Bitmap showCacheBitmap(String url){
 		if(getBitmapFromMemCache(url) != null){
@@ -227,7 +229,7 @@ public class ImageDownLoader {
 	public static byte[] unzip(GZIPInputStream gzipis) throws IOException{
 		int len = 1024;
 		int slen = 0;
-		ByteArrayOutputStream out= new ByteArrayOutputStream(len);		
+		ByteArrayOutputStream out= new ByteArrayOutputStream(len);
 		byte[] buf = new byte[len];
 		while((len = gzipis.read(buf))>0){
 			out.write(buf, 0, len);
