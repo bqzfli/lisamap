@@ -49,18 +49,22 @@ import static com.lisa.datamanager.map.MapsUtil.DKMaps;
  */
 public class MapDBManager {
 
-    private static MapDBManager mInstance = null;
+    private static volatile MapDBManager mInstance = null;
 
     /**
      * 地图点选操作
      */
     private static TouchLongToolMultipleDB mToolMultipleDB = null;
 
-    private List<IElement> surveyedElements = null;
+    /*private List<IElement> surveyedElements = null;*/
 
     public static MapDBManager getInstance(){
         if(mInstance==null){
-            mInstance = new MapDBManager();
+            synchronized (MapDBManager.class) {
+                if(mInstance==null) {
+                    mInstance = new MapDBManager();
+                }
+            }
         }
         return mInstance;
     }

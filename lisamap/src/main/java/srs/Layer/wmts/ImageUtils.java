@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.support.annotation.WorkerThread;
+import android.util.Log;
 import android.util.LruCache;
 
 public class ImageUtils {	
@@ -63,6 +65,7 @@ public class ImageUtils {
 	 * @param bitmap   
 	 * @throws IOException
 	 */
+	@WorkerThread
 	public static void SaveBitmap(Bitmap bitmap,String fileName) throws Exception{
 			FileOutputStream outStream = new FileOutputStream(CacheDir + File.separator + fileName);
 			bitmap.compress(CompressFormat.JPEG, 75, outStream);
@@ -87,13 +90,18 @@ public class ImageUtils {
 	 */
 	public static Bitmap getBitmap(String fileName){
 		Bitmap image = Caches.get(fileName);
-		if(image == null){
+		if(image == null||image.isRecycled()){
+			//为空或已经被回收
+			Log.i("LEVEL-ROW-COLUMN", "ImageUtils.getBitmap:" + "缓存中不存在，从硬盘读取"
+					+ "，" + fileName);
 			String filePath = CacheDir + File.separator + fileName;
 			File file = new File(filePath);
 			if(file.exists()){
 				image = BitmapFactory.decodeFile(filePath);
 				return image;
 			}
+		}else{
+			Log.i("LEVEL-ROW-COLUMN", "ImageUtils.getBitmap:" + "缓存中存在");
 		}
 		return image;
 	}

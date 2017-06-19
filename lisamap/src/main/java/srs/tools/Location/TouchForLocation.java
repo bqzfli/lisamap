@@ -130,11 +130,9 @@ public class TouchForLocation extends BaseTool {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (mExtTime == -1) {
-                    mExtTime = System.currentTimeMillis();
-                    mCurrentPoint = new PointF(event.getX() * mRate, event.getY()
-                            * mRate);
-                }
+                mExtTime = System.currentTimeMillis();
+                mCurrentPoint = new PointF(event.getX() * mRate, event.getY()
+                        * mRate);
                 break;
             case MotionEvent.ACTION_UP:
                 try {
@@ -155,8 +153,12 @@ public class TouchForLocation extends BaseTool {
                                     pF.y));
 
                             ClearSelect(mBuddyControl.getActiveView().FocusMap());
+                            BitmapFactory.Options opt = new BitmapFactory.Options();
+                            opt.inPreferredConfig = Bitmap.Config.RGB_565;
+                            /*opt.inPurgeable = true;
+                            opt.inSampleSize = 2;*/
                             Bitmap bit = BitmapFactory.decodeResource(
-                                    mBuddyControl.getContext().getResources(),R.drawable.pic_touch_location_64_yellow);
+                                    mBuddyControl.getContext().getResources(),R.drawable.pic_touch_location_48_yellow,opt);
                             PicElment = new PicElement();
                             PicElment.setGeometry(selGeo);
                             PicElment.setPic(bit,

@@ -128,7 +128,6 @@ public class TouchForLocationActivity extends Activity{
 		LATITUDE = 0;
 
 		initView();
-
 	}
 
 	/**界面设置
@@ -262,8 +261,6 @@ public class TouchForLocationActivity extends Activity{
 				goBack();
 			}
 		});
-
-
 
 
 		try {

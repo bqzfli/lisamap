@@ -24,12 +24,12 @@
         "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\drawable\\makecancel.png"
     },
     {
-        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\popup_style.xml",
-        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\drawable\\popup_style.xml"
-    },
-    {
         "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pic_china_64_gray.png",
         "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\drawable\\pic_china_64_gray.png"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\popup_style.xml",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\drawable\\popup_style.xml"
     },
     {
         "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\popup_btcancel_selector.xml",
@@ -70,6 +70,10 @@
     {
         "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\duidi_title_window.xml",
         "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\drawable\\duidi_title_window.xml"
+    },
+    {
+        "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\pic_touch_location_48_yellow.png",
+        "source": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\bundles\\debug\\res\\drawable\\pic_touch_location_48_yellow.png"
     },
     {
         "merged": "F:\\REPO\\git\\LISAMAPGITHUB\\lisamap\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\iconfont.png",

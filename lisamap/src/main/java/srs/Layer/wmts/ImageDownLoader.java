@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 public class ImageDownLoader {
@@ -245,6 +246,7 @@ public class ImageDownLoader {
 	 * @param url
 	 * @return
 	 */
+	@WorkerThread
 	private Bitmap getBitmapFormUrl(String url,int times) {
 		Bitmap img = null;
 		HttpURLConnection con =null;
@@ -271,12 +273,11 @@ public class ImageDownLoader {
 			if (con != null) {
 				con.disconnect();
 			}
-			//三次请求后若仍无回应，则放弃
-			if(times<2){
+			//3次请求后若仍无回应，则放弃
+			if(times<3){
 				times++;
 				img = getBitmapFormUrl(url,times);
-			}
-			if(times==3&&img==null){
+			}else if(times==3&&img==null){
 				Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片下载失败！");
 			}
 		} finally {

@@ -48,9 +48,9 @@ import android.widget.TextView;
 
 public class MapControl extends BaseControl implements ContentChangedListener {
 
-	
+
 	/**绘制次数计数器
-	 * 
+	 *
 	 */
 	private int mCount = 0;
 	private IActiveView mActiveView;
@@ -62,7 +62,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	private ProgressBar mProgressBar = null;
 	private boolean IsDrawTrack=false;
 	public Bitmap mBitScreen = null;
-	private Handler myHandler;	
+	private Handler myHandler;
 	DisplayMetrics dm = new DisplayMetrics();
 	private int densityDpi;
 	/**
@@ -72,7 +72,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	private TextView mTVRules;
 
 	/**开始进入编辑模式
-	 * 
+	 *
 	 */
 	/*@Override
 	public void StartEdit(){
@@ -80,7 +80,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	}
 
 	 *//**结束编辑模式
-	 * 
+	 *
 	 *//*
 	@Override
 	public void StopEdit(){
@@ -90,7 +90,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	private Paint mPaint = new Paint();
 
 	/**是否为第一次刷新
-	 * 
+	 *
 	 */
 	private boolean misFirst=true;
 
@@ -128,7 +128,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 		/*setWillNotDraw(false);*/
 	}
 
-	public MapControl(Context context, AttributeSet attrs) { 
+	public MapControl(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mZoomPan=new ZoomPan();
 		Initial();
@@ -158,43 +158,43 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 				try{
 					super.handleMessage(msg);
 					switch(msg.arg1){
-					case 6:
-						DrawTrackLayer();
-						Map.INDEXDRAWLAYER ++;
-						mActiveView.FocusMap().drawLayer(myHandler);
-						break;
-					case 0:
-						//mProgressBar.setVisibility(View.VISIBLE);
-						break;
-					case 4:
-						String key = msg.getData().getString("KEY");
-						Log.i("LEVEL-ROW-COLUMN", "MSG = 4:"+"MapControl.myHandler 绘制瓦片："+key);
-						if(key!=null){
-							Log.i("LEVEL-ROW-COLUMN", "MapControl.myHandler 绘制瓦片："+key);
-							DrawTileImage(key,myHandler);
-							DrawTrackLayer();
-						}
-						if(TileLayer.IsDrawnEnd()){
-							Log.i("LEVEL-ROW-COLUMN", "图层："
-									+ String.valueOf(Map.INDEXDRAWLAYER)
-									+ "绘制瓦片已经绘制完成，绘制下一层");
+						case 6:
 							DrawTrackLayer();
 							Map.INDEXDRAWLAYER ++;
 							mActiveView.FocusMap().drawLayer(myHandler);
-						}
-						break;
-					case 3:
-						Log.println(Log.ASSERT,"LEVEL-ROW-COLUMN", "3: 图层："+ String.valueOf(Map.INDEXDRAWLAYER)+" 绘制过程中,将部分'图层缓存'绘于屏幕 MapControl.DrawTrackLayer");
-						DrawTrackLayer();
-						break;
-					case 1:
-					case 2:
-						DrawTrack();
-						ImageDownLoader.cancelTask();
-						ImageDownLoader.StopThread();
-						mProgressBar.setVisibility(View.GONE);
-						Log.e("LEVEL-ROW-COLUMN","MapControl刷新完成：进度条消失");
-						break;
+							break;
+						case 0:
+							//mProgressBar.setVisibility(View.VISIBLE);
+							break;
+						case 4:
+							String key = msg.getData().getString("KEY");
+							Log.i("LEVEL-ROW-COLUMN", "MSG = 4:"+"MapControl.myHandler 绘制瓦片："+key);
+							if(key!=null){
+								Log.i("LEVEL-ROW-COLUMN", "MapControl.myHandler 绘制瓦片："+key);
+								DrawTileImage(key,myHandler);
+								DrawTrackLayer();
+							}
+							if(TileLayer.IsDrawnEnd()){
+								DrawTrackLayer();
+								Log.i("LEVEL-ROW-COLUMN", "图层："
+										+ String.valueOf(Map.INDEXDRAWLAYER)
+										+ "   所有瓦片已经绘制完成，绘制下一层");
+								Map.INDEXDRAWLAYER ++;
+								mActiveView.FocusMap().drawLayer(myHandler);
+							}
+							break;
+						case 3:
+							Log.println(Log.ASSERT,"LEVEL-ROW-COLUMN", "3: 图层："+ String.valueOf(Map.INDEXDRAWLAYER)+" 绘制过程中,将部分'图层缓存'绘于屏幕 MapControl.DrawTrackLayer");
+							DrawTrackLayer();
+							break;
+						case 1:
+						case 2:
+							DrawTrack();
+							ImageDownLoader.cancelTask();
+							ImageDownLoader.StopThread();
+							mProgressBar.setVisibility(View.GONE);
+							Log.e("LEVEL-ROW-COLUMN","MapControl刷新完成：进度条消失");
+							break;
 					}
 				}catch(Exception e){
 					Log.e("LEVEL-ROW-COLUMN","MapControl.myHandler.handleMessage:"+e.getMessage());
@@ -206,7 +206,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	}
 
 	/**清除控件上的所有绘图工具
-	 * 
+	 *
 	 */
 	public void ClearDrawTool(){
 		this.mDrawTool=null;
@@ -223,9 +223,9 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 			en=new Envelope(0,0,width,height);
 			//			mActiveView.getContentChanged().addListener(this);
 			//				this.mZoomPan.BuddyControl(this);
-		}		
+		}
 
-		mActiveView.FocusMap(new Map(en));		
+		mActiveView.FocusMap(new Map(en));
 		mActiveView.getContentChanged().addListener(this);
 
 		System.gc();
@@ -331,7 +331,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	@Override
 	public Bitmap getBitmap(){
 		return mActiveView.FocusMap().ExportMap(false);
-	} 
+	}
 
 	@Override
 	public IElementContainer getElementContainer(){
@@ -422,7 +422,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 
 
 	/**重绘全部缓存
-	 * 
+	 *
 	 */
 	@Override
 	public void Refresh(){
@@ -433,45 +433,45 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 		 */			try {
 //			 mProgressBar.setVisibility(View.VISIBLE);
 			 /*if(!mActiveView.FocusMap().IsEditMode()||mActiveView.FocusMap().IsFirstEdit()){*/
-			 this.setDrawingCacheEnabled(true);
-			 try{
-				 if(!misFirst&&mActiveView.FocusMap().getHasWMTSBUTTOM()){
-					 this.mBitScreen = this.getDrawingCache().copy(Config.RGB_565, false);
-					 Log.i("RECYCLE","通过getDrawingCache获取了控件的截图，并copy后赋值给mBitScreen"+mBitScreen);
-				 }
-				 this.setDrawingCacheEnabled(false);
-			 }catch(Exception e){
-				 Log.e("LEVEL-ROW-COLUMN","MapControl.Refresh at 490"+e.getMessage());
-			 }
-			 if(mBitScreen!=null
-					 &&!mBitScreen.isRecycled()
-					 &&mActiveView.FocusMap().getHasWMTSBUTTOM()){
-				 Log.println(Log.ASSERT,"RECYCLE","通过界面截图作为底图，mBtiScreen："+mBitScreen);
-				 //FIXME 先不考虑用上一次缩放的界面做底图
-				 //      原因：当wmts数据无法获取时，上一次的矢量会可见，导致底图“画花”了
-				 //mActiveView.FocusMap().Refresh(myHandler,mBitScreen);
-				 mActiveView.FocusMap().Refresh(myHandler,null);
-			 }else{
-				 Log.println(Log.ASSERT,"RECYCLE","通过白图作为底图");
-				 mActiveView.FocusMap().Refresh(myHandler,null);
-			 }
+			this.setDrawingCacheEnabled(true);
+			try{
+				if(!misFirst&&mActiveView.FocusMap().getHasWMTSBUTTOM()){
+					this.mBitScreen = this.getDrawingCache().copy(Config.RGB_565, false);
+					Log.i("RECYCLE","通过getDrawingCache获取了控件的截图，并copy后赋值给mBitScreen"+mBitScreen);
+				}
+				this.setDrawingCacheEnabled(false);
+			}catch(Exception e){
+				Log.e("LEVEL-ROW-COLUMN","MapControl.Refresh at 490"+e.getMessage());
+			}
+			if(mBitScreen!=null
+					&&!mBitScreen.isRecycled()
+					&&mActiveView.FocusMap().getHasWMTSBUTTOM()){
+				Log.println(Log.ASSERT,"RECYCLE","通过界面截图作为底图，mBtiScreen："+mBitScreen);
+				//FIXME 先不考虑用上一次缩放的界面做底图
+				//      原因：当wmts数据无法获取时，上一次的矢量会可见，导致底图“画花”了
+				//mActiveView.FocusMap().Refresh(myHandler,mBitScreen);
+				mActiveView.FocusMap().Refresh(myHandler,null);
+			}else{
+				Log.println(Log.ASSERT,"RECYCLE","通过白图作为底图");
+				mActiveView.FocusMap().Refresh(myHandler,null);
+			}
 			 /*}else{
 					mActiveView.FocusMap().RefreshEdit(myHandler);
 					StopEdit();
 				}*/
-			 //				message=new Message();
-			 //				message.arg1=1;
-			 //				myHandler.sendMessage(message);
-		 }catch(InterruptedException e){
-			 Log.e("LEVEL-ROW-COLUMN","MapControl.Refresh at 512 InterruptedException"+e.getMessage());
-			 e.printStackTrace();
-		 }catch(Exception e){
-			 Log.e("LEVEL-ROW-COLUMN","MapControl.Refresh at 515"+e.getMessage());
-			 Message message=new Message();
-			 message.arg1=2;
-			 myHandler.sendMessage(message);
-		 }
-		 return;
+			//				message=new Message();
+			//				message.arg1=1;
+			//				myHandler.sendMessage(message);
+		}catch(InterruptedException e){
+			Log.e("LEVEL-ROW-COLUMN","MapControl.Refresh at 512 InterruptedException"+e.getMessage());
+			e.printStackTrace();
+		}catch(Exception e){
+			Log.e("LEVEL-ROW-COLUMN","MapControl.Refresh at 515"+e.getMessage());
+			Message message=new Message();
+			message.arg1=2;
+			myHandler.sendMessage(message);
+		}
+		return;
 		 /*}catch (Exception e){
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -479,7 +479,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	}
 
 	/**仅刷新编辑部分
-	 * 
+	 *
 	 */
 	public void EditRefresh(){
 	}
@@ -507,20 +507,24 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	 */
 	public void DrawTrackLayer(){
 		//修改 李忠义 20121216 此处不需要copy， 因为不需要对底图数据进行绘制，并且copy bitmap消耗资源很严重
-		BitmapDrawable bd = new BitmapDrawable(getResources(), 
+		BitmapDrawable bd = new BitmapDrawable(getResources(),
 				mActiveView.FocusMap().ExportMapLayer());
 		this.setBackgroundDrawable(bd);
 
-		Log.i("LEVEL-ROW-COLUMN", "图层："+ String.valueOf(Map.INDEXDRAWLAYER)+"绘制,将'图层缓存'绘于屏幕 MapControl.DrawTrackLayer");
+		Log.i("LEVEL-ROW-COLUMN",
+				"MapControl.DrawTrackLayer    "
+						+"绘制图层："+ String.valueOf(Map.INDEXDRAWLAYER)+","
+						+",将'图层缓存区内容'绘于屏幕 "
+						+"\n\r-------------------------------" );
 	}
 
 	/**将缓冲区中的视图绘制到控件上     添加  by  李忠义 20120306
-	 * @param 
+	 * @param
 	 */
 	@Override
 	public void DrawTrack(){
 		Bitmap bmp = mActiveView.FocusMap().ExportMap(false).copy(Config.RGB_565, true);
-		BitmapDrawable bd= new BitmapDrawable(getResources(), bmp); 		
+		BitmapDrawable bd= new BitmapDrawable(getResources(), bmp);
 		this.setBackgroundDrawable(bd);
 		bmp=null;
 		Log.i("LEVEL-ROW-COLUMN", "地图刷新完成,将画布底图绘于屏幕 MapControl.DrawTrack");
@@ -530,7 +534,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	}
 
 	/**将指定图片绘制到控件上     添加  by  李忠义 20120306
-	 * @param 
+	 * @param
 	 */
 	@Override
 	public void DrawTrack(Bitmap bit){
@@ -538,7 +542,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 		//		IsDrawTrack=true;
 		//		this.setBackgroundColor(Color.BLACK);
 		if(bit!=null&&bit!=mActiveView.FocusMap().ExportMap(false)){
-			BitmapDrawable bd= new BitmapDrawable(getResources(), bit); 
+			BitmapDrawable bd= new BitmapDrawable(getResources(), bit);
 			this.setBackgroundDrawable(bd);
 			bit=null;
 		}
@@ -548,15 +552,15 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 		fLayer=layer;
 		mFid=fid;
 		menv=new Envelope(env.XMin()-env.Width()*0.1,env.YMin()-env.Height()*0.1,
-				env.XMax()+env.Width()*0.1,env.YMax()+env.Height()*0.1); 
-		if(mFid>-1){		
+				env.XMax()+env.Width()*0.1,env.YMax()+env.Height()*0.1);
+		if(mFid>-1){
 			IFeatureClass fClass = fLayer.getFeatureClass();
 			try {
-				map.getSelectionSet().ClearSelection();				
+				map.getSelectionSet().ClearSelection();
 				this.getActiveView().FocusMap().getSelectionSet().ClearSelection();
 				List<Integer> fidSelect=new ArrayList<Integer>();
 				fidSelect.add(mFid);
-				fClass.setSelectionSet(fidSelect);	
+				fClass.setSelectionSet(fidSelect);
 				//StaticConfig.LoadRegions();
 				this.setMap(map);
 				this.getActiveView().FocusMap().setExtent(menv);
@@ -564,7 +568,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} 									
+		}
 	}
 
 	/**全屏高亮显示选中记录    
@@ -580,7 +584,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 		s.FeatureClass=((IFeatureLayer)layer).getFeatureClass();
 		s.FIDs=fids;
 		layer.getFeatureClass().setSelectionSet(s.FIDs);
-		this.getActiveView().FocusMap().getSelectionSet().AddFeatures(s);	
+		this.getActiveView().FocusMap().getSelectionSet().AddFeatures(s);
 		this.getActiveView().FocusMap().setExtent(menv);
 		this.PartialRefresh();
 	}
@@ -614,7 +618,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 		}
 
 		menv=new Envelope(minx-(maxx-minx)*0.1,miny-(maxy-miny)*0.1,
-				maxx+(maxx-minx)*0.1,maxy+(maxy-miny)*0.1); 
+				maxx+(maxx-minx)*0.1,maxy+(maxy-miny)*0.1);
 		return menv;
 	}
 

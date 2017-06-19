@@ -27,7 +27,7 @@ public class MapWMTSManager {
      * 测试用 加载测试数据
      * @throws Exception
      */
-    public static void loadMap() throws Exception {
+    public final static void loadMap() throws Exception {
         int addedLayerCount = -1;
         //添加wmts瓦片服务
         try {

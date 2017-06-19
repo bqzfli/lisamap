@@ -22,6 +22,7 @@ dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile files('libs/dom4jOK.jar')
     compile files('libs/ksoap2-android-assembly-2.6.0-jar-with-dependencies.jar')
+    compile 'com.android.support:support-annotations:24.2.1'
 }
 
 /*//Copy类型

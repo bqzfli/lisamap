@@ -382,8 +382,8 @@ public class MainActivity extends AppCompatActivity
 
         //设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "/Img/WMTS";				//wmts缓存路径
-        MapsUtil.DIR_RASTER 	= dirWorkSpace + "/Img";				//raster文件路径
+        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Img/WMTS";				//wmts缓存路径
+        MapsUtil.DIR_RASTER 	= dirWorkSpace + "Img";				//raster文件路径
         MapsUtil.PATH_TCF_SHAPE = null;	//SHAPE数据路径
 
         //获取不可操作数据内容

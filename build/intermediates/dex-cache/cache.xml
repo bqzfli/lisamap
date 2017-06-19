@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="F:\sdk-android-win\Sdk\.android\build-cache\e30ca5439ffaee4897eeb4bbf861569688142dd2\output\jars\libs\ksoap2-android-assembly-2.6.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="be261d94cdbe6c2cb8e6191d8419904a739bb32f">
+        <dex dex="F:\REPO\git\LISAMAPGITHUB\maptestARR\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-2.6.0-jar-with-dependencies_102f9f5273df01025e51957487c27ef0680cfe5a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="F:\sdk-android-win\Sdk\.android\build-cache\e30ca5439ffaee4897eeb4bbf861569688142dd2\output\jars\libs\dom4jOK.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="53bef7e99675d18486298521cfdb7b4100b1b04b">
+        <dex dex="F:\REPO\git\LISAMAPGITHUB\maptestARR\build\intermediates\pre-dexed\debug\dom4jOK_88a737335403362efd30da48d9573880f5abb1d9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="F:\sdk-android-win\Sdk\.android\build-cache\e30ca5439ffaee4897eeb4bbf861569688142dd2\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7985589263139a3bd2c53d5223831f964d98c8cb">
+        <dex dex="F:\REPO\git\LISAMAPGITHUB\maptestARR\build\intermediates\pre-dexed\debug\classes_6585dc17c395ab316014fb781c33139c70cd72a9.jar" />
+    </item>
+
+</items>

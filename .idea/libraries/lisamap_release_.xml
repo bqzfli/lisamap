@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lisamap-release-">
+    <CLASSES>
+      <root url="jar://F:/sdk-android-win/Sdk/.android/build-cache/036408d0b64fa1d1a418a108429388ba4b5a0648/output/jars/classes.jar!/" />
+      <root url="jar://F:/sdk-android-win/Sdk/.android/build-cache/036408d0b64fa1d1a418a108429388ba4b5a0648/output/jars/libs/ksoap2-android-assembly-2.6.0-jar-with-dependencies.jar!/" />
+      <root url="file://F:/sdk-android-win/Sdk/.android/build-cache/036408d0b64fa1d1a418a108429388ba4b5a0648/output/res" />
+      <root url="jar://F:/sdk-android-win/Sdk/.android/build-cache/036408d0b64fa1d1a418a108429388ba4b5a0648/output/jars/libs/dom4jOK.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
