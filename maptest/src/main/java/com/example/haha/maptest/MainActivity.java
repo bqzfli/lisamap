@@ -50,21 +50,30 @@ import srs.Geometry.IEnvelope;
 import srs.Geometry.srsGeometryType;
 import srs.Rendering.CommonUniqueRenderer;
 import srs.tools.Event.MultipleItemChangedListener;
-import srs.tools.Location.TouchForLocation;
 import srs.tools.MapControl;
 import srs.tools.ZoomInCommand;
 import srs.tools.ZoomOutCommand;
+
+import butterknife.BindView;
+import butterknife.*;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,MultipleItemChangedListener {
     private long exitTime = 0;
 
-    private static Bitmap PicVillage = null;
-    private static Bitmap PicPeople = null;
-    private static Bitmap PicHouse = null;
-    private static Bitmap PicPerson = null;
-
-    private MapControl mMapView = null;
+    @BindBitmap(R.drawable.pic_village_32_green)
+    public Bitmap PicVillage = null;
+    @BindBitmap(R.drawable.pic_people_32_green)
+    public Bitmap PicPeople = null;
+    @BindBitmap(R.drawable.pic_house_32_blue)
+    public Bitmap PicHouse = null;
+    @BindBitmap(R.drawable.pic_person_32_blue)
+    public Bitmap PicPerson = null;
+    @BindView(R.id.mapview_main)
+    public MapControl mMapView = null;
+    @BindView(R.id.toolbar)
+    public Toolbar mToolbar = null;
     private SearchView mSearchView = null;
     private SearchView.SearchAutoComplete mEdit = null;
 
@@ -72,10 +81,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("MAP");
-        toolbar.setSubtitle("V.1.0.0");
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+        /*Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);*/
+        mToolbar.setTitle("MAP");
+        mToolbar.setSubtitle("V.1.0.0");
+        setSupportActionBar(mToolbar);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -88,17 +98,17 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mMapView = (MapControl)findViewById(R.id.mapview_main);
+       /* mMapView = (MapControl)findViewById(R.id.mapview_main);*/
         mMapView.ClearDrawTool();
 
-        initResource();
+        /*initResource();*/
 
         try {
             MapDBManager.getInstance().removeLayer();
@@ -456,7 +466,7 @@ public class MainActivity extends AppCompatActivity
     /** 获取唯一值渲染的方法
      * @return
      */
-    public static CommonUniqueRenderer GetTargetRender (){
+    public CommonUniqueRenderer GetTargetRender (){
         //实例化对象
         CommonUniqueRenderer renderRargetCommon = new CommonUniqueRenderer();
         //设置默认样式
