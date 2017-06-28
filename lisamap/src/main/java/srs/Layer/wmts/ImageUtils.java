@@ -12,8 +12,8 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 import android.util.LruCache;
 
-public class ImageUtils {	
-	
+public class ImageUtils {
+
 	/**当前线程中瓦片下载完成
 	 */
 	public final static int DOWNLOAD_THREAD_SUCCESS = 1;
@@ -23,36 +23,49 @@ public class ImageUtils {
 	/**当前瓦片下载失败
 	 */
 	public final static int DOWNLOAD_TILE_FAILED = 2;
-	
+
 	/**瓦片下载开启的线程数量
-	 * 
+	 *
 	 */
 	public static int DOWNLOAD_THREAD_COUNT = 10;
-	
+
 	/**缓存切片sd卡位置
-	 * 
+	 *
 	 */
 	public static String CacheDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/tiles/";
-	//获取系统分配给每个应用程序的最大内存，每个应用系统分配32M  
-	private static int  MaxCacheNum = 64/*(int)Runtime.getRuntime().maxMemory()/16*/;
+	//获取系统分配给每个应用程序的最大内存，每个应用系统分配32M
+	//  ((ActivityManager)context.getSystemService(context.ACTIVITY_SERVICE)).getMemoryClass()*1024*1024/8;
+	//	public static int MaxCacheNum ;
+
 
 	/**缓存切片内存位置
-	 * 给LruCache分配1/8 4M 
+	 * 给LruCache分配((ActivityManager)context.getSystemService(context.ACTIVITY_SERVICE)).getMemoryClass()*1024*1024/8;
 	 */
-	public static  LruCache<String,Bitmap> Caches = new LruCache<String, Bitmap>(MaxCacheNum){		 
-		/*必须重写此方法，来测量Bitmap的大小 
-		 * @see android.util.LruCache#sizeOf(java.lang.Object, java.lang.Object)
-		 */
-		@Override  
-		protected int sizeOf(String key, Bitmap value) {  
-			return value.getRowBytes() * value.getHeight();  
-		}  
-	};
+	public static  LruCache<String,Bitmap> Caches = null;
+
+	/**设置切片的内存大小
+	 * @param MaxCacheNum 最大内存数据
+	 *           ((ActivityManager)context.getSystemService(context.ACTIVITY_SERVICE)).getMemoryClass()*1024*1024/8;
+	 */
+	public static void GeneratImageCachesMemory(int MaxCacheNum){
+		if(Caches!=null||MaxCacheNum<0){
+			return;
+		}
+		Caches = new LruCache<String, Bitmap>(MaxCacheNum){
+			/*必须重写此方法，来测量Bitmap的大小
+             * @see android.util.LruCache#sizeOf(java.lang.Object, java.lang.Object)
+             */
+			@Override
+			protected int sizeOf(String key, Bitmap value) {
+				return value.getRowBytes() * value.getHeight();
+			}
+		};
+	}
 
 	/**构建缓存文件夹
-	 * 
+	 *
 	 */
-	public static void createImageSDdir(){
+	public static void CreateImageSDdir(){
 		File directory=new File(CacheDir);
 		if(!directory.exists()){
 			directory.mkdirs();
@@ -61,21 +74,21 @@ public class ImageUtils {
 
 	/**
 	 * 保存Image的方法，有sd卡存储到sd卡，没有就存储到手机目录
-	 * @param fileName 
-	 * @param bitmap   
+	 * @param fileName
+	 * @param bitmap
 	 * @throws IOException
 	 */
 	@WorkerThread
 	public static void SaveBitmap(Bitmap bitmap,String fileName) throws Exception{
-			FileOutputStream outStream = new FileOutputStream(CacheDir + File.separator + fileName);
-			bitmap.compress(CompressFormat.JPEG, 75, outStream);
-			outStream.flush();
-			outStream.close();
+		FileOutputStream outStream = new FileOutputStream(CacheDir + File.separator + fileName);
+		bitmap.compress(CompressFormat.JPEG, 75, outStream);
+		outStream.flush();
+		outStream.close();
 	}
 
 	/**判断 bitmap 是否已经下载过
 	 * @param fileName 照片名
-	 * @return 
+	 * @return
 	 */
 	public static boolean isBitmapSDCardExist(String fileName){
 		String filePath = CacheDir + File.separator + fileName;

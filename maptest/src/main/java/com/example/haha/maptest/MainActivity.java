@@ -1,5 +1,6 @@
 package com.example.haha.maptest;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +52,7 @@ import srs.Display.Symbol.SimplePointStyle;
 import srs.Display.Symbol.SimplePointSymbol;
 import srs.Geometry.IEnvelope;
 import srs.Geometry.srsGeometryType;
+import srs.Layer.wmts.ImageUtils;
 import srs.Rendering.CommonUniqueRenderer;
 import srs.tools.Event.MultipleItemChangedListener;
 import srs.tools.MapControl;
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity
         mToolbar.setTitle("MAP");
         mToolbar.setSubtitle("V.1.0.0");
         setSupportActionBar(mToolbar);
+
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -404,7 +407,7 @@ public class MainActivity extends AppCompatActivity
         MapsUtil.PATH_TCF_SHAPE = null;    //SHAPE数据路径
 
         //获取不可操作数据内容
-        MapWMTSManager.loadMap();                                        //获取WMTS数据
+        MapWMTSManager.loadMap(this,MapWMTSManager.LAYER_TDT);            //获取WMTS数据
         MapRasterManager.loadDataFromDir();                                //获取RASTER数据
         MapShapeManager.loadDataFromTCF();                                //获取SHAPE数据
 

@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity
         MapsUtil.PATH_TCF_SHAPE = null;	//SHAPE数据路径
 
         //获取不可操作数据内容
-        MapWMTSManager.loadMap();										//获取WMTS数据
+        MapWMTSManager.loadMap(this,MapWMTSManager.LAYER_TDT);			//获取WMTS数据
         MapRasterManager.loadDataFromDir();								//获取RASTER数据
         MapShapeManager.loadDataFromTCF();								//获取SHAPE数据
 
