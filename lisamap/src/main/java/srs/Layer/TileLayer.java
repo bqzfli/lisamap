@@ -498,7 +498,8 @@ public class TileLayer extends Layer implements ITileLayer {
                     G.drawBitmap(tileBmp, RectTileSize, rect, null);
                     Log.println(Log.INFO, "LEVEL-ROW-COLUMN", " URL 瓦片已经绘制完毕！" + key);
                 }
-                /*tileBmp.recycle();*/
+                ImageUtils.Caches.remove(key);
+                tileBmp.recycle();
             }else if(tileBmp==null&&rect!=null){
                 //此处无图，不做处理
                 Log.e("LEVEL-ROW-COLUMN", "!!!!!!!!!!!!\n\r此处无法获取瓦片，不做处理！\n\r!!!!!!!!!!!!"+ key);

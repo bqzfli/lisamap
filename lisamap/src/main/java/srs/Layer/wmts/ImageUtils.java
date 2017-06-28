@@ -34,7 +34,7 @@ public class ImageUtils {
 	 */
 	public static String CacheDir = Environment.getExternalStorageDirectory().getAbsolutePath()+"/tiles/";
 	//获取系统分配给每个应用程序的最大内存，每个应用系统分配32M  
-	private static int  MaxCacheNum = (int)Runtime.getRuntime().maxMemory()/8;
+	private static int  MaxCacheNum = 64/*(int)Runtime.getRuntime().maxMemory()/16*/;
 
 	/**缓存切片内存位置
 	 * 给LruCache分配1/8 4M 

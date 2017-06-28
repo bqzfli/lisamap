@@ -43,6 +43,9 @@ import com.lisa.utils.TAGUTIL;
 import java.io.IOException;
 import java.util.List;
 
+import butterknife.BindBitmap;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import srs.CoordinateSystem.ProjCSType;
 import srs.Display.Symbol.SimplePointStyle;
 import srs.Display.Symbol.SimplePointSymbol;
@@ -54,12 +57,17 @@ import srs.tools.MapControl;
 import srs.tools.ZoomInCommand;
 import srs.tools.ZoomOutCommand;
 
-import butterknife.BindView;
-import butterknife.*;
-
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,MultipleItemChangedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MultipleItemChangedListener {
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.mapview_main)
+    MapControl mMapView;
+    @BindView(R.id.nav_view)
+    NavigationView navView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
     private long exitTime = 0;
 
     @BindBitmap(R.drawable.pic_village_32_green)
@@ -70,10 +78,6 @@ public class MainActivity extends AppCompatActivity
     public Bitmap PicHouse = null;
     @BindBitmap(R.drawable.pic_person_32_blue)
     public Bitmap PicPerson = null;
-    @BindView(R.id.mapview_main)
-    public MapControl mMapView = null;
-    @BindView(R.id.toolbar)
-    public Toolbar mToolbar = null;
     private SearchView mSearchView = null;
     private SearchView.SearchAutoComplete mEdit = null;
 
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        /*Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);*/
+
         mToolbar.setTitle("MAP");
         mToolbar.setSubtitle("V.1.0.0");
         setSupportActionBar(mToolbar);
@@ -96,14 +100,12 @@ public class MainActivity extends AppCompatActivity
             }
         });*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navView.setNavigationItemSelectedListener(this);
 
        /* mMapView = (MapControl)findViewById(R.id.mapview_main);*/
         mMapView.ClearDrawTool();
@@ -144,11 +146,11 @@ public class MainActivity extends AppCompatActivity
     /**
      * 准备图片资源
      */
-    private void initResource(){
-        PicVillage = BitmapFactory.decodeResource(getResources(),R.drawable.pic_village_32_green);
-        PicPeople = BitmapFactory.decodeResource(getResources(),R.drawable.pic_people_32_green);
-        PicHouse = BitmapFactory.decodeResource(getResources(),R.drawable.pic_house_32_blue);
-        PicPerson = BitmapFactory.decodeResource(getResources(),R.drawable.pic_person_32_blue);
+    private void initResource() {
+        PicVillage = BitmapFactory.decodeResource(getResources(), R.drawable.pic_village_32_green);
+        PicPeople = BitmapFactory.decodeResource(getResources(), R.drawable.pic_people_32_green);
+        PicHouse = BitmapFactory.decodeResource(getResources(), R.drawable.pic_house_32_blue);
+        PicPerson = BitmapFactory.decodeResource(getResources(), R.drawable.pic_person_32_blue);
     }
 
 
@@ -171,12 +173,12 @@ public class MainActivity extends AppCompatActivity
         mSearchView = (SearchView) MenuItemCompat.getActionView(item);
         mSearchView.setIconifiedByDefault(false);
         mEdit = (SearchView.SearchAutoComplete) mSearchView.findViewById(R.id.search_src_text);
-        String value ="4";
+        String value = "4";
         mEdit.setText(value);
         mEdit.setSelection(value.length());
         mSearchView.setQueryHint("输入查找对象的“F_CAPTION”");
 
-        final LinearLayout search_edit_frame= (LinearLayout) mSearchView.findViewById(R.id.search_edit_frame);
+        final LinearLayout search_edit_frame = (LinearLayout) mSearchView.findViewById(R.id.search_edit_frame);
         search_edit_frame.setClickable(true);
 
         mEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -203,7 +205,7 @@ public class MainActivity extends AppCompatActivity
                     search_edit_frame.setPressed(false);
                     String value = v.getText().toString();
                     //TODO 对所有数据进行查找，通过"F_CAPTION"字段进行查找
-                    RefreshDBDataByField("F_CAPTION",value);
+                    RefreshDBDataByField("F_CAPTION", value);
                     return true;
                 }
                 return false;
@@ -231,21 +233,22 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * 通过某一字段，进行全局查找，并进行地图定位
-     * @param FieldName         过滤字段
-     * @param FeildValue       过滤值
+     *
+     * @param FieldName  过滤字段
+     * @param FeildValue 过滤值
      */
-    private void RefreshDBDataByField(String FieldName,String FeildValue){
-        Log.i("WRAP_TEST","'" + FieldName + "':'" + FeildValue + "'");
+    private void RefreshDBDataByField(String FieldName, String FeildValue) {
+        Log.i("WRAP_TEST", "'" + FieldName + "':'" + FeildValue + "'");
         String feildFilter = MapsUtil.FIELD_DB_FILTER;
         try {
             MapsUtil.FIELD_DB_FILTER = FieldName;
             refreshDBData(FeildValue);
             IEnvelope env = MapDBManager.getInstance().getEnvelope(40);
-            if(env!=null) {
+            if (env != null) {
                 MapsManager.getMap().setExtent(env);
-            }else{
-                Log.i("WrapTest","无数据");
-                Toast.makeText(this,"未找到数据！",Toast.LENGTH_SHORT).show();
+            } else {
+                Log.i("WrapTest", "无数据");
+                Toast.makeText(this, "未找到数据！", Toast.LENGTH_SHORT).show();
             }
             //清除点选记录
             mMapView.getElementContainer().ClearElement();
@@ -257,21 +260,23 @@ public class MainActivity extends AppCompatActivity
         MapsUtil.FIELD_DB_FILTER = feildFilter;
     }
 
-    /**显示某层级所有目标
+    /**
+     * 显示某层级所有目标
+     *
      * @param value 过滤层级
      */
-    private void RefreshDBDataByLevel(String value){
-        Log.i("WRAP_TEST",value);
+    private void RefreshDBDataByLevel(String value) {
+        Log.i("WRAP_TEST", value);
         String feildFilter = MapsUtil.FIELD_DB_FILTER;
         try {
             MapsUtil.FIELD_DB_FILTER = "FK_SURVEY_LEVEL";
             refreshDBData(value);
             IEnvelope env = MapDBManager.getInstance().getEnvelope(40);
-            if(env!=null) {
+            if (env != null) {
                 MapsManager.getMap().setExtent(env);
-            }else{
-                Log.i("WrapTest","无数据");
-                Toast.makeText(this,"未找到数据！",Toast.LENGTH_SHORT).show();
+            } else {
+                Log.i("WrapTest", "无数据");
+                Toast.makeText(this, "未找到数据！", Toast.LENGTH_SHORT).show();
             }
             mMapView.getElementContainer().ClearElement();
             mMapView.Refresh();
@@ -302,76 +307,76 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "点选获取位置", Toast.LENGTH_LONG).show();
             TouchForLocationActivity.MAP = MapsManager.getMap();
             TouchForLocationActivity.HEIGHTTITLE = 100;
-            Log.e("66666", String.valueOf(TouchForLocationActivity.MAP!=null));
+            Log.e("66666", String.valueOf(TouchForLocationActivity.MAP != null));
             TouchForLocationActivity.ENV = MapsManager.getMap().getExtent();
             /*Log.e("66666", String.valueOf(TouchForLocationActivity.ENV.XMax())+" "
                     +String.valueOf(TouchForLocationActivity.ENV.YMax())+" "
                     +String.valueOf(TouchForLocationActivity.ENV.XMin())+" "
                     +String.valueOf(TouchForLocationActivity.ENV.YMin())+" ");*/
-            Intent intent=new Intent(MainActivity.this,TouchForLocationActivity.class);
+            Intent intent = new Intent(MainActivity.this, TouchForLocationActivity.class);
             startActivityForResult(intent, TouchForLocationActivity.TAGCallBack);
-        } else if(id==R.id.db_all){
+        } else if (id == R.id.db_all) {
             String value = "null";
-            Log.i("WRAP_TEST",value);
+            Log.i("WRAP_TEST", value);
             RefreshDBDataByLevel(value);
-        } else if(id==R.id.village){
+        } else if (id == R.id.village) {
             String value = "4";
             RefreshDBDataByLevel(value);
-        }else if(id==R.id.people){
+        } else if (id == R.id.people) {
             String value = "5";
             RefreshDBDataByLevel(value);
-        }else if(id==R.id.person){
+        } else if (id == R.id.person) {
             String value = "6";
             RefreshDBDataByLevel(value);
-        }else if(id==R.id.house){
+        } else if (id == R.id.house) {
             String value = "7";
             RefreshDBDataByLevel(value);
-        }else if(id ==R.id.TDT){
+        } else if (id == R.id.TDT) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_TDT);
                 mMapView.Refresh();
             } catch (IOException e) {
-                Log.e(TAGUTIL.BASEMAP_WMTS,e.getMessage());
+                Log.e(TAGUTIL.BASEMAP_WMTS, e.getMessage());
                 e.printStackTrace();
             }
-        }else if(id ==R.id.ChinaOnlineCommunity){
+        } else if (id == R.id.ChinaOnlineCommunity) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_ChinaOnlineCommunity);
                 mMapView.Refresh();
             } catch (IOException e) {
-                Log.e(TAGUTIL.BASEMAP_WMTS,e.getMessage());
+                Log.e(TAGUTIL.BASEMAP_WMTS, e.getMessage());
                 e.printStackTrace();
             }
-        }else if(id ==R.id.World_Imagery){
+        } else if (id == R.id.World_Imagery) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_World_Imagery);
                 mMapView.Refresh();
             } catch (IOException e) {
-                Log.e(TAGUTIL.BASEMAP_WMTS,e.getMessage());
+                Log.e(TAGUTIL.BASEMAP_WMTS, e.getMessage());
                 e.printStackTrace();
             }
-        }else if(id ==R.id.World_Physical_Map){
+        } else if (id == R.id.World_Physical_Map) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_World_Physical_Map);
                 mMapView.Refresh();
             } catch (IOException e) {
-                Log.e(TAGUTIL.BASEMAP_WMTS,e.getMessage());
+                Log.e(TAGUTIL.BASEMAP_WMTS, e.getMessage());
                 e.printStackTrace();
             }
-        }else if(id ==R.id.World_Shaded_Relief){
+        } else if (id == R.id.World_Shaded_Relief) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_World_Shaded_Relief);
                 mMapView.Refresh();
             } catch (IOException e) {
-                Log.e(TAGUTIL.BASEMAP_WMTS,e.getMessage());
+                Log.e(TAGUTIL.BASEMAP_WMTS, e.getMessage());
                 e.printStackTrace();
             }
-        }else if(id ==R.id.World_Terrain_Base){
+        } else if (id == R.id.World_Terrain_Base) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_World_Terrain_Base);
                 mMapView.Refresh();
             } catch (IOException e) {
-                Log.e(TAGUTIL.BASEMAP_WMTS,e.getMessage());
+                Log.e(TAGUTIL.BASEMAP_WMTS, e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -382,8 +387,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /** 加载非DB表数据
+    /**
+     * 加载非DB表数据
      * 因为需要提前读取的数据量大，建议此部分增加进度条
+     *
      * @throws Exception
      */
     private void configMapData() throws Exception {
@@ -392,19 +399,19 @@ public class MainActivity extends AppCompatActivity
 
         //设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Img/WMTS";				//wmts缓存路径
-        MapsUtil.DIR_RASTER 	= dirWorkSpace + "Img";				//raster文件路径
-        MapsUtil.PATH_TCF_SHAPE = null;	//SHAPE数据路径
+        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Img/WMTS";                //wmts缓存路径
+        MapsUtil.DIR_RASTER = dirWorkSpace + "Img";                //raster文件路径
+        MapsUtil.PATH_TCF_SHAPE = null;    //SHAPE数据路径
 
         //获取不可操作数据内容
-        MapWMTSManager.loadMap();										//获取WMTS数据
-        MapRasterManager.loadDataFromDir();								//获取RASTER数据
-        MapShapeManager.loadDataFromTCF();								//获取SHAPE数据
+        MapWMTSManager.loadMap();                                        //获取WMTS数据
+        MapRasterManager.loadDataFromDir();                                //获取RASTER数据
+        MapShapeManager.loadDataFromTCF();                                //获取SHAPE数据
 
         //DB中地图数据设置
-        MapsUtil.PATH_DB_NAME 	= dirWorkSpace + "/DATA.db";	//DB数据库路径
-        MapsUtil.TABLENAME_DB 	= "VW_BIZ_SURVEY_DATA";					//调查对象表名称
-        MapsUtil.FIELDS_DB_TARGET 		=  new String[]{
+        MapsUtil.PATH_DB_NAME = dirWorkSpace + "/DATA.db";    //DB数据库路径
+        MapsUtil.TABLENAME_DB = "VW_BIZ_SURVEY_DATA";                    //调查对象表名称
+        MapsUtil.FIELDS_DB_TARGET = new String[]{
                 "PK_ID",
                 "F_PID",
                 "F_CODE",
@@ -416,22 +423,22 @@ public class MainActivity extends AppCompatActivity
                 "F_WKT",
                 "F_MIN_SCALE",
                 "F_MAX_SCALE"
-        };	//调查对象表字段
-        MapsUtil.FIELD_DB_LABEL			=  new String[]{"F_CAPTION"};		//需要显示为LABEL的字段
-        MapsUtil.FIELD_DB_EXTRACT_LATER =  new String[]{"FK_SURVEY_NAME"};		//作为唯一值、分段渲染所需要的字段，如COMPLETE等
-        MapsUtil.FEILD_DB_GEO			= "F_WKT";						//作为矢量（空间）信息的字段名
-        MapsUtil.TYPE_GEO_DB_TABLE		= srsGeometryType.Point;			//矢量的数据类型：点、线、面
-        MapsUtil.FIELD_DB_FILTER 		= "F_PID";							/*设置通过哪个字段控在数据表中过滤出需要显示的内容
-																		浙江项目建议：对应浙江项目的"PID"*/
+        };    //调查对象表字段
+        MapsUtil.FIELD_DB_LABEL = new String[]{"F_CAPTION"};        //需要显示为LABEL的字段
+        MapsUtil.FIELD_DB_EXTRACT_LATER = new String[]{"FK_SURVEY_NAME"};        //作为唯一值、分段渲染所需要的字段，如COMPLETE等
+        MapsUtil.FEILD_DB_GEO = "F_WKT";                        //作为矢量（空间）信息的字段名
+        MapsUtil.TYPE_GEO_DB_TABLE = srsGeometryType.Point;            //矢量的数据类型：点、线、面
+        MapsUtil.FIELD_DB_FILTER = "F_PID";							/*设置通过哪个字段控在数据表中过滤出需要显示的内容
+                                                                        浙江项目建议：对应浙江项目的"PID"*/
         //DB数据的渲染方式设置
         MapsUtil.RENDER_DB = GetTargetRender();
         MapDBManager.getInstance().addLayerToMap();
         MapDBManager.getInstance().setLayerConfig();
         MapDBManager.getInstance().setTouchTool(
-                mMapView,			//地图控件
-                true,					//是否为连续选择
-                false,					//是否为单选
-                this,					//选中对象后要触发的监听
+                mMapView,            //地图控件
+                true,                    //是否为连续选择
+                false,                    //是否为单选
+                this,                    //选中对象后要触发的监听
                 30.0f                      //捕捉距离
         );
 
@@ -440,14 +447,15 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * 刷新DB数据时调用
-     * @param FIELD_DB_FILTER_VALUE 		：MapsUtil.FIELD_DB_FILTER 所设置字段的筛选值
-     *                                 注意：		若需要显示全部记录，直接赋值为null
-     *                                 例如：
-     *                                      		统计   若需要显示CUNMC 为“立新村委会”的数据，则设置为“立新村委会”
-     *                                     			浙江
-     *                                      				1.每次点击列表，先提取点击记录的F_CODE值，标记为 a
-    2.将 MapsUtil.FIELD_DB_FILTER_VALUE 的值设置为   a
-    则地图上会显示所有 PID 为 a 的对象 *
+     *
+     * @param FIELD_DB_FILTER_VALUE ：MapsUtil.FIELD_DB_FILTER 所设置字段的筛选值
+     *                              注意：		若需要显示全部记录，直接赋值为null
+     *                              例如：
+     *                              统计   若需要显示CUNMC 为“立新村委会”的数据，则设置为“立新村委会”
+     *                              浙江
+     *                              1.每次点击列表，先提取点击记录的F_CODE值，标记为 a
+     *                              2.将 MapsUtil.FIELD_DB_FILTER_VALUE 的值设置为   a
+     *                              则地图上会显示所有 PID 为 a 的对象 *
      */
     private void refreshDBData(String FIELD_DB_FILTER_VALUE) throws Exception {
 		/*
@@ -461,16 +469,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-    /** 获取唯一值渲染的方法
+    /**
+     * 获取唯一值渲染的方法
+     *
      * @return
      */
-    public CommonUniqueRenderer GetTargetRender (){
+    public CommonUniqueRenderer GetTargetRender() {
         //实例化对象
         CommonUniqueRenderer renderRargetCommon = new CommonUniqueRenderer();
         //设置默认样式
-        renderRargetCommon.setDefaultSymbol(new SimplePointSymbol(Color.DKGRAY, 64, SimplePointStyle.Square	));
+        renderRargetCommon.setDefaultSymbol(new SimplePointSymbol(Color.DKGRAY, 64, SimplePointStyle.Square));
 		/*FIXME
 		针对数据，设置每种特殊颜色样式
 		若MapUtil中的样式不满足需求，可自行定义
@@ -479,24 +487,26 @@ public class MainActivity extends AppCompatActivity
                 "自然村",
                 "自然村",
                 (new SimplePointSymbol(Color.YELLOW, 8, SimplePointStyle.Square))
-                        .setPic(PicVillage,-PicVillage.getWidth()/2,-PicVillage.getHeight()/2));
+                        .setPic(PicVillage, -PicVillage.getWidth() / 2, -PicVillage.getHeight() / 2));
         renderRargetCommon.AddUniqValue(
                 "农户",
                 "农户",
-                (new SimplePointSymbol(Color.GREEN, 8, SimplePointStyle.Circle	))
-                        .setPic(PicPerson,-PicPerson.getWidth()/2,-PicPerson.getHeight()/2));
+                (new SimplePointSymbol(Color.GREEN, 8, SimplePointStyle.Circle))
+                        .setPic(PicPerson, -PicPerson.getWidth() / 2, -PicPerson.getHeight() / 2));
         renderRargetCommon.AddUniqValue(
                 "农户房屋",
                 "农户房屋",
                 (new SimplePointSymbol(Color.BLUE, 8, SimplePointStyle.Diamond))
-                        .setPic(PicHouse,-PicHouse.getWidth()/2,-PicHouse.getHeight()/2));
+                        .setPic(PicHouse, -PicHouse.getWidth() / 2, -PicHouse.getHeight() / 2));
         renderRargetCommon.AddUniqValue(
                 "村民小组",
                 "村民小组",
                 (new SimplePointSymbol(Color.BLUE, 8, SimplePointStyle.Cross))
-                        .setPic(PicPeople,-PicPeople.getWidth()/2,-PicPeople.getHeight()/2));
-        return  renderRargetCommon;
-    };
+                        .setPic(PicPeople, -PicPeople.getWidth() / 2, -PicPeople.getHeight() / 2));
+        return renderRargetCommon;
+    }
+
+    ;
 
 
     @Override
@@ -525,7 +535,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 设置GPS自动刷新
      */
-    private void setGPSConfig(){
+    private void setGPSConfig() {
         //设置GPS刷新
         TextView tv_info = new TextView(this);
         tv_info.setBackgroundColor(Color.argb(128, 0, 0, 0));
@@ -535,13 +545,13 @@ public class MainActivity extends AppCompatActivity
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         sp_params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        mMapView.addView(tv_info,sp_params1);
+        mMapView.addView(tv_info, sp_params1);
         //启动并设置GPS
         try {
             FactoryGPS factory = new FactoryGPS(tv_info, null, null, null,
                     mMapView);
             FactoryGPS.NaviStart = false;
-            factory.StartStopGPS(this,tv_info);
+            factory.StartStopGPS(this, tv_info);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -550,7 +560,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 设置缩放、当前位置剧中的按钮
      */
-    private void configMapButton(){
+    private void configMapButton() {
         int screenHight = ((WindowManager) this
                 .getSystemService(this.WINDOW_SERVICE)).getDefaultDisplay()
                 .getHeight();
@@ -585,15 +595,15 @@ public class MainActivity extends AppCompatActivity
         btnZoomin.setLayoutParams(sp_params1);
 
         sp_params2.width = screenWidth / 16;
-        sp_params2.height =  screenWidth / 16;
+        sp_params2.height = screenWidth / 16;
         sp_params2.rightMargin = 16;
         sp_params2.bottomMargin = 16;
         sp_params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         sp_params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         btnZoomout.setLayoutParams(sp_params2);
 
-        sp_params3.width =  screenWidth / 16;
-        sp_params3.height =  screenWidth / 16;
+        sp_params3.width = screenWidth / 16;
+        sp_params3.height = screenWidth / 16;
         sp_params3.leftMargin = 16;
         sp_params3.bottomMargin = 30;
         sp_params3.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -644,8 +654,8 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public boolean onTouch(View arg0, MotionEvent arg1) {
                     boolean isLocation = MapLocationManager.SetLocationCenter(mMapView);
-                    if(!isLocation){
-                        Toast.makeText(MainActivity.this,"未收到定位信号",Toast.LENGTH_SHORT).show();
+                    if (!isLocation) {
+                        Toast.makeText(MainActivity.this, "未收到定位信号", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 }
@@ -654,21 +664,23 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**处理在地图上选中目标后要做的工作
-     * @param indexs					选中对象的临时编号
+    /**
+     * 处理在地图上选中目标后要做的工作
+     *
+     * @param indexs 选中对象的临时编号
      * @throws IOException
      */
     @Override
     public void doEventSettingsChanged(List<Integer> indexs) throws IOException {
         //“F_CAPTION”字段可替换，根据需要设置
-        List<String> data =  MapDBManager.getInstance().getSelectInfoByIndex(indexs,"F_CAPTION");
+        List<String> data = MapDBManager.getInstance().getSelectInfoByIndex(indexs, "F_CAPTION");
         String strResult = "";
-        for(String result:data){
-            strResult += "\n"+result;
+        for (String result : data) {
+            strResult += "\n" + result;
         }
-        strResult=strResult.substring(1);
-        Log.i("WRAPTEST","-------"+strResult);
-        Toast.makeText(this,strResult,Toast.LENGTH_SHORT).show();
+        strResult = strResult.substring(1);
+        Log.i("WRAPTEST", "-------" + strResult);
+        Toast.makeText(this, strResult, Toast.LENGTH_SHORT).show();
         //TODO ALL YOU WANT
     }
 
@@ -677,11 +689,11 @@ public class MainActivity extends AppCompatActivity
      * 新增或拆分自然地块之后，刷新自然图斑，同时显示新增或拆分后的自然地块编号
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==TouchForLocationActivity.TAGCallBack){
-            double longitude = data.getExtras().getDouble(TouchForLocationActivity.TAGLONGITUDE,0);
-            double latitude = data.getExtras().getDouble(TouchForLocationActivity.TAGLATITUDE,0);
-            String strLocation = "经度："+longitude+";\n纬度："+latitude;
-            Toast.makeText(this,strLocation,Toast.LENGTH_LONG).show();
+        if (requestCode == TouchForLocationActivity.TAGCallBack) {
+            double longitude = data.getExtras().getDouble(TouchForLocationActivity.TAGLONGITUDE, 0);
+            double latitude = data.getExtras().getDouble(TouchForLocationActivity.TAGLATITUDE, 0);
+            String strLocation = "经度：" + longitude + ";\n纬度：" + latitude;
+            Toast.makeText(this, strLocation, Toast.LENGTH_LONG).show();
 
         }
     }
