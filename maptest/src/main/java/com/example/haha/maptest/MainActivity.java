@@ -316,7 +316,8 @@ public class MainActivity extends AppCompatActivity
                     +String.valueOf(TouchForLocationActivity.ENV.YMax())+" "
                     +String.valueOf(TouchForLocationActivity.ENV.XMin())+" "
                     +String.valueOf(TouchForLocationActivity.ENV.YMin())+" ");*/
-            Intent intent = new Intent(MainActivity.this, TouchForLocationActivity.class);
+            /*Intent intent = new Intent(MainActivity.this, TouchForLocationActivity.class);*/
+            Intent intent = new Intent("com.lisa.map.app.TouchForLocationActivity");
             startActivityForResult(intent, TouchForLocationActivity.TAGCallBack);
         } else if (id == R.id.db_all) {
             String value = "null";
