@@ -37,8 +37,9 @@ import com.lisa.datamanager.map.MapShapeManager;
 import com.lisa.datamanager.map.MapWMTSManager;
 import com.lisa.datamanager.map.MapsManager;
 import com.lisa.datamanager.map.MapsUtil;
-import com.lisa.map.app.TouchForLocationActivity;
 import com.lisa.utils.TAGUTIL;
+import com.tool.location.TouchForLocationActivity;
+import com.tool.location.UTIL;
 
 import java.io.IOException;
 import java.util.List;
@@ -315,7 +316,8 @@ public class MainActivity extends AppCompatActivity
                     +String.valueOf(TouchForLocationActivity.ENV.XMin())+" "
                     +String.valueOf(TouchForLocationActivity.ENV.YMin())+" ");*/
             /*Intent intent = new Intent(MainActivity.this, TouchForLocationActivity.class);*/
-            Intent intent = new Intent("com.lisa.map.app.TouchForLocationActivity");
+            /*Intent intent = new Intent("com.lisa.map.app.TouchForLocationActivity");*/
+            Intent intent = new Intent("TouchForLocation_APP");
             startActivityForResult(intent, TouchForLocationActivity.TAGCallBack);
         } else if (id == R.id.db_all) {
             String value = "null";
@@ -397,12 +399,12 @@ public class MainActivity extends AppCompatActivity
      */
     private void configMapData() throws Exception {
         //任务包路径
-        String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Immigrant/dibinbin/247/01013302831030101排溪自然村V6/";
+        String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Immigrant/dibinbin/247/01073302831030101排溪自然村V6/";
 
         //设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Img/WMTS";                //wmts缓存路径
-        MapsUtil.DIR_RASTER = dirWorkSpace + "Img";                //raster文件路径
+        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Map/WMTS";                //wmts缓存路径
+        MapsUtil.DIR_RASTER = dirWorkSpace + "Map/RASTER";                //raster文件路径
         MapsUtil.PATH_TCF_SHAPE = null;    //SHAPE数据路径
 
         //获取不可操作数据内容
@@ -411,7 +413,7 @@ public class MainActivity extends AppCompatActivity
         MapShapeManager.loadDataFromTCF();                                //获取SHAPE数据
 
         //DB中地图数据设置
-        MapsUtil.PATH_DB_NAME = dirWorkSpace + "/DATA.db";    //DB数据库路径
+        MapsUtil.PATH_DB_NAME = dirWorkSpace + "DATA.db";    //DB数据库路径
         MapsUtil.TABLENAME_DB = "VW_BIZ_SURVEY_DATA";                    //调查对象表名称
         MapsUtil.FIELDS_DB_TARGET = new String[]{
                 "PK_ID",
@@ -688,15 +690,16 @@ public class MainActivity extends AppCompatActivity
 
 
     /**
-     * 新增或拆分自然地块之后，刷新自然图斑，同时显示新增或拆分后的自然地块编号
+     * 选取位置点成功时，返回位置信息
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TouchForLocationActivity.TAGCallBack) {
-            double longitude = data.getExtras().getDouble(TouchForLocationActivity.TAGLONGITUDE, 0);
-            double latitude = data.getExtras().getDouble(TouchForLocationActivity.TAGLATITUDE, 0);
-            String strLocation = "经度：" + longitude + ";\n纬度：" + latitude;
+            UTIL.LONGITUDE_SELECT = data.getExtras().getDouble(TouchForLocationActivity.TAGLONGITUDE, 0);
+            UTIL.LATITUDE_SELECT = data.getExtras().getDouble(TouchForLocationActivity.TAGLATITUDE, 0);
+            String strLocation = "经度：" + UTIL.LONGITUDE_SELECT + ";\n纬度：" + UTIL.LATITUDE_SELECT;
             Toast.makeText(this, strLocation, Toast.LENGTH_LONG).show();
-
+            //TODO 想用坐标干啥，可写在下方
         }
     }
+
 }
