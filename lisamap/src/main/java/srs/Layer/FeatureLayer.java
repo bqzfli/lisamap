@@ -489,7 +489,7 @@ public class FeatureLayer extends Layer implements IFeatureLayer {
 		String fileName = super.getSource();
 
 		if (new File(fileName).exists()
-				&& fileName.substring(fileName.indexOf("") + 1).toUpperCase()
+				&& fileName.substring(fileName.indexOf(".") + 1).toUpperCase()
 				.equalsIgnoreCase("SHP")) {
 			mFeatureClass = ShapeFileClass.OpenShapeFile(fileName,handler);
 			mUseAble = true;

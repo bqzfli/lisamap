@@ -60,7 +60,7 @@ public class XmlFunction{
 		Class<?> type = Symbol.class;
 		String nameSpace = type.getPackage().getName();
 
-		Class<?> symbolType = Class.forName(nameSpace + "" + node.attributeValue("Type"));
+		Class<?> symbolType = Class.forName(nameSpace + "." + node.attributeValue("Type"));
 		if (symbolType == null){
 			throw new sRSException("Symbol设置错误！");
 		}
@@ -113,7 +113,7 @@ public class XmlFunction{
 
 		Class<?> type = Renderer.class;
 		String nameSpace = type.getPackage().getName();
-		Class<?> rendererType = Class.forName(nameSpace + "" + node.attributeValue("Type"));
+		Class<?> rendererType = Class.forName(nameSpace + "." + node.attributeValue("Type"));
 		if (rendererType == null){
 			throw new sRSException("Renderer设置错误！");
 		}

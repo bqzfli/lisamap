@@ -6,7 +6,7 @@ import srs.Rendering.*;
 
 public class XmlFunction {
 
-	/**灏哫ML鏁版嵁杞崲涓篢askLayer
+	/**����TASKLAYER�ڵ�
 	 * @param node
 	 * @return
 	 * @throws Exception
@@ -17,7 +17,7 @@ public class XmlFunction {
 
 		Class<?> type=Class.forName("com.lisa.datamanager.wrap.TaskLayer");
 		if(type==null){
-			throw new Exception("Renderer璁剧疆閿欒锛�");
+			throw new Exception("�����ļ�TaskLayer��������!");
 		}
 		String nameSapce=type.getPackage().getName();
 
@@ -27,7 +27,7 @@ public class XmlFunction {
 	}
 
 
-	/**灏哫ML鏁版嵁杞崲涓篢askLayer
+	/**��XML����ת��ΪTaskLayer
 	 * @param node
 	 * @param layer
 	 */
@@ -41,9 +41,9 @@ public class XmlFunction {
 		if (node.attributeValue("Type") == null)
 			return null;
 
-		Class<?> type = Class.forName("Rendering.Renderer");
+		Class<?> type = Class.forName("srs.Rendering.Renderer");
 		if(type==null){
-			throw new Exception("Renderer璁剧疆閿欒锛�");
+			throw new Exception("Renderer????????");
 		}
 		String name=type.getPackage().getName()+ "" +node.attributeValue("Type");
 		Class<?> rendererType=Class.forName(name); 
@@ -52,7 +52,7 @@ public class XmlFunction {
 		return renderer;
 	}
 
-	/**淇濆瓨XML鏁版嵁
+	/**����XML����
 	 * @param node
 	 * @param renderer
 	 */
@@ -63,16 +63,16 @@ public class XmlFunction {
 		}
 	}
 
-	/**缁欒妭鐐规坊鍔犲睘鎬�
-	 * @param node 闇�瑕佹坊鍔犲睘鎬х殑鑺傜偣
-	 * @param name 灞炴�у悕绉�
-	 * @param value 灞炴�у��
+	/**���ڵ������??
+	 * @param node ??Ҫ������ԵĽڵ�
+	 * @param name ��???��??
+	 * @param value ��??????
 	 */
 	public static void AppendAttribute(Element node, String name, String value){
 		node.addAttribute(name, value);
 	}
 
-	/**淇濆瓨Symbol鐨刋ML鏁版嵁
+	/**����Symbol��XML����
 	 * @param node
 	 * @param symbol
 	 */
@@ -83,7 +83,7 @@ public class XmlFunction {
 		}
 	}
 
-	/**灏哫ML鏁版嵁杞崲涓篠ymbol
+	/**��XML����ת��ΪSymbol
 	 * @param node
 	 * @return
 	 * @throws Exception 
@@ -97,7 +97,7 @@ public class XmlFunction {
 		String name=type.getPackage().getName()+ "" +node.attributeValue("Type");
 		Class<?>  symbolType=Class.forName(name);
 		if(symbolType==null){
-			throw new Exception("Symbol璁剧疆閿欒锛�");
+			throw new Exception("Symbol���ô���??");
 		}
 
 		Symbol symbol=(Symbol)symbolType.newInstance();
