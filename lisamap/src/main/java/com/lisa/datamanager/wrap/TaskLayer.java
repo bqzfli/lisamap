@@ -17,147 +17,152 @@ import srs.Utility.sRSException;
 
 public class TaskLayer/* implements IXMLPersist */{
 
-	/**閫変腑璁板綍鐨凢ID
-	 * 
+	/**选中记录的FID
+	 *
 	 */
 	public Integer SelectedFID = -1;
 
-	/**淇℃伅閲囬泦浜烘墍鍦ㄥ瓧娈�
+	/**信息采集人所在字�?
 	 * ++
 	 */
 	public String COLLECTOR = null;
 
 
-	/**add by 鏉庡繝涔�
+	/**add by 李忠义
 	 * 20150616
-	 * 鍥惧眰鏍囨敞淇℃伅
+	 * 图层标注信息
 	 */
 	public Label Label;
 
-	/**椤圭洰鏍囪瘑
+	/**项目标识
 	 * ++
 	 */
 	public String TASKNAME = null;
-	/**淇℃伅閲囬泦鎻忚堪鎵�鍦ㄥ瓧娈�
+	/**信息采集描述�?在字�?
 	 * ++
 	 */
 	public String DISFEILDS = null;
 
-	/**璁板綍鍚嶇О鎵�鍦ㄥ瓧娈�
+	/**
+	 * 图层分组信息
+	 */
+	public String Group = null;
+
+	/**记录名称�?在字�?
 	 * ++
 	 */
 	public String[] NAMEFEILDS = null;
 
-	/**璋冩煡涓氬姟鏉＄洰
-	 * 
+	/**调查业务条目
+	 *
 	 */
 	public String SURVEYITEMS = "";
 
-	/**瀛楁鈥曗�曚繚瀛樼収鐗囦俊鎭殑
-	 * 
+	/**字段―�?�保存照片信息的
+	 *
 	 */
-	public String PHOTOFEILD = ""; 
-	/**瀛楁鈥曗�曚繚瀛樺綍闊充俊鎭殑
-	 * 
+	public String PHOTOFEILD = "";
+	/**字段―�?�保存录音信息的
+	 *
 	 */
 	public String RECORDFEILD = "";
-	/**瀛楁鈥曗�曚繚瀛樺綍鍍忎俊鎭殑
-	 * 
+	/**字段―�?�保存录像信息的
+	 *
 	 */
 	public String MEDIAFEILD = "";
 
-	/**鏁版嵁鍚嶇О銆佸敮涓�鏍囩ず
+	/**数据名称、唯�?标示
 	 * ++
 	 */
 	public String Name;
 
-	/**鏁版嵁瀹屾暣鐨勮矾寰�
+	/**数据完整的路�?
 	 * ++
 	 */
 	public String FilePath;
 
-	/**鍥惧眰鐨勬渶鍒濇覆鏌撴柟寮�
+	/**图层的最初渲染方�?
 	 * ++
 	 */
 	public IRenderer LayerRendererOriginal;
 
-	/**鏌ョ湅鍏ㄩ儴浠诲姟鏃讹紝鏄惁鏄剧ず绀�
-	 * 
+	/**查看全部任务时，是否显示�?
+	 *
 	 */
-	public boolean ShowInWholeTask; 
+	public boolean ShowInWholeTask;
 
-	/**鍦ㄨ皟鏌ヤ换鍔℃椂锛屾槸鍚︽樉绀�
-	 * 
+	/**在调查任务时，是否显�?
+	 *
 	 */
 	public boolean ShowInTask;
 
-	/**鏄惁鍙紪杈�
+	/**是否可编�?
 	 * ++
 	 */
 	public boolean Editable;
 
-	/**鏄惁鍙煡璇�
+	/**是否可查�?
 	 * ++
 	 */
 	public boolean Queryable;
 
-	/**鍥惧眰绫诲瀷
+	/**图层类型
 	 * ++
 	 */
 	public String LayerType;
 
-	/**涓婚
+	/**主题
 	 * ++
 	 */
 	public String Title;
 
-	/**涓婚敭鐨勫瓧娈靛悕
+	/**主键的字段名
 	 * ++
 	 */
 	public String NameField;
 
-	/** 
-	 * 
+	/**
+	 *
 	 */
 	public String CodeField;
 
-	/**鏁版嵁鍥惧眰
-	 * 
+	/**数据图层
+	 *
 	 */
 	public ILayer Layer;
 
-	/**鍥惧眰鏄惁鍙
-	 * 
+	/**图层是否可见
+	 *
 	 */
 	public boolean Visible;
 
-	/**鏄惁鏀寔鎹曟崏
-	 * 
+	/**是否支持捕捉
+	 *
 	 */
 	public boolean CanSnap;
 
-	/**浣滀负鏍囩鐨勫瓧娈靛悕
+	/**作为标签的字段名
 	 * ++
 	 */
 	public String LabelField;
 
-	/**鏄惁鏄剧ず鏍囩
-	 * 
+	/**是否显示标签
+	 *
 	 */
 	public boolean DisplayLaybel;
 
-	/**鏈�澶х殑鍙姣斾緥灏�
+	/**�?大的可见比例�?
 	 * ++
 	 */
 	public double MaximumScale;
 
-	/**鏈�灏忕殑鍙姣斾緥灏�
+	/**�?小的可见比例�?
 	 * ++
 	 */
 	public double MinimumScale;
 
-	/**琛ㄥ紡鏂囦欢
-	 * 
+	/**表式文件
+	 *
 	 */
 	public TableStyleInfo PaperInfo;
 
@@ -167,6 +172,7 @@ public class TaskLayer/* implements IXMLPersist */{
 			return;
 
 		Name=node.attributeValue("Name");
+		Group = node.attributeValue("Group")!=null? node.attributeValue("Group"):"0";
 		FilePath=node.attributeValue("FilePath").replace("\\", "//");
 		ShowInWholeTask=Boolean.valueOf(node.attributeValue("ShowInWholeTask"));
 		//removed by lzy 20110920
@@ -198,7 +204,7 @@ public class TaskLayer/* implements IXMLPersist */{
 		MEDIAFEILD =  node.attributeValue("MEDIA")==null ? null : node.attributeValue("MEDIA");
 
 		Title=node.attributeValue("Title");
-		//娣诲姞 鏉庡繝涔� 20121206 浣跨敤姣斾緥灏烘帶鍒舵樉绀虹姸鎬�
+		//添加 李忠�? 20121206 使用比例尺控制显示状�?
 		MaximumScale=node.attributeValue("MaximumScale")==null?Double.MAX_VALUE / 10:Double.valueOf(node.attributeValue("MaximumScale"));
 		MinimumScale=node.attributeValue("MinimumScale")==null?Double.MIN_VALUE / 10:Double.valueOf(node.attributeValue("MinimumScale"));
 		//			IsEmpty=false;

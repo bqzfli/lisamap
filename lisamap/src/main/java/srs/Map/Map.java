@@ -835,7 +835,7 @@ public class Map implements IMap,
 				}
 			}else{
 				//若本图层不显示，则发送消息绘制下一图层；
-				Log.e("LEVEL-ROW-COLUMN",layer.getName()+"不显示");
+				Log.e("LEVEL-ROW-COLUMN","图层"+layer.getName()+"：不显示");
 				Message msg = new Message();
 				msg.arg1 = 6;
 				handler.sendMessage(msg);

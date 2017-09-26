@@ -16,7 +16,7 @@ public class MapShapeManager {
     /**
      * 任务包数据
      */
-     static WholeTask mTASK = null;
+     private static WholeTask mTASK = null;
 
     /**
      * 提取矢量数据
@@ -39,7 +39,7 @@ public class MapShapeManager {
         MapsUtil.LayerIDs_SHAPE.clear();
         for (int i = 0; i < count; i++) {
             ILayer layer = mTASK.GetLayer(i);
-            if (layer != null && layer.getVisible()) {
+            if (layer != null /*&& layer.getVisible()*/) {
                 MapsManager.getMap().AddLayer(layer);
                 MapsUtil.LayerIDs_SHAPE.add(addedLayerCount);
                 addedLayerCount += 1;
@@ -65,6 +65,16 @@ public class MapShapeManager {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    /**
+     * 按分组控制图层的显示状态
+     * @param mc	分组标志
+     * @param flag	是否显示。true：显示；false：隐藏
+     */
+    public static void show(String mc,boolean flag) {
+        mTASK.showLayer(mc,flag);
     }
 
 }
