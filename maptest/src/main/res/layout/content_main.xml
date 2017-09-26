@@ -17,8 +17,118 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></srs.tools.MapControl>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_switch_landtype"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onSwithLayer"
+            android:background="@drawable/corner">
+
+            <ImageView
+                android:id="@+id/iv_switch_render"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_above="@+id/textView"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pic_landtype_40_white" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:text="土地类型"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_switch_raster"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/corner"
+            android:layout_below="@+id/rl_switch_landtype"
+            android:layout_alignLeft="@+id/rl_switch_landtype"
+            android:layout_alignStart="@+id/rl_switch_landtype"
+            android:onClick="onSwithLayer"
+            android:layout_marginTop="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_above="@+id/tv2"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pic_raster_40_white" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:text="影像底图"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/rl_switch_wmts"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/corner"
+            android:layout_below="@+id/rl_switch_raster"
+            android:layout_alignLeft="@+id/rl_switch_raster"
+            android:layout_alignStart="@+id/rl_switch_raster"
+            android:onClick="onSwithLayer"
+            android:layout_marginTop="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_above="@+id/tv3"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pic_wmts_40_white" />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:text="瓦片底图"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </srs.tools.MapControl>
 
 </android.support.constraint.ConstraintLayout>

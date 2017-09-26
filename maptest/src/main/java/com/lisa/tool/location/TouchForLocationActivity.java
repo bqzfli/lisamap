@@ -1,4 +1,4 @@
-package com.tool.location;
+package com.lisa.tool.location;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,6 +24,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.Factory.FactoryGPS;
+import com.lisa.utils.UTIL;
 
 import srs.GPS.GPSControl;
 import srs.GPS.GPSConvert;

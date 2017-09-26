@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
-    <application android:allowBackup="true" android:icon="@mipmap/pic_map_64_blue"
+    <application android:allowBackup="true" android:icon="@mipmap/pic_map_48_white"
+        android:logo="@mipmap/pic_map_48_white"
         android:label="@string/app_name" android:supportsRtl="true" android:theme="@style/AppTheme"
         tools:replace="android:icon">
         <activity android:name=".MainActivity" android:label="@string/app_name"
@@ -26,7 +27,7 @@
         </activity>-->
 
         <activity
-            android:name="com.tool.location.TouchForLocationActivity"
+            android:name="com.lisa.tool.location.TouchForLocationActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="TouchForLocation_APP"/>

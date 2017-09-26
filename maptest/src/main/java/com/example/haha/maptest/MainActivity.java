@@ -1,16 +1,20 @@
 package com.example.haha.maptest;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Factory.FactoryGPS;
+import com.lisa.adapter.RenderAdapter;
+import com.lisa.bean.Bean_business_child;
 import com.lisa.datamanager.map.MapDBManager;
 import com.lisa.datamanager.map.MapLocationManager;
 import com.lisa.datamanager.map.MapRasterManager;
@@ -37,9 +44,11 @@ import com.lisa.datamanager.map.MapShapeManager;
 import com.lisa.datamanager.map.MapWMTSManager;
 import com.lisa.datamanager.map.MapsManager;
 import com.lisa.datamanager.map.MapsUtil;
+import com.lisa.manager.LayerGroup;
+import com.lisa.map.app.MapUtil;
+import com.lisa.tool.location.TouchForLocationActivity;
 import com.lisa.utils.TAGUTIL;
-import com.tool.location.TouchForLocationActivity;
-import com.tool.location.UTIL;
+import com.lisa.utils.UTIL;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,9 +67,8 @@ import srs.tools.MapControl;
 import srs.tools.ZoomInCommand;
 import srs.tools.ZoomOutCommand;
 
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MultipleItemChangedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MultipleItemChangedListener{
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.mapview_main)
@@ -82,6 +90,11 @@ public class MainActivity extends AppCompatActivity
     private SearchView mSearchView = null;
     private SearchView.SearchAutoComplete mEdit = null;
 
+    /**
+     * 土地资源信息适配器
+     */
+    RenderAdapter mAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +104,6 @@ public class MainActivity extends AppCompatActivity
         mToolbar.setTitle("MAP");
         mToolbar.setSubtitle("V.1.0.0");
         setSupportActionBar(mToolbar);
-
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -111,38 +123,93 @@ public class MainActivity extends AppCompatActivity
 
        /* mMapView = (MapControl)findViewById(R.id.mapview_main);*/
         mMapView.ClearDrawTool();
-
         /*initResource();*/
+        //设置地图基本按钮：放大、缩小、当前位置居中
+        configMapButton();
+        //设置GPS相关按钮
+        setGPSConfig();
+        //读取数据
+        readData();
+    }
 
+    /**
+     * 配置数据路径、读取数据
+     */
+    private void readData(){
+        //显示进度条
+        final ProgressDialog loadingdialog = new ProgressDialog(this);
+        loadingdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingdialog.setMessage("地图数据读取中");
+        loadingdialog.setCancelable(false);
+        loadingdialog.show();
+
+        //配置信息管理器
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch(msg.arg1){
+                    case 1:
+                        //得到消息数据读取完毕，关闭进度条
+                        loadingdialog.dismiss();
+                        //刷新地图控件
+                        mMapView.Refresh();
+                        break;
+                }
+            }
+        };
+
+        //创建基础信息配置、数据读取线程
+        Thread readData = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //读取数据
+                refreshData();
+                //数据读取完毕，发送消息
+                Message ms = new Message();
+                ms.arg1 = 1;
+                handler.sendMessage(ms);
+            }
+        });
+        //启动线程
+        readData.start();
+    }
+
+    /***
+     * 刷新地图数据及相关控件
+     */
+    private void refreshData(){
         try {
+            //清空DB数据图层管理类中的历史遗留图层
             MapDBManager.getInstance().removeLayer();
-            //清除地图资源
+            //清空地图内残留资源
             MapsManager.drumpMap();
         } catch (Exception e) {
+            Log.e("DB图层清理错误",e.getMessage());
             e.printStackTrace();
         }
+        //设置地图控件的内容“地图信息”
         mMapView.setMap(MapsManager.getMap());
+        //设置地图的投影，此处为Web墨卡托投影
         MapsManager.getMap().setGeoProjectType(ProjCSType.ProjCS_WGS1984_WEBMERCATOR);
 
+        //--------------设置地图基础数据--------------
         try {
-            //设置地图数据
             configMapData();
         } catch (Exception e) {
+            Log.e("地图数据设置错误",e.getMessage());
             e.printStackTrace();
         }
 
+        //---------------刷新DB数据----------------------
         try {
-            //刷新DB数据
             refreshDBData("-1");
             IEnvelope env = MapDBManager.getInstance().getEnvelope(20);
             MapsManager.getMap().setExtent(env);
         } catch (Exception e) {
+            Log.e("目标数据设置错误",e.getMessage());
             e.printStackTrace();
         }
-
-        //设置GPS相关
-        setGPSConfig();
-
     }
 
     /**
@@ -213,7 +280,6 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-
 
         return true;
     }
@@ -394,7 +460,6 @@ public class MainActivity extends AppCompatActivity
     /**
      * 加载非DB表数据
      * 因为需要提前读取的数据量大，建议此部分增加进度条
-     *
      * @throws Exception
      */
     private void configMapData() throws Exception {
@@ -403,9 +468,9 @@ public class MainActivity extends AppCompatActivity
 
         //设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Map/WMTS";                //wmts缓存路径
-        MapsUtil.DIR_RASTER = dirWorkSpace + "Map/RASTER";                //raster文件路径
-        MapsUtil.PATH_TCF_SHAPE = null;    //SHAPE数据路径
+        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Map/WMTS";                //WMTS缓存路径
+        MapsUtil.DIR_RASTER = dirWorkSpace + "Map/RASTER";                //RASTER文件路径
+        MapsUtil.PATH_TCF_SHAPE = dirWorkSpace + "Map/VECTOR/RENDER.tcf";   //SHAPE数据路径
 
         //获取不可操作数据内容
         MapWMTSManager.loadMap(this,MapWMTSManager.LAYER_TDT);            //获取WMTS数据
@@ -445,13 +510,11 @@ public class MainActivity extends AppCompatActivity
                 this,                    //选中对象后要触发的监听
                 30.0f                      //捕捉距离
         );
-
     }
 
 
     /**
      * 刷新DB数据时调用
-     *
      * @param FIELD_DB_FILTER_VALUE ：MapsUtil.FIELD_DB_FILTER 所设置字段的筛选值
      *                              注意：		若需要显示全部记录，直接赋值为null
      *                              例如：
@@ -510,15 +573,18 @@ public class MainActivity extends AppCompatActivity
         return renderRargetCommon;
     }
 
-    ;
-
 
     @Override
     protected void onResume() {
         super.onResume();
-        configMapButton();
     }
 
+    /***
+     * 系统按键
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK
@@ -693,13 +759,104 @@ public class MainActivity extends AppCompatActivity
      * 选取位置点成功时，返回位置信息
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == com.tool.location.TouchForLocationActivity.TAGCallBack) {
-            UTIL.LONGITUDE_SELECT = data.getExtras().getDouble(com.tool.location.TouchForLocationActivity.TAGLONGITUDE, 0);
-            UTIL.LATITUDE_SELECT = data.getExtras().getDouble(com.tool.location.TouchForLocationActivity.TAGLATITUDE, 0);
+        if (requestCode == TouchForLocationActivity.TAGCallBack) {
+            UTIL.LONGITUDE_SELECT = data.getExtras().getDouble(TouchForLocationActivity.TAGLONGITUDE, 0);
+            UTIL.LATITUDE_SELECT = data.getExtras().getDouble(TouchForLocationActivity.TAGLATITUDE, 0);
             String strLocation = "经度：" + UTIL.LONGITUDE_SELECT + ";\n纬度：" + UTIL.LATITUDE_SELECT;
             Toast.makeText(this, strLocation, Toast.LENGTH_LONG).show();
-
         }
     }
 
+    /**
+     * 控制WMTS瓦片底图的显示状态
+     */
+    private void switchShowWMTS(){
+        //更改WMTS影像显示状态的标记；
+        MapsUtil.VISIBLE_WMTS = !MapsUtil.VISIBLE_WMTS;
+        //通过WMTS的显示状态标记来WMTS图层的显示状态；
+        MapWMTSManager.showAll(MapsUtil.VISIBLE_WMTS);
+        //刷新地图
+        mMapView.Refresh();
+    }
+
+    /**
+     * 控制tif地图的显示状态
+     * 说明：仅仅控制tif文件的显示情况，并不对map进行图层的删除或添加操作
+     */
+    private void switchShowRASTER(){
+        //更改Tiff影像显示状态的标记；
+        MapsUtil.VISIBLE_RASTER = !MapsUtil.VISIBLE_RASTER;
+        //设置所有Tiff影像显示状态；
+        MapRasterManager.showAll(MapsUtil.VISIBLE_RASTER);
+        //刷新地图
+        mMapView.Refresh();
+    }
+
+    /**
+     * 创建图层选择清单
+     */
+    private void initLandtypeMenu(){
+        //设置弹窗样式创建弹窗
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = View.inflate(this, R.layout.layout_dialog_render, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        //关闭按钮
+        TextView tv_close = (TextView) view.findViewById(R.id.tv_shutdown_close);
+        //保存设置按钮
+        TextView tv_save_ldnt = (TextView) view.findViewById(R.id.tv_save_ldnt);
+        //弹窗标题
+        TextView tv_title_business_dialog = (TextView) view.findViewById(R.id.tv_title_business_dialog);
+        tv_title_business_dialog.setText("图层显示");
+        //图层列表
+        final ExpandableListView main_expandablelistview = (ExpandableListView) view.findViewById(R.id.main_expandablelistview);
+        //通过“管理图层分组的信息的模型”获取土地信息的分组列表，更新适配器
+        mAdapter = new RenderAdapter(LayerGroup.GetRenderList(), this);
+        //更新适配器内容
+        main_expandablelistview.setAdapter(mAdapter);
+        tv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        tv_save_ldnt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Bean_business_child> resultList = mAdapter.getResult();
+                if (resultList.size() > 0) {
+                    for (Bean_business_child child : resultList) {
+                        MapShapeManager.show(child.getBM(), child.isRenderShow());
+                    }
+                    //刷新地图控件的显示
+                    mMapView.Refresh();
+                }
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    /**
+     * 图层管理的相关点击事件
+     * @param v
+     */
+    public void onSwithLayer(View v) {
+        switch (v.getId()){
+            case R.id.rl_switch_landtype:
+                initLandtypeMenu();
+                break;
+
+            case R.id.rl_switch_raster:
+                switchShowRASTER();
+                break;
+
+            case R.id.rl_switch_wmts:
+                switchShowWMTS();
+                break;
+        }
+        return;
+    }
 }
