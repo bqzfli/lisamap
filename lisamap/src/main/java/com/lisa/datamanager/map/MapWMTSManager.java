@@ -11,6 +11,8 @@ import srs.Layer.ILayer;
 import srs.Layer.ITileLayer;
 import srs.Layer.TileLayer;
 import srs.Layer.wmts.ImageUtils;
+import srs.Utility.UTILTAG;
+import srs.Utility.sRSException;
 
 /**
  * Created by lisa on 2016/12/15.
@@ -61,6 +63,24 @@ public class MapWMTSManager {
         LAYER_World_Imagery = TDTLayerFactory.World_ImageryLayer();
         LAYER_World_Shaded_Relief = TDTLayerFactory.World_Shaded_Relief_Layer();
         LAYER_World_Terrain_Base = TDTLayerFactory.World_Terrain_BaseLayer();
+    }
+
+    /**
+     * 设置全部wmts底图的显示情况
+     * 说明：只是控制是否显示，并不会删除图层
+     *
+     * @param isShow  是否显示： true：全部显示；false：全部隐藏
+     */
+    public static void showAll(boolean isShow) {
+        if (MapsUtil.LayerID_WMTS != -1) {
+            try {
+                ILayer layer = MapsManager.getMap().GetLayer(MapsUtil.LayerID_WMTS);
+                layer.setVisible(isShow);
+            } catch (sRSException e) {
+                Log.e(UTILTAG.TAGRASTER, "tiff影像：" + MapsUtil.LayerID_WMTS + ",设置显示出现问题；\n" + e.toString());
+                e.printStackTrace();
+            }
+        }
     }
 
     /** 替换WMTS底图

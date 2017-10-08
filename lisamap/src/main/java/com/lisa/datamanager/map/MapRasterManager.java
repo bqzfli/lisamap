@@ -1,5 +1,7 @@
 package com.lisa.datamanager.map;
 
+import android.util.Log;
+
 import com.lisa.datamanager.wrap.WholeTask;
 
 import org.dom4j.DocumentException;
@@ -10,6 +12,8 @@ import java.io.IOException;
 import srs.Layer.ILayer;
 import srs.Layer.IRasterLayer;
 import srs.Layer.RasterLayer;
+import srs.Utility.UTILTAG;
+import srs.Utility.sRSException;
 
 /**
  * Created by lisa on 2016/12/15.
@@ -72,6 +76,26 @@ public class MapRasterManager {
                 mTASK.LoadFromFile(taskPath);
             } catch (DocumentException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 设置全部底图影像的显示情况
+     * 说明：只是控制是否显示，并不会删除图层
+     *
+     * @param isShow  是否显示： true：全部显示；false：全部隐藏
+     */
+    public static void showAll(boolean isShow){
+        if(MapsUtil.LayerIDs_RASTER!=null&&MapsUtil.LayerIDs_RASTER.size()>0){
+            for(Integer id:MapsUtil.LayerIDs_RASTER){
+                try {
+                    ILayer layer =  MapsManager.getMap().GetLayer(id);
+                    layer.setVisible(isShow);
+                } catch (sRSException e) {
+                    Log.e(UTILTAG.TAGRASTER,"tiff影像："+id.toString()+",设置显示出现问题；\n"+e.toString());
+                    e.printStackTrace();
+                }
             }
         }
     }

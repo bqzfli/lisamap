@@ -228,5 +228,13 @@ public class MapsUtil {
             SimpleLineStyle.Solid), SimpleFillStyle.Soild, Color.argb(0,
             0,255,0));
 
-
+    /*********************  图层的显示 *****************************************/
+    /***
+     * Tiff影像是否在显示状态
+     */
+    public static boolean VISIBLE_RASTER = true;
+    /**
+     * WMTS瓦片是否在显示状态
+     */
+    public static boolean VISIBLE_WMTS = true;
 }
