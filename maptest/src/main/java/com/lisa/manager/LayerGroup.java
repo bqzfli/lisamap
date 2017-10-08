@@ -77,11 +77,11 @@ public class LayerGroup {
         //高程数据分组
         group2.setMC("高程");
         child2.setMC("等高线");
-        child2.setRenderShow(true);
+        child2.setRenderShow(false);
         child2.setBM("2");
         childList2.add(child2);
         child3.setMC("高程点");
-        child3.setRenderShow(true);
+        child3.setRenderShow(false);
         child3.setBM("3");
         childList2.add(child3);
         group2.setSon(childList2);
