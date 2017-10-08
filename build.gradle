@@ -2,10 +2,21 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
+        /*  flatDir{
+            dirs 'libs'
+        }*/
     }
     dependencies {
+        // replace with the current version of the Android plugin
         classpath 'com.android.tools.build:gradle:2.3.3'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+
+        // the latest version of the android-apt plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        //butterknife的新版插件必须在此处作配置
+//        classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
     }
 }
 
@@ -18,5 +29,6 @@ repositories{
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
     }
 }
