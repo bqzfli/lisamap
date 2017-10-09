@@ -655,25 +655,27 @@ public class MainActivity extends AppCompatActivity
         ivLocationCenter
                 .setBackgroundResource(com.lisa.map.app.R.drawable.duidi_bt_clickerstyle2);
 
-        sp_params1.width = screenWidth / 16;
-        sp_params1.height = screenWidth / 16;
-        sp_params1.bottomMargin = screenWidth / 11 + 32;
+        int buttonWidth = screenWidth<screenHight?screenWidth/16:screenHight/16;
+
+        sp_params1.width = buttonWidth;
+        sp_params1.height = buttonWidth;
+        sp_params1.bottomMargin = buttonWidth + 32;
         sp_params1.rightMargin = 16;
         sp_params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         sp_params1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
         btnZoomin.setLayoutParams(sp_params1);
 
-        sp_params2.width = screenWidth / 16;
-        sp_params2.height = screenWidth / 16;
+        sp_params2.width = buttonWidth;
+        sp_params2.height = buttonWidth;
         sp_params2.rightMargin = 16;
         sp_params2.bottomMargin = 16;
         sp_params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         sp_params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         btnZoomout.setLayoutParams(sp_params2);
 
-        sp_params3.width = screenWidth / 16;
-        sp_params3.height = screenWidth / 16;
+        sp_params3.width = buttonWidth;
+        sp_params3.height = buttonWidth;
         sp_params3.leftMargin = 16;
         sp_params3.bottomMargin = 30;
         sp_params3.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -796,6 +798,10 @@ public class MainActivity extends AppCompatActivity
      * 创建图层选择清单
      */
     private void initLandtypeMenu(){
+        if(!MapShapeManager.hasTask()){
+            Toast.makeText(this,"没有参考图层数据！",Toast.LENGTH_LONG).show();
+            return;
+        }
         //设置弹窗样式创建弹窗
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = View.inflate(this, R.layout.layout_dialog_render, null);
