@@ -40,7 +40,8 @@ public class MapRasterManager {
         int addedLayerCount = MapsManager.getMap().getLayerCount();
         //添加TIF数据
         File basicLayerDir = new File(MapsUtil.DIR_RASTER);
-        if(basicLayerDir.isDirectory()&&basicLayerDir.list().length>0){
+        //若路径存在、是文件夹、并且子文件不为0，则读取其中的底图数据添加至地图中
+        if(basicLayerDir!=null&&basicLayerDir.isDirectory()&&basicLayerDir.list().length>0){
             File[] files = basicLayerDir.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if(files[i].isFile()&&files[i].getName().endsWith(".tif")){
