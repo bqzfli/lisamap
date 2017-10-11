@@ -18,7 +18,6 @@ public class MapShapeManager {
      */
      private static WholeTask mTASK = null;
 
-
     /**
      * 矢量数据是否存在
      * @return
@@ -29,7 +28,6 @@ public class MapShapeManager {
         }
         return false;
     }
-
 
     /**
      * 提取矢量数据
