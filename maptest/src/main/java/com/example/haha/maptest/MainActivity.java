@@ -786,6 +786,10 @@ public class MainActivity extends AppCompatActivity
      * 说明：仅仅控制tif文件的显示情况，并不对map进行图层的删除或添加操作
      */
     private void switchShowRASTER(){
+        if(!MapRasterManager.hasTask()){
+            Toast.makeText(this,"没有底图影像数据！",Toast.LENGTH_LONG).show();
+            return;
+        }
         //更改Tiff影像显示状态的标记；
         MapsUtil.VISIBLE_RASTER = !MapsUtil.VISIBLE_RASTER;
         //设置所有Tiff影像显示状态；

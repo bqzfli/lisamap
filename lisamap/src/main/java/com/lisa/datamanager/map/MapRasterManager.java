@@ -25,6 +25,17 @@ public class MapRasterManager {
     public static WholeTask mTASK = null;
 
     /**
+     * 离线影像数据是否存在
+     * @return
+     */
+    public static boolean hasTask(){
+        if(MapsUtil.LayerIDs_RASTER!=null&&MapsUtil.LayerIDs_RASTER.size()>0){
+            return  true;
+        }
+        return false;
+    }
+
+    /**
      * 从文件夹加载tif数据
      *
      * @throws Exception
