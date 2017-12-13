@@ -10,6 +10,8 @@ import java.io.IOException;
 import srs.Layer.ILayer;
 import srs.Layer.IRasterLayer;
 import srs.Layer.RasterLayer;
+import srs.Utility.UTILTAG;
+import srs.Utility.sRSException;
 
 /**
  * Created by lisa on 2016/12/15.
@@ -19,6 +21,17 @@ public class MapRasterManager {
      * 任务包数据
      */
     public static WholeTask mTASK = null;
+
+    /**
+     * 离线影像数据是否存在
+     * @return
+     */
+    public static boolean hasTask(){
+        if(MapsUtil.LayerIDs_RASTER!=null&&MapsUtil.LayerIDs_RASTER.size()>0){
+            return  true;
+        }
+        return false;
+    }
 
     /**
      * 从文件夹加载tif数据
@@ -36,8 +49,8 @@ public class MapRasterManager {
         int addedLayerCount = MapsManager.getMap().getLayerCount();
         //添加TIF数据
         File basicLayerDir = new File(MapsUtil.DIR_RASTER);
-        if(basicLayerDir.isDirectory()
-                &&basicLayerDir.list().length>0){
+        //若路径存在、是文件夹、并且子文件不为0，则读取其中的底图数据添加至地图中
+        if(basicLayerDir!=null&&basicLayerDir.isDirectory()&&basicLayerDir.list().length>0){
             File[] files = basicLayerDir.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if(files[i].isFile()&&files[i].getName().endsWith(".tif")){
@@ -73,6 +86,26 @@ public class MapRasterManager {
                 mTASK.LoadFromFile(taskPath);
             } catch (DocumentException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 设置全部底图影像的显示情况
+     * 说明：只是控制是否显示，并不会删除图层
+     *
+     * @param isShow  是否显示： true：全部显示；false：全部隐藏
+     */
+    public static void showAll(boolean isShow){
+        if(MapsUtil.LayerIDs_RASTER!=null&&MapsUtil.LayerIDs_RASTER.size()>0){
+            for(Integer id:MapsUtil.LayerIDs_RASTER){
+                try {
+                    ILayer layer =  MapsManager.getMap().GetLayer(id);
+                    layer.setVisible(isShow);
+                } catch (sRSException e) {
+                    Log.e(UTILTAG.TAGRASTER,"tiff影像："+id.toString()+",设置显示出现问题；\n"+e.toString());
+                    e.printStackTrace();
+                }
             }
         }
     }

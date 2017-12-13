@@ -2,8 +2,6 @@ package srs.tools.Location;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -12,32 +10,18 @@ import android.view.View;
 import com.lisa.map.app.R;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import srs.DataSource.Vector.SearchType;
 import srs.Display.IScreenDisplay;
-import srs.Element.FillElement;
-import srs.Element.IElement;
-import srs.Element.IFillElement;
 import srs.Element.IPicElement;
 import srs.Element.PicElement;
 import srs.GPS.GPSConvert;
-import srs.Geometry.IGeometry;
 import srs.Geometry.IPoint;
-import srs.Geometry.IPolygon;
 import srs.Geometry.Point;
-import srs.Geometry.srsGeometryType;
-import srs.Layer.IDBLayer;
-import srs.Layer.wmts.LOD;
 import srs.Map.IMap;
 import srs.Utility.UTILTAG;
-import srs.method.DouglasAlgorithm;
 import srs.tools.BaseControl;
 import srs.tools.BaseTool;
-import srs.tools.Event.MultipleItemChangedListener;
 import srs.tools.Location.Event.SelectedLocationListener;
-import srs.tools.MapControl;
 
 /**
  * @ClassName: TouchForLocation
@@ -198,7 +182,7 @@ public class TouchForLocation extends BaseTool {
                             /*opt.inPurgeable = true;
                             opt.inSampleSize = 2;*/
                             Bitmap bit = BitmapFactory.decodeResource(
-                                    mBuddyControl.getContext().getResources(),R.drawable.pic_touch_location_48_yellow,opt);
+                                    mBuddyControl.getContext().getResources(), R.drawable.pic_touch_location_48_yellow,opt);
                             PicElment = new PicElement();
                             PicElment.setGeometry(selGeo);
                             PicElment.setPic(bit,

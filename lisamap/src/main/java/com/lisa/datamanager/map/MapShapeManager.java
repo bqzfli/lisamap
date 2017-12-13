@@ -16,7 +16,18 @@ public class MapShapeManager {
     /**
      * 任务包数据
      */
-     static WholeTask mTASK = null;
+     private static WholeTask mTASK = null;
+
+    /**
+     * 矢量数据是否存在
+     * @return
+     */
+    public static boolean hasTask(){
+        if(mTASK!=null){
+            return  true;
+        }
+        return false;
+    }
 
     /**
      * 提取矢量数据
@@ -39,7 +50,7 @@ public class MapShapeManager {
         MapsUtil.LayerIDs_SHAPE.clear();
         for (int i = 0; i < count; i++) {
             ILayer layer = mTASK.GetLayer(i);
-            if (layer != null && layer.getVisible()) {
+            if (layer != null /*&& layer.getVisible()*/) {
                 MapsManager.getMap().AddLayer(layer);
                 MapsUtil.LayerIDs_SHAPE.add(addedLayerCount);
                 addedLayerCount += 1;
@@ -56,7 +67,7 @@ public class MapShapeManager {
     public static void loadTCF(String taskPath) throws Exception {
         File file = new File(taskPath);
         if (file.exists()
-                && taskPath.substring(taskPath.indexOf(".")).equalsIgnoreCase(
+                && taskPath.substring(taskPath.indexOf("")).equalsIgnoreCase(
                 ".TCF")) {
             mTASK = new WholeTask();
             try {
@@ -65,6 +76,16 @@ public class MapShapeManager {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    /**
+     * 按分组控制图层的显示状态
+     * @param mc	分组标志
+     * @param flag	是否显示。true：显示；false：隐藏
+     */
+    public static void show(String mc,boolean flag) {
+        mTASK.showLayer(mc,flag);
     }
 
 }

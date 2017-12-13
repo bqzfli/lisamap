@@ -20,6 +20,7 @@ public class UTILTAG {
 
     public static final String TAGGEOINDEX = "GEOINDEX"; // 空间索引操作
     public static final String TAGDB = "DB"; // DB操作
+    public static final String TAGRASTER = "RASTER"; // TIFF影像操作
     public static final String SETTING_BASE = "SETTING_BASE" ; //搴曞浘璁剧疆鐩稿叧
     public static final String TAGTOUCHFORLOCATION = "TOUCH_FOR_LOCATION"; // 点击获取位置操作
 }

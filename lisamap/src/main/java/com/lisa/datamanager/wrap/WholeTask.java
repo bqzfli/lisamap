@@ -31,7 +31,7 @@ import android.graphics.Typeface;
 
 
 /**
- * 绠＄悊鍗曚釜宸ョ▼鐨勭被
+ * 管理单个工程的类
  * 
  * @author lzy
  *
@@ -41,53 +41,53 @@ public class WholeTask implements IXMLPersist {
 	public String FilePath;
 
 	/**
-	 * 宸ョ▼鍚嶇О
+	 * 工程名称
 	 * 
 	 */
 	public String Title;
 
 	/**
-	 * 涓婚
+	 * 主题
 	 * 
 	 */
 	public String Theme = "";
 	/**
-	 * 鐪�
+	 * �?
 	 * 
 	 */
 	public String Province = "";
 	/**
-	 * 甯�
+	 * �?
 	 * 
 	 */
 	public String City = "";
 	/**
-	 * 鍘�
+	 * �?
 	 * 
 	 */
 	public String County = "";
 
 	/**
-	 * 宸ョ▼鎻忚堪
+	 * 工程描述
 	 * 
 	 */
 	public String Description;
 
 	/**
-	 * 鎵�鏈夌殑鍥惧眰
+	 * �?有的图层
 	 * 
 	 */
 	private List<TaskLayer> pLayers;
 	// private List<Task> pTasks;
 
 	/**
-	 * 褰撳墠姝ｅ湪缂栬緫鐨勫浘灞�
+	 * 当前正在编辑的图�?
 	 * 
 	 */
 	private TaskLayer mActiveTask = null;
 
 	/**
-	 * 褰撳墠缂栬緫鍥惧眰鍚�
+	 * 当前编辑图层�?
 	 * 
 	 * @return
 	 */
@@ -100,13 +100,13 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鏍规嵁鐢ㄦ埛鍚嶈缃綋鍓嶇紪杈戝浘灞�
+	 * 根据用户名设置当前编辑图�?
 	 * 
 	 * @param name
 	 * @return
 	 */
 	public ILayer SetActiveTaskLayer(String name) {
-		// 鎭㈠涓婁竴娆¤缃殑鎿嶄綔鍥惧眰鐨勬覆鏌撴柟寮�
+		// 恢复上一次设置的操作图层的渲染方�?
 		if (this.mActiveTask != null
 				&& this.mActiveTask.Layer instanceof IFeatureLayer) {
 			try {
@@ -120,7 +120,7 @@ public class WholeTask implements IXMLPersist {
 		this.mActiveTask = GetTaskLayer(name);
 		if (mActiveTask != null) {
 			try {
-				// 璁剧疆鏈閫夋嫨鐨勫綋鍓嶆搷浣滃浘灞傜殑娓叉煋鏂瑰紡
+				// 设置本次选择的当前操作图层的渲染方式
 				ILayer layer = GetLayer(mActiveTask);
 				if (layer instanceof IFeatureLayer) {
 					IFeatureLayer featurelayer = (IFeatureLayer) layer;
@@ -146,7 +146,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇褰撳墠姝ｅ湪缂栬緫鐨勬縺娲诲浘灞�
+	 * 获取当前正在编辑的激活图�?
 	 * 
 	 * @return
 	 * @throws Exception
@@ -156,7 +156,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇琚�変腑鐨勫浘灞備腑閫変腑鏉＄洰鐨凢ID
+	 * 获取被�?�中的图层中选中条目的FID
 	 * 
 	 * @return
 	 */
@@ -165,7 +165,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 璁剧疆琚�変腑鐨勫浘灞備腑閫変腑鏉＄洰鐨凢ID
+	 * 设置被�?�中的图层中选中条目的FID
 	 * 
 	 * @param value
 	 */
@@ -174,7 +174,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇褰撳墠姝ｅ湪缂栬緫鐨勬縺娲诲浘灞傜殑鍚嶇О鎵�鍦ㄥ瓧娈靛悕
+	 * 获取当前正在编辑的激活图层的名称�?在字段名
 	 * 
 	 * @return
 	 * @throws Exception
@@ -184,7 +184,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇褰撳墠姝ｅ湪缂栬緫鐨勬縺娲诲浘灞傜殑鎻忚堪淇℃伅鎵�鍦ㄥ瓧娈靛悕
+	 * 获取当前正在编辑的激活图层的描述信息�?在字段名
 	 * 
 	 * @return
 	 * @throws Exception
@@ -194,7 +194,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 璋冩煡鍐呭鏉＄洰
+	 * 调查内容条目
 	 * 
 	 * @return
 	 * @throws Exception
@@ -204,7 +204,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鐓х墖瀛楁
+	 * 照片字段
 	 * 
 	 * @return
 	 * @throws Exception
@@ -214,7 +214,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 褰曢煶瀛楁
+	 * 录音字段
 	 * 
 	 * @return
 	 * @throws Exception
@@ -224,7 +224,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 澶氬獟浣撳瓧娈�
+	 * 多媒体字�?
 	 * 
 	 * @return
 	 * @throws Exception
@@ -234,7 +234,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇褰撳墠姝ｅ湪缂栬緫鐨勬縺娲诲浘灞傜殑璋冩煡浜烘墍鍦ㄥ瓧娈靛悕
+	 * 获取当前正在编辑的激活图层的调查人所在字段名
 	 * 
 	 * @return
 	 * @throws Exception
@@ -244,7 +244,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇褰撳墠鍙敤鐨勮〃寮忔枃浠躲��
+	 * 获取当前可用的表式文件�??
 	 * 
 	 * @return
 	 */
@@ -256,7 +256,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 琚�変腑鐨勫浘灞傦紝鍗冲綋鍓嶆鍦ㄧ紪杈戠殑鍥惧眰
+	 * 被�?�中的图层，即当前正在编辑的图层
 	 * 
 	 */
 	private int pSelectedTaskID;
@@ -269,7 +269,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 杩斿洖鍥惧眰鐨勪釜鏁�
+	 * 返回图层的个�?
 	 * 
 	 * @return
 	 */
@@ -278,7 +278,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇鑾峰彇琚�変腑鐨勫浘灞傜殑椤哄簭鍙�
+	 * 获取获取被�?�中的图层的顺序�?
 	 * 
 	 * @return
 	 */
@@ -287,7 +287,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 璁剧疆琚�変腑鐨勫浘灞傜殑椤哄簭鍙�
+	 * 设置被�?�中的图层的顺序�?
 	 * 
 	 * @param value
 	 * @throws Exception
@@ -303,7 +303,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 杩斿洖鎵�鏈夊浘灞傜殑 鍥惧眰鐨勫垪琛ㄤ俊鎭�
+	 * 返回�?有图层的 图层的列表信�?
 	 * 
 	 * @return
 	 */
@@ -372,7 +372,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 杩斿洖鎵�鏈夊浘灞傜殑 鍥惧眰鐨勫垪琛ㄤ俊鎭�
+	 * 返回�?有图层的 图层的列表信�?
 	 * 
 	 * @return
 	 */
@@ -443,7 +443,7 @@ public class WholeTask implements IXMLPersist {
 	 */
 
 	/**
-	 * 鑾峰彇缁欏畾TaskLayer鐨勬暟鎹�
+	 * 获取给定TaskLayer的数�?
 	 * 
 	 * @param layer
 	 * @return
@@ -465,12 +465,12 @@ public class WholeTask implements IXMLPersist {
 			fLayer.setRenderer(layer.LayerRendererOriginal/*.Clone()*/);
 			fLayer.setName(layer.Name);
 			fLayer.setVisible(layer.Visible);
-			// 娣诲姞 鏉庡繝涔� 20121206 浣跨敤姣斾緥灏烘帶鍒舵樉绀虹姸鎬�
+			// 添加 李忠�? 20121206 使用比例尺控制显示状�?
 			fLayer.setMaximumScale(layer.MaximumScale);
 			fLayer.setMinimumScale(layer.MinimumScale);
 
 			layer.Layer = fLayer;
-			/*removed by 鏉庡繝涔�
+			/*removed by 李忠�?
 			 * 20150616
 			if (layer.DisplayLaybel) {
 				fLayer.getLabel().FieldID(
@@ -483,11 +483,11 @@ public class WholeTask implements IXMLPersist {
 				fLayer.getLabel()
 						.getSymbol()
 						.setFont(
-								android.graphics.Typeface.create("瀹嬩綋",
+								android.graphics.Typeface.create("宋体",
 										Typeface.NORMAL));
 				fLayer.setDisplayLabel(true);				
 			}*/
-			//add by 鏉庡繝涔�
+			//add by 李忠�?
 			//20150616
 			if (layer.DisplayLaybel&&layer.Label!=null){
 				fLayer.setDisplayLabel(layer.DisplayLaybel);
@@ -506,7 +506,7 @@ public class WholeTask implements IXMLPersist {
 			IRasterLayer rLayer = new RasterLayer(fileName);
 			rLayer.setName(layer.Name);
 			rLayer.setVisible(layer.Visible);
-			// 娣诲姞 鏉庡繝涔� 20121206 浣跨敤姣斾緥灏烘帶鍒舵樉绀虹姸鎬�
+			// 添加 李忠�? 20121206 使用比例尺控制显示状�?
 			rLayer.setMaximumScale(layer.MaximumScale);
 			rLayer.setMinimumScale(layer.MinimumScale);
 
@@ -517,7 +517,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇鍥惧眰鏄剧ず鐘舵��
+	 * 获取图层显示状�??
 	 * 
 	 * @param name
 	 * @return
@@ -532,7 +532,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鎺у埗鍥惧眰鏄剧ず
+	 * 控制图层显示
 	 * 
 	 * @param isShow
 	 */
@@ -545,10 +545,10 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇鎸囧畾鍚嶇О鐨凾askLayer鐨勬暟鎹�
+	 * 获取指定名称的TaskLayer的数�?
 	 * 
 	 * @param name
-	 *            鎸囧畾鐨凾askLayer鐨勫悕绉�
+	 *            指定的TaskLayer的名�?
 	 * @return
 	 */
 	public ILayer GetLayer(String name) {
@@ -565,7 +565,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 閫氳繃ID鑾峰彇鎸囧畾鐨凾askLayer
+	 * 通过ID获取指定的TaskLayer
 	 * 
 	 * @param id
 	 * @return
@@ -579,7 +579,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鑾峰彇鎸囧畾鍥惧眰鐨勫瓧娈靛悕
+	 * 获取指定图层的字段名
 	 * 
 	 * @param layer
 	 * @return
@@ -610,7 +610,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 閫氳繃鍚嶇О鑾峰彇鎸囧畾鐨凾askLayer
+	 * 通过名称获取指定的TaskLayer
 	 * 
 	 * @param name
 	 * @return
@@ -627,10 +627,10 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 閫氳繃椤哄簭鍙疯幏鍙栨寚瀹氱殑TaskLayer鐨勬暟鎹�
+	 * 通过顺序号获取指定的TaskLayer的数�?
 	 * 
 	 * @param i
-	 *            鎸囧畾鐨勯『搴忓彿
+	 *            指定的顺序号
 	 * @return
 	 */
 	public ILayer GetLayer(int i) {
@@ -647,7 +647,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 鍒犻櫎鎸囧畾鍚嶇О鐨� taskLayer 20130705 by gxh
+	 * 删除指定名称�? taskLayer 20130705 by gxh
 	 * 
 	 * @param name
 	 */
@@ -663,7 +663,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 娓呮宸ョ▼涓殑鎵�鏈塗askLayer
+	 * 清楚工程中的�?有TaskLayer
 	 * 
 	 */
 	public void DisposeLayer() {
@@ -675,7 +675,7 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 浠庨厤缃枃浠朵腑鍔犺浇璇ュ伐绋嬩腑鐨勬墍鏈夊浘灞傛暟鎹�
+	 * 从配置文件中加载该工程中的所有图层数�?
 	 * 
 	 * @param filePath
 	 * @throws DocumentException
@@ -693,10 +693,10 @@ public class WholeTask implements IXMLPersist {
 	}
 
 	/**
-	 * 淇濆瓨鍒颁换鍔℃枃浠�
+	 * 保存到任务文�?
 	 * 
 	 * @param filePath
-	 *            宸ョ▼鏂囦欢璺緞
+	 *            工程文件路径
 	 */
 	public void SaveToFile(String filePath) {
 		FilePath = filePath;
@@ -781,4 +781,22 @@ public class WholeTask implements IXMLPersist {
 		return this.Title;
 	}
 
+	/**
+	 * 按分组控制图层的显示状态
+	 * @param mc	分组标志
+	 * @param flag	是否显示。true：显示；false：隐藏
+	 */
+	public void showLayer(String mc,boolean flag) {
+		for (int i = 0; i < pLayers.size(); i++) {
+			if (pLayers.get(i).Group != null) {
+				if (pLayers.get(i).Group.equals(mc)) {
+					try {
+						GetLayer(pLayers.get(i)).setVisible(flag);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 }
