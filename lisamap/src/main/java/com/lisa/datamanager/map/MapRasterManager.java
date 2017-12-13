@@ -1,5 +1,7 @@
 package com.lisa.datamanager.map;
 
+import android.util.Log;
+
 import com.lisa.datamanager.wrap.WholeTask;
 
 import org.dom4j.DocumentException;
