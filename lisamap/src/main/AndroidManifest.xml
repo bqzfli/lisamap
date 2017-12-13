@@ -30,7 +30,7 @@
             android:name="com.lisa.map.app.TouchForLocationActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="com.lisa.map.app.TouchForLocationActivity"/>
+                <action android:name="TouchForLocation"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

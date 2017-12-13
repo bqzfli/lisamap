@@ -17,18 +17,24 @@ public class MapsManager {
     //elements
 
     public static void drumpMap() throws Exception {
-        if(mMap!=null){
-            //清除数据
-            mMap.getLayers().clear();						//清空所有图层
-            mMap.getElementContainer().ClearElement();		//清空所有矢量要素
-            mMap.dispose();
+        if(mMap!=null) {
+            synchronized (IMap.class) {
+                //清除数据
+                mMap.getLayers().clear();                        //清空所有图层
+                mMap.getElementContainer().ClearElement();        //清空所有矢量要素
+                mMap.dispose();
+                mMap = null;
+            }
         }
-        mMap = null;
     }
 
     public static IMap getMap() {
-        if(mMap==null){
-            mMap = new Map(new Envelope(0, 0, 1920, 1090));
+        if (mMap == null) {
+            synchronized (IMap.class) {
+                if(mMap==null){
+                    mMap = new Map(new Envelope(0, 0, 1920, 1090));
+                }
+            }
         }
         return mMap;
     }

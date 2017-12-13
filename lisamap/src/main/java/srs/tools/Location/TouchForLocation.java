@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -25,9 +26,13 @@ import srs.GPS.GPSConvert;
 import srs.Geometry.IGeometry;
 import srs.Geometry.IPoint;
 import srs.Geometry.IPolygon;
+import srs.Geometry.Point;
 import srs.Geometry.srsGeometryType;
 import srs.Layer.IDBLayer;
+import srs.Layer.wmts.LOD;
 import srs.Map.IMap;
+import srs.Utility.UTILTAG;
+import srs.method.DouglasAlgorithm;
 import srs.tools.BaseControl;
 import srs.tools.BaseTool;
 import srs.tools.Event.MultipleItemChangedListener;
@@ -35,15 +40,15 @@ import srs.tools.Location.Event.SelectedLocationListener;
 import srs.tools.MapControl;
 
 /**
- * @ClassName: TouchLongToolMultipleDB
+ * @ClassName: TouchForLocation
  * @Description: TODO  点击以获取地图上的经纬度
  * @Version: V1.0.0.0
  * @author lisa
  * @date 2016年12月26日 下午4:30:42
  ***********************************
  * @editor lisa
- * @data 2016年12月26日 下午4:30:42
- * @todo TODO
+ * @data 2017年09月21日 下午9:00
+ * @设置显示默认选中位置
  */
 public class TouchForLocation extends BaseTool {
 
@@ -74,6 +79,41 @@ public class TouchForLocation extends BaseTool {
         if(PicElment!=null) {
             map.getElementContainer().RemoveElement(PicElment);
             PicElment = null;
+        }
+    }
+
+    /**
+     * 设置默认显示位置
+     * @param lon 默认显示位置：经度；
+     * @param lat 默认显示位置：纬度
+     */
+    public void initSelectPositionPoint(double lon,double lat){
+        if(!Double.isNaN(lon)&& !Double.isNaN(lat)&&lon!=0&&lat!=0) {
+            try {
+                ClearSelect(mBuddyControl.getActiveView().FocusMap());
+                BitmapFactory.Options opt = new BitmapFactory.Options();
+                opt.inPreferredConfig = Bitmap.Config.RGB_565;
+                Bitmap bit = BitmapFactory.decodeResource(
+                        mBuddyControl.getContext().getResources(), com.lisa.map.app.R.drawable.pic_touch_location_48_yellow, opt);
+
+                double[] xy = GPSConvert.GEO2PROJECT(lon, lat, mBuddyControl.getActiveView().FocusMap().getGeoProjectType());
+                IPoint point = new Point(xy[0], xy[1]);
+                PicElment = new PicElement();
+                PicElment.setGeometry(point);
+                PicElment.setPic(bit,
+                        -bit.getWidth() / 2,
+                        -bit.getHeight());
+                mBuddyControl.getElementContainer().AddElement(PicElment);
+                if(ListenerTouchLocationChanged!=null) {
+                    this.ListenerTouchLocationChanged.doSelectedLocationChanged(new double[]{lon,lat});
+                }
+            } catch (IOException e){
+                Log.e(UTILTAG.TAGTOUCHFORLOCATION,"error when adding picElement to map ：\n"+e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e(UTILTAG.TAGTOUCHFORLOCATION,"error when partialRefresh after adding picElement to map ：\n"+e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 

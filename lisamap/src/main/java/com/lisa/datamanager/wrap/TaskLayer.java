@@ -22,13 +22,13 @@ public class TaskLayer/* implements IXMLPersist */{
 	 */
 	public Integer SelectedFID = -1;
 
-	/**淇℃伅閲囬泦浜烘墍鍦ㄥ瓧娈�
+	/**淇℃伅閲囬泦浜烘墍鍦ㄥ瓧娈?
 	 * ++
 	 */
 	public String COLLECTOR = null;
 
 
-	/**add by 鏉庡繝涔�
+	/**add by 鏉庡繝涔?
 	 * 20150616
 	 * 鍥惧眰鏍囨敞淇℃伅
 	 */
@@ -38,12 +38,12 @@ public class TaskLayer/* implements IXMLPersist */{
 	 * ++
 	 */
 	public String TASKNAME = null;
-	/**淇℃伅閲囬泦鎻忚堪鎵�鍦ㄥ瓧娈�
+	/**淇℃伅閲囬泦鎻忚堪鎵?鍦ㄥ瓧娈?
 	 * ++
 	 */
 	public String DISFEILDS = null;
 
-	/**璁板綍鍚嶇О鎵�鍦ㄥ瓧娈�
+	/**璁板綍鍚嶇О鎵?鍦ㄥ瓧娈?
 	 * ++
 	 */
 	public String[] NAMEFEILDS = null;
@@ -53,50 +53,50 @@ public class TaskLayer/* implements IXMLPersist */{
 	 */
 	public String SURVEYITEMS = "";
 
-	/**瀛楁鈥曗�曚繚瀛樼収鐗囦俊鎭殑
+	/**瀛楁鈥曗?曚繚瀛樼収鐗囦俊鎭殑
 	 * 
 	 */
 	public String PHOTOFEILD = ""; 
-	/**瀛楁鈥曗�曚繚瀛樺綍闊充俊鎭殑
+	/**瀛楁鈥曗?曚繚瀛樺綍闊充俊鎭殑
 	 * 
 	 */
 	public String RECORDFEILD = "";
-	/**瀛楁鈥曗�曚繚瀛樺綍鍍忎俊鎭殑
+	/**瀛楁鈥曗?曚繚瀛樺綍鍍忎俊鎭殑
 	 * 
 	 */
 	public String MEDIAFEILD = "";
 
-	/**鏁版嵁鍚嶇О銆佸敮涓�鏍囩ず
+	/**鏁版嵁鍚嶇О銆佸敮涓?鏍囩ず
 	 * ++
 	 */
 	public String Name;
 
-	/**鏁版嵁瀹屾暣鐨勮矾寰�
+	/**鏁版嵁瀹屾暣鐨勮矾寰?
 	 * ++
 	 */
 	public String FilePath;
 
-	/**鍥惧眰鐨勬渶鍒濇覆鏌撴柟寮�
+	/**鍥惧眰鐨勬渶鍒濇覆鏌撴柟寮?
 	 * ++
 	 */
 	public IRenderer LayerRendererOriginal;
 
-	/**鏌ョ湅鍏ㄩ儴浠诲姟鏃讹紝鏄惁鏄剧ず绀�
+	/**鏌ョ湅鍏ㄩ儴浠诲姟鏃讹紝鏄惁鏄剧ず绀?
 	 * 
 	 */
 	public boolean ShowInWholeTask; 
 
-	/**鍦ㄨ皟鏌ヤ换鍔℃椂锛屾槸鍚︽樉绀�
+	/**鍦ㄨ皟鏌ヤ换鍔℃椂锛屾槸鍚︽樉绀?
 	 * 
 	 */
 	public boolean ShowInTask;
 
-	/**鏄惁鍙紪杈�
+	/**鏄惁鍙紪杈?
 	 * ++
 	 */
 	public boolean Editable;
 
-	/**鏄惁鍙煡璇�
+	/**鏄惁鍙煡璇?
 	 * ++
 	 */
 	public boolean Queryable;
@@ -146,12 +146,12 @@ public class TaskLayer/* implements IXMLPersist */{
 	 */
 	public boolean DisplayLaybel;
 
-	/**鏈�澶х殑鍙姣斾緥灏�
+	/**鏈?澶х殑鍙姣斾緥灏?
 	 * ++
 	 */
 	public double MaximumScale;
 
-	/**鏈�灏忕殑鍙姣斾緥灏�
+	/**鏈?灏忕殑鍙姣斾緥灏?
 	 * ++
 	 */
 	public double MinimumScale;
@@ -198,7 +198,7 @@ public class TaskLayer/* implements IXMLPersist */{
 		MEDIAFEILD =  node.attributeValue("MEDIA")==null ? null : node.attributeValue("MEDIA");
 
 		Title=node.attributeValue("Title");
-		//娣诲姞 鏉庡繝涔� 20121206 浣跨敤姣斾緥灏烘帶鍒舵樉绀虹姸鎬�
+		//娣诲姞 鏉庡繝涔? 20121206 浣跨敤姣斾緥灏烘帶鍒舵樉绀虹姸鎬?
 		MaximumScale=node.attributeValue("MaximumScale")==null?Double.MAX_VALUE / 10:Double.valueOf(node.attributeValue("MaximumScale"));
 		MinimumScale=node.attributeValue("MinimumScale")==null?Double.MIN_VALUE / 10:Double.valueOf(node.attributeValue("MinimumScale"));
 		//			IsEmpty=false;
