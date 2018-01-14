@@ -65,8 +65,8 @@ public class XmlFunction{
 			throw new sRSException("Symbol设置错误！");
 		}
 
-		Constructor<?> cons=symbolType.getConstructor(null);
-		Symbol symbol = (Symbol)cons.newInstance(null);
+		Constructor<?> cons=symbolType.getConstructor(new Class[0]);
+		Symbol symbol = (Symbol)cons.newInstance(new Object[]{});
 		symbol.LoadXMLData(node);
 		return symbol;
 	}
@@ -118,8 +118,8 @@ public class XmlFunction{
 			throw new sRSException("Renderer设置错误！");
 		}
 
-		Constructor<?> cons=rendererType.getConstructor(null);
-		Renderer renderer = (Renderer)cons.newInstance(null);
+		Constructor<?> cons=rendererType.getConstructor(new Class[0]);
+		Renderer renderer = (Renderer)cons.newInstance(new Object[]{});
 		renderer.LoadXMLData(node);
 		return renderer;
 	}
@@ -171,8 +171,8 @@ public class XmlFunction{
 			throw new sRSException("Symbol设置错误！");
 		}
 
-		Constructor<?> cons = layerType.getConstructor(null);
-		ILayer layer = (ILayer)cons.newInstance(null);
+		Constructor<?> cons = layerType.getConstructor(new Class[0]);
+		ILayer layer = (ILayer)cons.newInstance(new Object[]{});
 		((IXMLPersist)((layer instanceof IXMLPersist) ? layer : null)).LoadXMLData(node);
 		return layer;
 	}
@@ -256,8 +256,8 @@ public class XmlFunction{
 			throw new sRSException("Element错误！");
 		}
 
-		Constructor<?> cons=surType.getConstructor(null);
-		srs.Element.Element element = (srs.Element.Element)cons.newInstance(null);
+		Constructor<?> cons=surType.getConstructor(new Class[0]);
+		srs.Element.Element element = (srs.Element.Element)cons.newInstance(new Object[]{});
 		element.LoadXMLData(node);
 		return element;
 	}

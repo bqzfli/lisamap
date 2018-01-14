@@ -331,8 +331,8 @@ public class CommenUtil {
 		try {
 			String fr = fieldName.substring(0, 1).toUpperCase();
 			String getter = "get" + fr + fieldName.substring(1);
-			Method m = obj.getClass().getDeclaredMethod(getter, null);
-			value = m.invoke(obj, null);
+			Method m = obj.getClass().getDeclaredMethod(getter, new Class[0]);
+			value = m.invoke(obj, new Object[]{});
 
 		} catch (Exception e) {
 			e.printStackTrace();

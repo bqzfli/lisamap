@@ -52,8 +52,8 @@ public class XmlFunction
 			throw new sRSException("00300001");
 		}
 
-		Constructor<?> cons=geoType.getConstructor(null);
-		IGeometry geo = (IGeometry)cons.newInstance(null);
+		Constructor<?> cons=geoType.getConstructor(new Class[0]);
+		IGeometry geo = (IGeometry)cons.newInstance(new Object[]{});
 		((IXMLPersist)geo).LoadXMLData(node);
 //		((IXMLPersist)((geo instanceof IXMLPersist) ? geo : null)).LoadXMLData(node);
 		return geo;
