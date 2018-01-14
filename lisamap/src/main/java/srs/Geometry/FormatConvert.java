@@ -1,5 +1,8 @@
 package srs.Geometry;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -646,7 +649,8 @@ public class FormatConvert {
 		String temp = wkt.substring(wkt.indexOf("(")+1, wkt.lastIndexOf(")"));
 		String subMultipath = temp.substring(1, temp.length()-1);
 		String[] paths;
-		List<String> pathlist = new ArrayList<String>();		
+		List<String> pathlist = new ArrayList<String>();
+		subMultipath = subMultipath.replace("), (","),(");
 		int index = subMultipath.indexOf("),(");
 		if(index>0){
 			while(index >=0 ){	
@@ -667,14 +671,17 @@ public class FormatConvert {
 		IPolygon polygon = new Polygon();
 
 		if(headStr.trim().equalsIgnoreCase("MULTIPOLYGON")){
+			//多环
 			IPart[] parts = new IPart[paths.length];
 			String tempPointStr ="";
 			for(int i=0;i<paths.length;i++){
-				tempPointStr = paths[i].substring(paths[i].indexOf("(")+1, paths[i].lastIndexOf(")"));
+				tempPointStr = paths[i].replace("(","").replace(")","");
+				//tempPointStr = paths[i].substring(paths[i].indexOf("(")+1, paths[i].lastIndexOf(")"));
 				String[] points = tempPointStr.split(",");
 				parts[i]= new Part();
 				for(int j=0;j<points.length;j++){
-					String[] pointStr = points[j].split(" ");
+
+					String[] pointStr = points[j].trim().split(" ");
 					if(startPoint == null){
 						startPoint = new Point(Double.valueOf(pointStr[0]),Double.valueOf(pointStr[1]));
 						parts[i].AddPoint(startPoint);
@@ -690,10 +697,54 @@ public class FormatConvert {
 				//目前都按外环算
 				polygon.AddPart(parts[i], true);
 			}
+		}else if(headStr.trim().equalsIgnoreCase("POLYGON")){
+			//单环
+			IPart[] parts = new IPart[paths.length];
+			String tempPointStr ="";
+			for(int i=0;i<paths.length;i++){
+				tempPointStr = paths[i];
+				String[] points = tempPointStr.split(",");
+				parts[i]= new Part();
+				for(int j=0;j<points.length;j++){
+					String[] pointStr = points[j].trim().split(" ");
+					if(startPoint == null){
+						startPoint = new Point(Double.valueOf(pointStr[0]),Double.valueOf(pointStr[1]));
+						parts[i].AddPoint(startPoint);
+					}else{
+						parts[i].AddPoint(new Point(Double.valueOf(pointStr[0]),Double.valueOf(pointStr[1])));
+					}
+				}
+				startPoint=null;//每圈画完后要清空起点
+				parts[i].AddPoint(startPoint);
+			}
+			for (int i = 0; i < parts.length; i++){
+				/*polygon.AddPart(parts[i], !parts[i].IsCounterClockwise());*/
+				//目前都按外环算
+				polygon.AddPart(parts[i], true);
+			}
 		}else{
 			return null;
 		}
 		return polygon;
+	}
+
+	/**
+	 * 将空间范围转换为Json格式
+	 * @param env
+	 * @return
+	 * @throws JSONException
+	 */
+	public static String EnvelopToJS(IEnvelope env) throws JSONException {
+		if(env==null){
+			return "";
+		}
+		JSONObject envJS = new JSONObject();
+		envJS.put("XMIN",env.XMin());
+		envJS.put("XMAX",env.XMax());
+		envJS.put("YMIN",env.YMin());
+		envJS.put("YMAX",env.YMax());
+		String envStr = envJS.toString();
+		return envStr;
 	}
 
 	/**wkt转换为POLYLINE 临时函数
