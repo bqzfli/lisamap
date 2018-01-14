@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+//apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
@@ -6,8 +7,8 @@ android {
 
     defaultConfig {
         /*applicationId "com.lisa.map.app"*/
-        minSdkVersion 12
-        targetSdkVersion 12
+        minSdkVersion 16
+        targetSdkVersion 16
     }
 
     buildTypes {
