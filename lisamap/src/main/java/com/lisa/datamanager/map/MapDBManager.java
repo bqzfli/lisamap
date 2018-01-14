@@ -169,7 +169,7 @@ public class MapDBManager {
         DisplaySettings.SetLayerLabel(
                 mLAYER,
                 10,
-                Color.rgb(96,96,96),
+                Color.rgb(166,166,166),
                 Typeface.create("Times New Roman", Typeface.BOLD),
                 1/666.666,
                 null);

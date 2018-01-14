@@ -310,12 +310,17 @@ public class DBSourceManager {
 						mGeometries.add(geo);
 					}
 					if(mFeildNamesLabels.length>0){
-						//FIXME 此处仅仅处理了单个字段作为标注的情况
-						LableID = map.get(mFeildNamesLabels[0]);
+						LableID = "";
+						for(String strFieldName:mFeildNamesLabels){
+							LableID += map.get(strFieldName)+" " ;
+						}
 						mDisplayLableValues.add(LableID!=null?LableID:LABEL_EMPTY);
 					}
 					if(mFeildNamesDestine.length>0){
-						Destine = map.get(mFeildNamesDestine[0]);
+						Destine = "";
+						for(String strfieldName :mFeildNamesDestine) {
+							Destine += map.get(strfieldName);
+						}
 						mDestineValues.add(Destine!=null?Destine:LABEL_EMPTY);
 					}
 				}
