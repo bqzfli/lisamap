@@ -734,6 +734,24 @@ public class TileLayer extends Layer implements ITileLayer {
 		setTileMatix(tileMatrixSet.elements("TileMatrix"),url);
 	}*/
 
+
+    /**
+     * 设置最深级别
+     * @param Maxlevel 最深级别，从0级开始，默认最深18级别；
+     */
+    public void setLodMaxLevels(int Maxlevel){
+        if(Maxlevel<0||Maxlevel>18){
+            Log.i("WMTSLEVEL:","超出限制"+ String.valueOf(Maxlevel));
+            return;
+        }else{
+            LOD[] temps = new LOD[Maxlevel];
+            for(int i=0;i<Maxlevel;i++){
+                temps[i]=mTileInfo.LODs[i];
+            }
+            mTileInfo.LODs = temps;
+        }
+    }
+
     /**设置默认级别
      *
      */
