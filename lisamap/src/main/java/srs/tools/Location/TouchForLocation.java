@@ -62,6 +62,7 @@ public class TouchForLocation extends BaseTool {
     public static void ClearSelect(IMap map) throws Exception {
         if(PicElment!=null) {
             map.getElementContainer().RemoveElement(PicElment);
+            PicElment.dispose();
             PicElment = null;
         }
     }
@@ -205,5 +206,13 @@ public class TouchForLocation extends BaseTool {
                 break;
         }
         return false;
+    }
+
+    public void dispose() throws Exception{
+        //清空地图上的要素
+        ClearSelect(mBuddyControl.getActiveView().FocusMap());
+        ListenerTouchLocationChanged = null;
+        mScreenDisplay = null;
+        mBuddyControl = null;
     }
 }

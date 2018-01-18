@@ -24,6 +24,7 @@ import android.graphics.PointF;
 public class PicElement extends GraphicElement implements IPicElement{
 
 	Bitmap mbitmap = null;
+
 	/**水平偏移量：左负，右正
 	 * 
 	 */
@@ -102,4 +103,9 @@ public class PicElement extends GraphicElement implements IPicElement{
 		}
 		super.SaveXMLData(node);
 	}
+
+	public void dispose(){
+		mbitmap = null;
+	}
+
 }

@@ -1,40 +1,13 @@
 package srs.tools;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.Iterator;
-import java.util.List;
-
-import srs.DataSource.Vector.IFeatureClass;
-import srs.Display.Drawing;
-import srs.Display.FromMapPointDelegate;
-import srs.Display.ScreenDisplay;
-import srs.Display.Setting;
-import srs.Display.Symbol.TextSymbol;
-import srs.Geometry.Envelope;
-import srs.Geometry.IEnvelope;
-import srs.Geometry.IPoint;
-import srs.Layer.IElementContainer;
-import srs.Layer.IFeatureLayer;
-import srs.Layer.IGPSContainer;
-import srs.Layer.ILayer;
-import srs.Layer.TileLayer;
-import srs.Layer.wmts.ImageDownLoader;
-import srs.Map.ActiveView;
-import srs.Map.IActiveView;
-import srs.Map.IMap;
-import srs.Map.Map;
-import srs.Map.Event.ContentChangedListener;
-import srs.Operation.SelectedFeatures;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -45,6 +18,27 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.Iterator;
+import java.util.List;
+
+import srs.DataSource.Vector.IFeatureClass;
+import srs.Geometry.Envelope;
+import srs.Geometry.IEnvelope;
+import srs.Geometry.IPoint;
+import srs.Layer.IElementContainer;
+import srs.Layer.IFeatureLayer;
+import srs.Layer.IGPSContainer;
+import srs.Layer.TileLayer;
+import srs.Layer.wmts.ImageDownLoader;
+import srs.Map.ActiveView;
+import srs.Map.Event.ContentChangedListener;
+import srs.Map.IActiveView;
+import srs.Map.IMap;
+import srs.Map.Map;
+import srs.Operation.SelectedFeatures;
 
 public class MapControl extends BaseControl implements ContentChangedListener {
 

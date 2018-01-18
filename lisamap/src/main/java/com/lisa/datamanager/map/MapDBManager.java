@@ -1,47 +1,32 @@
 package com.lisa.datamanager.map;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.Log;
 
 import com.lisa.datamanager.set.DisplaySettings;
-import com.lisa.map.app.MapUtil;
 import com.lisa.utils.GEOMETHORD;
 import com.lisa.utils.TAGUTIL;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import srs.CoordinateSystem.ProjCSType;
-import srs.DataSource.DB.DBSourceManager;
 import srs.DataSource.DB.tools.DBImportUtil;
-import srs.Element.FillElement;
-import srs.Element.IElement;
-import srs.Element.IFillElement;
 import srs.Geometry.Envelope;
 import srs.Geometry.IEnvelope;
-import srs.Geometry.IPolygon;
-import srs.Geometry.srsGeometryType;
 import srs.Layer.DBLayer;
 import srs.Layer.IDBLayer;
-import srs.Layer.ILayer;
 import srs.Map.IMap;
-import srs.Rendering.CommonRenderer;
 import srs.Rendering.CommonUniqueRenderer;
 import srs.Rendering.IRenderer;
-import srs.Utility.sRSException;
 import srs.tools.Event.MultipleItemChangedListener;
 import srs.tools.MapBaseTool;
 import srs.tools.MapControl;
 import srs.tools.TouchLongToolMultipleDB;
-
-import static com.lisa.datamanager.map.MapsUtil.DKMaps;
 
 /**
  * Created by lzy on 15/12/2016.
@@ -265,6 +250,17 @@ public class MapDBManager {
         }
         return DK;
     }
+
+    public void dispose(){
+        if(mToolMultipleDB!=null) {
+            mToolMultipleDB.dispose();
+            mToolMultipleDB = null;
+        }
+        mLAYER = null;
+        mInstance = null;
+    }
+
+
 
     /**设置数据渲染方式
      * @param map

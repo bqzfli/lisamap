@@ -1,6 +1,8 @@
 package com.lisa.datamanager.map;
 
 
+import android.util.Log;
+
 import com.lisa.datamanager.wrap.WholeTask;
 
 import org.dom4j.DocumentException;
@@ -37,6 +39,7 @@ public class MapShapeManager {
         MapsUtil.LayerIDs_SHAPE.clear();
         if(MapsUtil.PATH_TCF_SHAPE==null||MapsUtil.PATH_TCF_SHAPE.trim().equalsIgnoreCase("")){
             //若尚未设置路径，则直接返回
+            Log.i("MAP","无矢量shape数据");
             return;
         }
         //获取当前共多少图层
@@ -88,4 +91,10 @@ public class MapShapeManager {
         mTASK.showLayer(mc,flag);
     }
 
+    public static void dispose(){
+        if(mTASK != null){
+            mTASK.dispose();
+            mTASK = null;
+        }
+    }
 }

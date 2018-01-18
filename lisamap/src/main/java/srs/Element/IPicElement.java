@@ -14,4 +14,6 @@ public interface IPicElement extends IGraphicElement{
 	 * @param verticalMove 垂直偏移量：上负，下正
 	 */
 	public void setPic(Bitmap bitmap,int horizantolMove,int verticalMove);
+
+	public void dispose();
 }

@@ -86,4 +86,19 @@ public class MapLocationManager {
         return  true;
     }
 
+
+    public static void dispose(){
+        try {
+            MapsManager.getMap().getElementContainer().RemoveElement(mElementMyposition);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("MapLocationManager",e.getMessage());
+        }
+        if(mElementMyposition!=null) {
+            ((IPicElement) mElementMyposition).dispose();
+        }
+        mGeoMyposition = null;
+        mBmpMyposition = null;
+    }
+
 }

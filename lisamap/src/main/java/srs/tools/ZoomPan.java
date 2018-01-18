@@ -1,12 +1,7 @@
 package srs.tools;
 
-import srs.Geometry.Envelope;
-import srs.Geometry.IEnvelope;
-import srs.Geometry.IPoint;
-import srs.Geometry.Point;
-import srs.Map.IActiveView;
-import srs.Map.IMap;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,15 +9,19 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Bitmap.Config;
-import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import srs.Geometry.Envelope;
+import srs.Geometry.IEnvelope;
+import srs.Geometry.IPoint;
+import srs.Geometry.Point;
+import srs.Map.IActiveView;
+import srs.Map.IMap;
+import srs.Utility.Log;
 
 public class ZoomPan extends BaseTool implements ITool {
 	private PointF pointOld1;
@@ -92,6 +91,7 @@ public class ZoomPan extends BaseTool implements ITool {
 		if(mBitmapShaderView!=null){
 			mBitmapShaderView.recycle(); mBitmapShaderView= null;
 		}
+		mBuddyControl = null;
 	}
 
 
@@ -150,8 +150,12 @@ public class ZoomPan extends BaseTool implements ITool {
 			switch(event.getAction()){
 			case MotionEvent.ACTION_DOWN:
 				if(mBitmapCurrent!=null&&!mBitmapCurrent.isRecycled()){
-					((MapControl)v).setBackgroundDrawable(null);
-					Log.println(Log.INFO,"RECYCLE",
+					/**
+					 *  部分定制版本的系统必须增加此函数，否则会导致崩溃
+					 * (v).setBackgroundDrawable(null);
+					 * 增加此方法后，一定会造成平移后，第一次触屏时的白色闪烁
+					 */
+					Log.i("RECYCLE",
 							"RECYCLE mBitmapCurrent（MapControl的BackGround）"+mBitmapCurrent);
 					mBitmapCurrent.recycle();
 					mBitmapCurrent = null;
@@ -172,7 +176,7 @@ public class ZoomPan extends BaseTool implements ITool {
 				break;
 			case MotionEvent.ACTION_POINTER_2_DOWN:
 				if(event.getPointerCount()==2){
-					Log.println(Log.INFO,"MotionEvent",
+					Log.i("MotionEvent",
 							"MotionEvent.ACTION_POINTER_2_DOWN");
 					if(map==null){
 						map=this.mBuddyControl.getActiveView().FocusMap();
@@ -197,7 +201,7 @@ public class ZoomPan extends BaseTool implements ITool {
 				}
 				break;
 			case MotionEvent.ACTION_MOVE:
-				if(mBitmapCurrent == null){			
+				if(mBitmapCurrent == null){
 					mBitmapCurrent = Bitmap.createBitmap(map.ExportMap(false).getWidth(), map.ExportMap(false).getHeight(), Config.RGB_565);				
 					//				mBitmapCurrent = Bitmap.createBitmap(v.getWidth(),v.getHeight(),Config.RGB_565);
 					Log.i("RECYCLE","Create mBitmapCurrent"+mBitmapCurrent);					
@@ -262,7 +266,7 @@ public class ZoomPan extends BaseTool implements ITool {
 						//缩放前原地图输出的图片
 						Bitmap bitExMap = map.ExportMap(true);
 						if(bitExMap!=null&&!bitExMap.isRecycled()){
-							Log.println(Log.INFO,"MotionEvent",
+							Log.i("MotionEvent",
 									"MotionEvent.ACTION_MOVE 重置 缩放 时的缓存画面");
 						}
 						PointF p1Pic=new PointF(event.getX(0)*mRate,event.getY(0)*mRate);
@@ -288,7 +292,7 @@ public class ZoomPan extends BaseTool implements ITool {
 					if(((MapControl)mBuddyControl).MODE ==DRAG){
 						Bitmap bitExMap = map.ExportMap(true);
 						if(bitExMap!=null&&!bitExMap.isRecycled()){
-							Log.println(Log.INFO,"MotionEvent",
+							Log.i("MotionEvent",
 									"MotionEvent.ACTION_MOVE 重置 平移 时的缓存画面");
 						}
 						g.drawColor(Color.WHITE);

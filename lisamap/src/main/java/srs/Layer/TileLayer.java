@@ -65,9 +65,18 @@ public class TileLayer extends Layer implements ITileLayer {
         URLGetCapabilitis = null;
         URLGetTile = null;
         mTileInfo = null;
-        mURLs = null;
-        mSDCardFiles = null;
-        mURLRect = null;
+        if(mURLs!=null) {
+            mURLs.clear();
+            mURLs = null;
+        }
+        if(mSDCardFiles!=null) {
+            mSDCardFiles.clear();
+            mSDCardFiles = null;
+        }
+        if(mURLRect!=null) {
+            mURLRect.clear();
+            mURLRect = null;
+        }
         mImages = null;
         G = null;
     }
@@ -78,6 +87,10 @@ public class TileLayer extends Layer implements ITileLayer {
         mTileInfo = new TileInfo();
         ImageUtils.CreateImageSDdir();
         mImages = new ImageDownLoader();
+
+        mURLs = new ArrayList<String>();
+        mSDCardFiles = new ArrayList<String>();
+        mURLRect = new HashMap<String,RectF>();
     }
 
     /**是否绘制完所有瓦片

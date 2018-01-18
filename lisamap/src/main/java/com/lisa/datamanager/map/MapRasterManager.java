@@ -45,6 +45,7 @@ public class MapRasterManager {
         MapsUtil.LayerIDs_RASTER.clear();
         if(MapsUtil.DIR_RASTER==null||MapsUtil.DIR_RASTER.trim().equalsIgnoreCase("")){
             //若尚未设置路径，则直接返回
+            Log.i("MAP","无tif影像数据");
             return;
         }
         //获取当前共多少图层
@@ -135,6 +136,11 @@ public class MapRasterManager {
         }
     }
 
-
+    public static void dispose(){
+        if(mTASK != null){
+            mTASK.dispose();
+            mTASK = null;
+        }
+    }
 
 }

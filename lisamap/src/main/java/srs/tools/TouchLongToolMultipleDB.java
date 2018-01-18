@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -45,7 +46,7 @@ public class TouchLongToolMultipleDB extends BaseTool {
     private PointF mCurrentPoint = null;
     /*private IPoint mPFT = null;*/
     private IScreenDisplay mScreenDisplay;
-    private static IDBLayer mLayer;
+    private IDBLayer mLayer;
     /* private List<Integer> mAllfids; */
     private Paint mPaint;
     public static int currentIndex;
@@ -188,6 +189,7 @@ public class TouchLongToolMultipleDB extends BaseTool {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.i("MAP","点选DB中的目标，action_down,start");
                 mBitExMap = mBuddyControl.getActiveView().FocusMap()
                         .ExportMap(false);
                 if (mExtTime == -1) {
@@ -195,10 +197,12 @@ public class TouchLongToolMultipleDB extends BaseTool {
                     mCurrentPoint = new PointF(event.getX() * mRate, event.getY()
                             * mRate);
                 }
+                Log.i("MAP","点选DB中的目标，action_down,over");
 			/*xposition = (int) event.getX();
 			yposition = (int) event.getY();*/
                 break;
             case MotionEvent.ACTION_UP:
+                Log.i("MAP","点选DB中的目标，action_down，start");
                 try {
                     if (event.getPointerCount() == 1
 						/* mExtTime!=-1&&System.currentTimeMillis()-mExtTime>LONGTIME
@@ -278,22 +282,27 @@ public class TouchLongToolMultipleDB extends BaseTool {
                                     zoom2Selected.doEventSettingsChanged(indexs);
                                 }
                                 mBuddyControl.PartialRefresh();
-                            } else {
-                                // 设置地图为未选中任何对象
-//							if(SELECTEDElement!=null
-//									&&mBuddyControl.getElementContainer().getElements().contains(SELECTEDElement)){
-//								mBuddyControl.getElementContainer().RemoveElementsE(fillElements);
-//							}
+                                /**
+                                 * 搜索成功后不需要平移地图，返回true，销毁操作事件
+                                 */
+                                return true;
+                            } /*else {
+                                *//** 设置地图为未选中任何对象
+                                 *//*
+                                if(SELECTEDElement!=null
+                                        &&mBuddyControl.getElementContainer().getElements().contains(SELECTEDElement)){
+                                    mBuddyControl.getElementContainer().RemoveElementsE(fillElements);
+                                }
                                 mBuddyControl.PartialRefresh();
-                            }
-						/*应该在else里面写
-						 * mBuddyControl.PartialRefresh();*/
+                            }*/
                         }
-					/*修改 20150820  李忠义
-					 * 为了让地图能刷新，啥时候都要返回false*/
+                        Log.i("MAP","点选DB中的目标，action_up，over");
+					    /*修改 20150820  李忠义
+					    * 为了让地图能刷新，啥时候都要返回false*/
                         return false;
                     }
                 } catch (Exception e) {
+                    Log.e("MAP","点选DB中的目标，action_up:"+e.getMessage());
                     e.printStackTrace();
                 }
                 mExtTime = -1;
@@ -301,5 +310,29 @@ public class TouchLongToolMultipleDB extends BaseTool {
                 break;
         }
         return false;
+    }
+
+
+    public void dispose(){
+        if(fillElements!=null) {
+            fillElements.clear();
+            fillElements = null;
+        }
+        if(geos!=null){
+            geos.clear();
+            geos = null;
+        }
+        if(indexs!=null){
+            indexs.clear();
+            indexs = null;
+        }
+        mCurrentPoint = null;
+        mPaint = null;
+        mScreenDisplay = null;
+        zoom2Selected = null;
+
+        mBuddyControl = null;
+        mBitExMap = null;
+        mLayer = null;
     }
 }

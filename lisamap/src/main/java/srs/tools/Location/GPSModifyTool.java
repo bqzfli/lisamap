@@ -37,10 +37,10 @@ public class GPSModifyTool extends BaseTool {
     public List<double[]> GPSDoubles = new ArrayList<double[]>();
     public List<double[]> TIFDoubles = new ArrayList<double[]>();
     
-    Bitmap mBitExMap = null;
+    /*Bitmap mBitExMap = null;
     Bitmap mBitmapCurrentBack = null;
-    IMap mMapCurrent = null;
-    public Context mContext = null;
+    IMap mMapCurrent = null;*/
+    /*public Context mContext = null;*/
     private long mExtTime = -1;
     private long mStartTime;
     private long mEndTime;
@@ -57,7 +57,7 @@ public class GPSModifyTool extends BaseTool {
     	zoom2Selected = null;
     	selectedOffsetListener = null;
         /*mLayer = mubiao;*/
-        mContext = context;
+        /*mContext = context;*/
         mPaint = new Paint();
         mPaint.setColor(Color.YELLOW);
         mPaint.setStrokeWidth(2);
@@ -234,7 +234,17 @@ public class GPSModifyTool extends BaseTool {
     public double[] getPROJECTXY(double lon,double lat,IMap map){
     	return GPSConvert.GEO2PROJECT(lon,lat, map.getGeoProjectType());
     }
-    
+
+    public void dispose() throws Exception{
+        gpsControl = null;
+        GPSDoubles.clear();
+        listTif.clear();
+        mCurrentPoint = null;
+        savelonLat = null;
+        TIFDoubles.clear();
+        selectedOffsetListener = null;
+        zoom2Selected = null;
+    }
 
     
 }

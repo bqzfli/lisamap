@@ -581,7 +581,7 @@ public class WholeTask implements IXMLPersist {
 	/**
 	 * 获取指定图层的字段名
 	 * 
-	 * @param layer
+	 * @param name
 	 * @return
 	 * @throws Exception
 	 */
@@ -798,5 +798,14 @@ public class WholeTask implements IXMLPersist {
 				}
 			}
 		}
+	}
+
+	public void dispose(){
+		if(pLayers != null){
+			pLayers.clear();
+			pLayers = null;
+		}
+		mActiveTask = null;
+		SelectedTaskChanged = null;
 	}
 }

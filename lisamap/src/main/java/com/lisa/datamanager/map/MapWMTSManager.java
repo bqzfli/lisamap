@@ -19,12 +19,25 @@ import srs.Utility.sRSException;
  */
 public class MapWMTSManager {
 
-    public static ITileLayer LAYER_TDT = TDTLayerFactory.TDTSat();
-    public static ITileLayer LAYER_ChinaOnlineCommunity = TDTLayerFactory.ChinaOnlineCommunityLayer();
-    public static ITileLayer LAYER_World_Physical_Map = TDTLayerFactory.World_Physical_MapLayer();
-    public static ITileLayer LAYER_World_Imagery = TDTLayerFactory.World_ImageryLayer();
-    public static ITileLayer LAYER_World_Shaded_Relief = TDTLayerFactory.World_Shaded_Relief_Layer();
-    public static ITileLayer LAYER_World_Terrain_Base = TDTLayerFactory.World_Terrain_BaseLayer();
+    public static ITileLayer LAYER_TDT;
+    public static ITileLayer LAYER_ChinaOnlineCommunity;
+    public static ITileLayer LAYER_World_Physical_Map;
+    public static ITileLayer LAYER_World_Imagery;
+    public static ITileLayer LAYER_World_Shaded_Relief;
+    public static ITileLayer LAYER_World_Terrain_Base;
+
+    /**
+     * 设置创建瓦片地图信息
+     */
+    public static void init(){
+        LAYER_TDT = TDTLayerFactory.TDTSat();
+        LAYER_ChinaOnlineCommunity = TDTLayerFactory.ChinaOnlineCommunityLayer();
+        LAYER_World_Physical_Map = TDTLayerFactory.World_Physical_MapLayer();
+        LAYER_World_Imagery = TDTLayerFactory.World_ImageryLayer();
+        LAYER_World_Shaded_Relief = TDTLayerFactory.World_Shaded_Relief_Layer();
+        LAYER_World_Terrain_Base = TDTLayerFactory.World_Terrain_BaseLayer();
+    }
+
     /**
      * 测试用 加载测试数据
      * @param context   程序运行环境；
@@ -95,4 +108,13 @@ public class MapWMTSManager {
         return MapsUtil.LayerID_WMTS;
     }
 
+
+    public static void dispose() throws Exception {
+        LAYER_TDT.dispose();
+        LAYER_ChinaOnlineCommunity.dispose();
+        LAYER_World_Imagery.dispose();
+        LAYER_World_Shaded_Relief.dispose();
+        LAYER_World_Terrain_Base.dispose();
+        LAYER_World_Physical_Map.dispose();
+    }
 }
