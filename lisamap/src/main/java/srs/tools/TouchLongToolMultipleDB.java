@@ -189,7 +189,6 @@ public class TouchLongToolMultipleDB extends BaseTool {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.i("MAP","点选DB中的目标，action_down,start");
                 mBitExMap = mBuddyControl.getActiveView().FocusMap()
                         .ExportMap(false);
                 if (mExtTime == -1) {
@@ -197,12 +196,10 @@ public class TouchLongToolMultipleDB extends BaseTool {
                     mCurrentPoint = new PointF(event.getX() * mRate, event.getY()
                             * mRate);
                 }
-                Log.i("MAP","点选DB中的目标，action_down,over");
 			/*xposition = (int) event.getX();
 			yposition = (int) event.getY();*/
                 break;
             case MotionEvent.ACTION_UP:
-                Log.i("MAP","点选DB中的目标，action_down，start");
                 try {
                     if (event.getPointerCount() == 1
 						/* mExtTime!=-1&&System.currentTimeMillis()-mExtTime>LONGTIME
@@ -296,7 +293,6 @@ public class TouchLongToolMultipleDB extends BaseTool {
                                 mBuddyControl.PartialRefresh();
                             }*/
                         }
-                        Log.i("MAP","点选DB中的目标，action_up，over");
 					    /*修改 20150820  李忠义
 					    * 为了让地图能刷新，啥时候都要返回false*/
                         return false;

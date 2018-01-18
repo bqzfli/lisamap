@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -39,6 +38,7 @@ import srs.Map.IActiveView;
 import srs.Map.IMap;
 import srs.Map.Map;
 import srs.Operation.SelectedFeatures;
+import srs.Utility.Log;
 
 public class MapControl extends BaseControl implements ContentChangedListener {
 
@@ -178,7 +178,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 							}
 							break;
 						case 3:
-							Log.println(Log.ASSERT,"LEVEL-ROW-COLUMN", "3: 图层："+ String.valueOf(Map.INDEXDRAWLAYER)+" 绘制过程中,将部分'图层缓存'绘于屏幕 MapControl.DrawTrackLayer");
+							Log.a("LEVEL-ROW-COLUMN", "3: 图层："+ String.valueOf(Map.INDEXDRAWLAYER)+" 绘制过程中,将部分'图层缓存'绘于屏幕 MapControl.DrawTrackLayer");
 							DrawTrackLayer();
 							break;
 						case 1:
@@ -193,7 +193,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 				}catch(Exception e){
 					Log.e("LEVEL-ROW-COLUMN","MapControl.myHandler.handleMessage:"+e.getMessage());
 					/*String key = msg.getData().getString("KEY");*/
-					Log.println(10256, "key", "e.getMessage()");
+					Log.e("key", "e.getMessage()");
 				}
 			}
 		};
@@ -440,13 +440,13 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 			if(mBitScreen!=null
 					&&!mBitScreen.isRecycled()
 					&&mActiveView.FocusMap().getHasWMTSBUTTOM()){
-				Log.println(Log.ASSERT,"RECYCLE","通过界面截图作为底图，mBtiScreen："+mBitScreen);
+				Log.a("RECYCLE","通过界面截图作为底图，mBtiScreen："+mBitScreen);
 				//FIXME 先不考虑用上一次缩放的界面做底图
 				//      原因：当wmts数据无法获取时，上一次的矢量会可见，导致底图“画花”了
 				//mActiveView.FocusMap().Refresh(myHandler,mBitScreen);
 				mActiveView.FocusMap().Refresh(myHandler,null);
 			}else{
-				Log.println(Log.ASSERT,"RECYCLE","通过白图作为底图");
+				Log.a("RECYCLE","通过白图作为底图");
 				mActiveView.FocusMap().Refresh(myHandler,null);
 			}
 			 /*}else{
@@ -685,8 +685,6 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 
 		} catch (Exception e1) {
 			Log.e("mBitScreen", "MapControl onDraw :451    特殊异常");
-			/*System.out.println("终于抓到你了！"); 
-			e1.printStackTrace();*/
 		}
 	}
 

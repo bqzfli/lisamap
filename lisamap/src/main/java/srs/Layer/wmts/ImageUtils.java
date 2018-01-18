@@ -9,8 +9,8 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 import android.util.LruCache;
+import srs.Utility.Log;
 
 public class ImageUtils {
 

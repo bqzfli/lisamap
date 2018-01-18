@@ -37,7 +37,7 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import srs.Utility.Log;
 
 /**
  * 用于在Map上描绘空间矢量图形的图层

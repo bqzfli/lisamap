@@ -94,9 +94,9 @@ public class DBImportUtil {
 
 //        if(db == null){
         try{
-            System.out.println("###数据库："+dbPath);
+            Log.i("DBImportUtil","###数据库："+dbPath);
             db = SQLiteDatabase.openOrCreateDatabase(dbPath, null);
-            System.out.println("###获得db");
+            Log.i("DBImportUtil","###获得db");
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -137,7 +137,7 @@ public class DBImportUtil {
             sql = "SELECT " + fstr + " FROM " + table + " " + " WHERE " + extendCondition;
         }
 
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 
@@ -182,7 +182,7 @@ public class DBImportUtil {
         }
 
         String sql = "SELECT "+fstr + " FROM "+table + " "+wstr;
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 
@@ -226,7 +226,7 @@ public class DBImportUtil {
         }
 
         String sql = "SELECT "+fstr + " FROM "+table + " "+wstr;
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 
@@ -270,7 +270,7 @@ public class DBImportUtil {
         }
 
         String sql = "SELECT "+fstr + " FROM "+table + " "+wstr;
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 
@@ -320,7 +320,7 @@ public class DBImportUtil {
         int count = 0;
 
         String sql = "SELECT COUNT(*) AS num FROM "+table;
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 
@@ -349,7 +349,7 @@ public class DBImportUtil {
         if(!StringUtil.isEmpty(where)){
             sql += " where " + where;
         }
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 
@@ -375,7 +375,7 @@ public class DBImportUtil {
         if(!StringUtil.isEmpty(where)){
             sql += " where " + where;
         }
-        System.out.println("###sql:"+sql);
+        Log.i("DBImportUtil","###sql:"+sql);
 
         Cursor c = db.rawQuery(sql, null);
 

@@ -1,10 +1,21 @@
 package srs.Layer;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.CallSuper;
+import android.support.annotation.UiThread;
+
 import java.io.IOException;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import srs.Display.FromMapPointDelegate;
 import srs.Display.IScreenDisplay;
 import srs.Display.ScreenDisplay;
@@ -18,17 +29,7 @@ import srs.Layer.wmts.LOD;
 import srs.Layer.wmts.TileInfo;
 import srs.Utility.sRSException;
 import srs.convert.Convert;
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.CallSuper;
-import android.support.annotation.UiThread;
-import android.util.Log;
+import srs.Utility.Log;
 
 /**瓦片地图图层
  * @author 李忠义
@@ -196,7 +197,7 @@ public class TileLayer extends Layer implements ITileLayer {
         }
         Log.i("WMTSLOAD", "需要下载" + String.valueOf(mURLs.size()) + "个瓦片");
 
-        Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "开始下载瓦片");
+        Log.i("LEVEL-ROW-COLUMN", "开始下载瓦片");
         mImages.downloadTiles2SDCRAD(ImageUtils.DOWNLOAD_THREAD_COUNT, mURLs, mSDCardFiles, null);
     }
 
@@ -233,7 +234,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 col = startRowCol[1] + j;
                 catheKey = tileName + "_" +String.valueOf(lod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
                 if(!ImageUtils.isBitmapSDCardExist(catheKey)){
-                    Log.println(Log.INFO, "WMTSLOAD", "瓦片需要下载：" + catheKey + " LEVEL"
+                    Log.i("WMTSLOAD", "瓦片需要下载：" + catheKey + " LEVEL"
                             +String.valueOf(lod.Level)
                             +"，ROW"+ String.valueOf(row)
                             +"，COL"+ String.valueOf(col));
@@ -242,7 +243,7 @@ public class TileLayer extends Layer implements ITileLayer {
                     mSDCardFiles.add(catheKey);
                     countRequired ++;
                 }else{
-                    Log.println(Log.INFO, "WMTSLOAD", "瓦片已经下载：" + catheKey + " LEVEL"
+                    Log.i( "WMTSLOAD", "瓦片已经下载：" + catheKey + " LEVEL"
                             + String.valueOf(lod.Level)
                             +"，ROW"+ String.valueOf(row)
                             +"，COL"+ String.valueOf(col));
@@ -250,7 +251,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 }
             }
         }
-        Log.println(Log.INFO, "WMTSLOAD", "LEVEL" + "需要下载" + String.valueOf(countRequired) + "个瓦片,"
+        Log.i( "WMTSLOAD", "LEVEL" + "需要下载" + String.valueOf(countRequired) + "个瓦片,"
                 + "已经下载"+ String.valueOf(countExist) + "个瓦片");
     }
 
@@ -319,13 +320,13 @@ public class TileLayer extends Layer implements ITileLayer {
 
         //创建合并的bitmap，将瓦片画在其上
         G = new Canvas(canvas);
-        Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level));
+        Log.i("LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level));
         drawFromSDCARD(left,top, rate,
                 rLod, vertImgCount, horzImgCount,
                 startRowCol,
                 handler);
         //逐个瓦片获取并画到画布上
-        Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level)+"\n\r--------------------");
+        Log.i("LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level)+"\n\r--------------------");
 
         getURLTiles(rectTileDraw,
                 handler);
@@ -411,7 +412,7 @@ public class TileLayer extends Layer implements ITileLayer {
 					/*已经下载到机身存储中的瓦片，无需内存缓存了
 					ImageUtils.Caches.put(catheKey, tileBmp);*/
                     tileBmp.recycle();
-                    Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "drawFromSDCARD:" + "绘制完毕：" + catheKey + " LEVEL"
+                    Log.i("LEVEL-ROW-COLUMN", "drawFromSDCARD:" + "绘制完毕：" + catheKey + " LEVEL"
                             +String.valueOf(rLod.Level)
                             +"，ROW"+ String.valueOf(row)
                             +"，COL"+ String.valueOf(col)
@@ -463,7 +464,7 @@ public class TileLayer extends Layer implements ITileLayer {
         ImageDownLoader.creatThreadPool(mURLs.size());
 
         if(mURLs.size()>0) {
-            Log.println(Log.INFO, "LEVEL-ROW-COLUMN",
+            Log.i("LEVEL-ROW-COLUMN",
                     "*********************\r\n"
                             +"开始下载瓦片");
             for (int i = 0; i < mURLs.size(); i++) {
@@ -475,7 +476,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 mImages.downloadImage(tileURL, catheKey, null, handler);
             }
         }else{
-            Log.println(Log.INFO, "LEVEL-ROW-COLUMN",
+            Log.i("LEVEL-ROW-COLUMN",
                     "*********************\n\r"
                             +"所需瓦片均在本机，无需下载"
                             +"\r\n***************************");
@@ -501,7 +502,7 @@ public class TileLayer extends Layer implements ITileLayer {
      */
     public static void DrawImageFromURL(String key,Handler handler){
         if(key!=null&&key.equalsIgnoreCase(SDCARDIMAGE)){
-            Log.println(Log.INFO, "LEVEL-ROW-COLUMN",
+            Log.i("LEVEL-ROW-COLUMN",
                     " ----------------\n\r" +"机身存储屏幕刷新开始");
         }else if(key!=null){
             Bitmap tileBmp = ImageUtils.Caches.get(key);
@@ -509,7 +510,7 @@ public class TileLayer extends Layer implements ITileLayer {
             if(tileBmp!=null){
                 if(rect!=null) {
                     G.drawBitmap(tileBmp, RectTileSize, rect, null);
-                    Log.println(Log.INFO, "LEVEL-ROW-COLUMN", " URL 瓦片已经绘制完毕！" + key);
+                    Log.i( "LEVEL-ROW-COLUMN", " URL 瓦片已经绘制完毕！" + key);
                 }
                 /*ImageUtils.Caches.remove(key);
                 tileBmp.recycle();*/
@@ -622,7 +623,7 @@ public class TileLayer extends Layer implements ITileLayer {
         URLGetCapabilitis = urlGetCatability;
         URLGetTile = urlGetTile;
         setLods(urlGetTile);
-        Log.println(Log.ASSERT,"Theards",mName +":Has setted LODs");
+        Log.a("Theards",mName +":Has setted LODs");
 		/*预先写死URL,不动态获取
 		 * new Thread(){
 			@Override
@@ -772,7 +773,7 @@ public class TileLayer extends Layer implements ITileLayer {
 		/*mTileInfo.Height = 256;
 		mTileInfo.Width = 256;
 		mTileInfo.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);*/
-        Log.println(Log.ASSERT,"Theards","Ready to set LOD");
+        Log.a("Theards","Ready to set LOD");
         LOD[] lodArray = new LOD[18];
         LOD lod1 = new LOD();
         lod1.Level = 1;

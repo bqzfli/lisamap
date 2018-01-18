@@ -1,27 +1,22 @@
 package srs.Layer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import srs.CoordinateSystem.ICoordinateSystem;
 import srs.DataSource.DB.DBSourceManager;
-import srs.DataSource.Table.ITable;
 import srs.Display.FromMapPointDelegate;
 import srs.Display.IScreenDisplay;
 import srs.Display.ScreenDisplay;
-import srs.Display.Symbol.ITextSymbol;
 import srs.Display.Symbol.SimpleFillSymbol;
 import srs.Display.Symbol.SimpleLineSymbol;
 import srs.Display.Symbol.SimplePointSymbol;
-import srs.Display.Symbol.TextSymbol;
-import srs.Element.ITextElement;
-import srs.Element.TextElement;
 import srs.Geometry.Envelope;
 import srs.Geometry.IEnvelope;
 import srs.Geometry.IPoint;
@@ -32,6 +27,7 @@ import srs.Rendering.CommonRenderer;
 import srs.Rendering.IRenderer;
 import srs.Utility.UTILTAG;
 import srs.Utility.sRSException;
+import srs.Utility.Log;
 
 /**
 * @ClassName: DBLayer

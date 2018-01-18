@@ -331,7 +331,7 @@ public class FactoryGPS {
 									+ GPSControl.DDToDMM(
 											gpscontrol.GPSLongitude, false)
 									+ "  ";
-							System.out.println("000000000000" + locInfo);
+							Log.i("FactoryGPS","000000000000" + locInfo);
 						}
 						if (mMapControl != null) {
 							// 地图为Albers坐标系时用此转换

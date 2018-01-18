@@ -42,9 +42,9 @@ public class LabelDB extends Label {
 
 
 			drawElements(canvas, sels, dbManager, Delegate);			
-			Log.i("LEVEL-ROW-COLUMN", "在绘制Label个数"+ String.valueOf(sels.size()));
+			Log.i("MAP_LABEL", "在绘制Label个数"+ String.valueOf(sels.size()));
 		}catch (java.lang.Exception e){
-			Log.i("LEVEL-ROW-COLUMN", "在绘制Label过程中发生不可预知的错误.");
+			Log.e("MAP_LABEL", "在绘制Label过程中发生不可预知的错误.\r\t" + e.getMessage());
 			throw new sRSException("在绘制Label过程中发生不可预知的错误.");
 		}
 	}

@@ -1,8 +1,12 @@
 package srs.Layer.wmts;
 
-import java.io.BufferedInputStream;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.WorkerThread;
+
 import java.io.ByteArrayOutputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -11,16 +15,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import javax.net.ssl.HttpsURLConnection;
-import org.apache.http.util.ByteArrayBuffer;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.WorkerThread;
-import android.util.Log;
+import srs.Utility.Log;
 
 public class ImageDownLoader {
 
@@ -109,7 +105,7 @@ public class ImageDownLoader {
 							//保存在SD卡或者手机目录
 							try {
 								ImageUtils.SaveBitmap(bitmap,key);
-								Log.println(Log.INFO, "WMTSLOAD", "瓦片机身获取、保存成功" + key);
+								Log.i("WMTSLOAD", "瓦片机身获取、保存成功" + key);
 								Message msg = new Message();
 								msg.arg1 = ImageUtils.DOWNLOAD_TILE_SUCCESS;
 								msg.getData().putString("KEY", key);
@@ -119,7 +115,7 @@ public class ImageDownLoader {
 								msg.arg1 = ImageUtils.DOWNLOAD_TILE_FAILED;
 								msg.getData().putString("KEY", key);
 								handler.sendMessage(msg);
-								Log.println(Log.INFO, "WMTSLOAD", "瓦片获取成功，  机身保存失败" + key);
+								Log.e("WMTSLOAD", "瓦片获取成功，  机身保存失败" + key);
 								e.printStackTrace();
 							}
 							try {
@@ -132,7 +128,7 @@ public class ImageDownLoader {
 							msg.arg1 = ImageUtils.DOWNLOAD_TILE_FAILED;
 							msg.getData().putString("KEY", key);
 							handler.sendMessage(msg);
-							Log.println(Log.INFO, "WMTSLOAD", "瓦片获取失败！" + key);
+							Log.i( "WMTSLOAD", "瓦片获取失败！" + key);
 							try {
 								Thread.sleep(1);
 							} catch (InterruptedException e) {
@@ -168,9 +164,9 @@ public class ImageDownLoader {
 						//保存在SD卡或者手机目录
 						try {
 							ImageUtils.SaveBitmap(bitmap,key);
-							Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片机身获取、保存成功" + key);
+							Log.i( "LEVEL-ROW-COLUMN", "瓦片机身获取、保存成功" + key);
 						} catch (Exception e) {
-							Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片获取成功，  机身保存失败" + key);
+							Log.e( "LEVEL-ROW-COLUMN", "瓦片获取成功，  机身保存失败" + key);
 							e.printStackTrace();
 						}
 						//将Bitmap 加入内存缓存
@@ -189,7 +185,7 @@ public class ImageDownLoader {
 						msg.arg1 = 4;
 						msg.getData().putString("KEY", key);
 						handler.sendMessage(msg);
-						Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片获取失败！" + key);
+						Log.i( "LEVEL-ROW-COLUMN", "瓦片获取失败！" + key);
 						try {
 							Thread.sleep(1);
 						} catch (InterruptedException e) {
@@ -262,13 +258,13 @@ public class ImageDownLoader {
 				GZIPInputStream gzipis = (GZIPInputStream)is;
 				byte[] cbt = unzip(gzipis);
 				img = BitmapFactory.decodeByteArray(cbt, 0, cbt.length);
-				Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片下载成功！");
+				Log.i( "LEVEL-ROW-COLUMN", "瓦片下载成功！");
 			}else{
 				img = BitmapFactory.decodeStream(is);
-				Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片下载成功！");
+				Log.i( "LEVEL-ROW-COLUMN", "瓦片下载成功！");
 			}
 		} catch (Exception e) {
-			Log.println(0, e.getMessage(), url);
+			Log.e( e.getMessage(), url);
 			e.printStackTrace();
 			if (con != null) {
 				con.disconnect();
@@ -278,7 +274,7 @@ public class ImageDownLoader {
 				times++;
 				img = getBitmapFormUrl(url,times);
 			}else if(times==3&&img==null){
-				Log.println(Log.INFO, "LEVEL-ROW-COLUMN", "瓦片下载失败！");
+				Log.i( "LEVEL-ROW-COLUMN", "瓦片下载失败！");
 			}
 		} finally {
 			if (con != null) {

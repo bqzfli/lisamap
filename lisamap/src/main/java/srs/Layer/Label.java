@@ -112,9 +112,9 @@ public class Label /*implements IXMLPersist*/{
 			Class<?> fieldType = featureClass.getFields().getField(featureClass.getFields().FindField(mFieldName)).getType();
 
 			drawElements(canvas, sels, fieldType, table, featureClass, Delegate);			
-			Log.i("LEVEL-ROW-COLUMN", featureClass.getName() + ":在绘制Label个数"+ String.valueOf(sels.size()));
+			Log.i("MAP_LABLE", featureClass.getName() + ":在绘制Label个数"+ String.valueOf(sels.size()));
 		}catch (java.lang.Exception e){
-			Log.i("LEVEL-ROW-COLUMN", featureClass.getName() +":在绘制Label过程中发生不可预知的错误.");
+			Log.e("MAP_LABLE", featureClass.getName() +":在绘制Label过程中发生不可预知的错误.\r\t"+e.getMessage());
 			throw new sRSException("在绘制Label过程中发生不可预知的错误.");
 		}
 	}

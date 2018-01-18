@@ -50,7 +50,8 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+
+import srs.Utility.Log;
 
 public class Map implements IMap,
 		LayerActiveChangedListener,
