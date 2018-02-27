@@ -1,1 +1,1 @@
-include ':lisamap', ':maptest', ':maptestARR'
+include ':lisamap', ':maptestNoButterknife'//, ':maptestARR'
