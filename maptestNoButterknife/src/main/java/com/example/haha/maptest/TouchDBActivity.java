@@ -111,6 +111,7 @@ public class TouchDBActivity extends Activity {
     }
 
     /**
+     * Todo
      * 设置数据显示筛选功能
      */
     private void setFilter(){
@@ -138,6 +139,9 @@ public class TouchDBActivity extends Activity {
         btRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mLAYER==null){
+                    return;
+                }
                 //todo  根据设置的过滤信息，更新地图显示的内容
                 /**
                  * 提取筛选字段、筛选值
@@ -156,6 +160,7 @@ public class TouchDBActivity extends Activity {
     }
 
     /**
+     * Todo
      * 核心功能部分
      * 设置图层点击事件
      */
