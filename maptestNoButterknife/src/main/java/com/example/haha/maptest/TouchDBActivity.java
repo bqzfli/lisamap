@@ -9,12 +9,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.lisa.datamanager.map.MapWMTSManager;
@@ -23,6 +28,7 @@ import com.lisa.datamanager.map.MapsUtil;
 import com.lisa.datamanager.set.DisplaySettings;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import srs.CoordinateSystem.ProjCSType;
@@ -66,12 +72,22 @@ public class TouchDBActivity extends Activity {
     private String mFilterField = "F_PID";
     /**筛选值*/
     private String mFilterValue = "44";
+    /**数据表中有用的字段*/
+    private String[] mFieldsNeed = new String[]{
+            "PK_ID",
+            "F_PID",
+            "F_CODE",
+            "F_CAPTION",
+            "F_RENDER",
+            "F_WKT"
+    };
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_touch_db);
+        //地图控件
         mMapControl = (MapControl)findViewById(R.id.map_main_test);
         try {
             //向MapControl中添加Map,并设置地图投影
@@ -83,12 +99,60 @@ public class TouchDBActivity extends Activity {
             MapWMTSManager.loadMap(this,MapWMTSManager.LAYER_TDT);            //获取WMTS数据
             //以上的部分属于Map初始设置，若是从其他界面传递过来的Map，可以忽略
 
-            //Todo 此函数为功能核心代码 设置点击工具
+            //Todo 此函数为功能核心代码
+            /**设置点击工具*/
             setTouchTool();
+            /**筛选条件*/
+            setFilter();
             // Log.ISLog = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 设置数据显示筛选功能
+     */
+    private void setFilter(){
+        /**筛选字段选择框**/
+        final Spinner filterSpinner = (Spinner) findViewById(R.id.spinner2);
+        //筛选字段
+        List<String> field_list = new ArrayList<String>();
+        for(String field : mFieldsNeed){
+            field_list.add(field);
+        }
+        //字段适配器
+        ArrayAdapter field_adapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, field_list);
+        //设置样式
+        field_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //加载适配器
+        filterSpinner.setAdapter(field_adapter);
+        //设置初始的筛选字段
+        filterSpinner.setSelection(1);
+
+        /**筛选值输入框*/
+        final EditText etFilterValue = (EditText)findViewById(R.id.et_field_value);
+        etFilterValue.setText("44");
+
+        Button btRefresh = (Button)findViewById(R.id.bt_refresh_map);
+        btRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo  根据设置的过滤信息，更新地图显示的内容
+                /**
+                 * 提取筛选字段、筛选值
+                 */
+                mFilterField = filterSpinner.getSelectedItem().toString();
+                mFilterValue = etFilterValue.getEditableText().toString();
+                try {
+                    mToolMultipleDB.ClearSelect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showToast(e.getMessage());
+                }
+                refreshData(mFilterField,mFilterValue);
+            }
+        });
     }
 
     /**
@@ -201,28 +265,22 @@ public class TouchDBActivity extends Activity {
         mLAYER.initInfos(
                 dirWorkSpace + "DATA.db",   //DB数据库路径
                 "VW_BIZ_SURVEY_DATA", //调查对象表名称
-                new String[]{                        //需要显示为LABEL的字段
-                        "PK_ID",
-                        "F_PID",
-                        "F_CODE",
-                        "F_CAPTION",
-                        "F_RENDER",
-                        "F_WKT"
-                },
-                new String[]{"F_CAPTION"} ,         //需要显示为LABEL的字段,r如：地块编号
-                new String[]{"F_RENDER"} ,    //作为唯一值、分段渲染所需要的字段，如COMPLETE等
-                "F_WKT",                  //作为矢量（空间）信息的字段名
-                srsGeometryType.Polygon,            //矢量的数据类型：点、线、面
-                new Envelope(),                     //图层范围
+                mFieldsNeed,                         //后期解算需要用到的字段
+                new String[]{"F_CAPTION"} ,          //需要显示为LABEL的字段,r如：地块编号
+                new String[]{"F_RENDER"} ,           //作为唯一值、分段渲染所需要的字段，如COMPLETE等
+                "F_WKT",                   //作为矢量（空间）信息的字段名
+                srsGeometryType.Polygon,             //矢量的数据类型：点、线、面
+                new Envelope(),                      //图层范围
                 null);            //图层数据的坐标系
         /**设置目标渲染方式 */
         // todo 自己替换getTargetRender(),此处只是示例
         mLAYER.setRenderer(GetTargetRender());
         /**设置标注样式*/
+        // todo 自己替换label的字号、颜色……此处只是示例
         DisplaySettings.SetLayerLabel(
                 mLAYER,
                 10,
-                Color.rgb(166,166,166),
+                Color.rgb(224,224,224),
                 Typeface.create("Times New Roman", Typeface.BOLD),
                 1/666.666,
                 null);
@@ -325,11 +383,12 @@ public class TouchDBActivity extends Activity {
             public void doEventSettingsChanged(List<Integer> indexs) throws IOException {
                 String info = "无选中的目标！";
                 if(indexs !=null&& indexs.size()>0) {
-                    info = "";
+                    info = "目标数据";
                     // 选中目标后出发的事件
                     for (int index : indexs) {
-                        info += "F_CODE:" + mLAYER.getDBSourceManager().getValueAll().get(index).get("F_CODE");
-                        info += ";   F_CAPTION:" + mLAYER.getDBSourceManager().getValueAll().get(index).get("F_CAPTION");
+                        for(String strField : mFieldsNeed){
+                            info += "\n\t"+ strField +":   "+mLAYER.getDBSourceManager().getValueAll().get(index).get(strField);
+                        }
                     }
                 }
                 showToast(info);

@@ -1,45 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="数据表图层点选"
-                android:gravity="center"
-                android:textSize="16dp"></TextView>
-            <RadioGroup android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/radioOn"
-                    android:checked="true"
-                    android:text="开"></RadioButton>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/radioOff"
-                    android:text="关"></RadioButton>
-            </RadioGroup>
-        </LinearLayout>
-    </LinearLayout>
     <srs.tools.MapControl
         android:id="@+id/map_main_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
     </srs.tools.MapControl>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_touch_touch_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:background ="#bfff"
+        android:layout_margin="8dp"
+        android:elevation="2dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_width="wrap_content"
+            android:text="数据表图层点选"
+            android:gravity="center"
+            android:textSize="16dp"></TextView>
+        <RadioGroup android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioOn"
+                android:checked="true"
+                android:text="开"></RadioButton>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioOff"
+                android:text="关"></RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#bfff"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/ll_touch_touch_set"
+        android:layout_margin="8dp"
+        android:elevation="2dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:text="设置显示内容"
+            android:gravity="center"
+            android:textSize="16dp"></TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:text = "筛选字段：">
+            </TextView>
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner2"
+                android:entries="@array/spingarr"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text = "筛选字段：">
+            </TextView>
+            <EditText
+                android:id="@+id/et_field_value"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textSize="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/bt_refresh_map"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:text="地图刷新"></Button>
+    </LinearLayout>
+
+</RelativeLayout>
