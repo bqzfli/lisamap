@@ -2,16 +2,21 @@ package srs.tools;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.lisa.map.app.R;
 
@@ -53,7 +58,6 @@ public class TouchLongToolMultipleDB extends BaseTool {
     /**选中的要素高亮显示时使用的
      *
      */
-
     private List<IElement> fillElements = null;
     private List<Integer> indexs = new ArrayList<Integer>();
     private List<IGeometry> geos = new ArrayList<IGeometry>();
@@ -73,6 +77,10 @@ public class TouchLongToolMultipleDB extends BaseTool {
      */
     public static float DisLongTouch = 60;
     private static String mTitleStr = "详细信息";
+    /**
+     * 选择是否有效
+     */
+    private  boolean mSelectAvailable = true;
     /**
      * MapControl输出的底图
      *
@@ -187,103 +195,105 @@ public class TouchLongToolMultipleDB extends BaseTool {
 	 */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mBitExMap = mBuddyControl.getActiveView().FocusMap()
-                        .ExportMap(false);
-                if (mExtTime == -1) {
-                    mExtTime = System.currentTimeMillis();
-                    mCurrentPoint = new PointF(event.getX() * mRate, event.getY()
-                            * mRate);
-                }
+        if(mSelectAvailable) {
+            //选择有效
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mBitExMap = mBuddyControl.getActiveView().FocusMap()
+                            .ExportMap(false);
+                    if (mExtTime == -1) {
+                        mExtTime = System.currentTimeMillis();
+                        mCurrentPoint = new PointF(event.getX() * mRate, event.getY()
+                                * mRate);
+                    }
 			/*xposition = (int) event.getX();
 			yposition = (int) event.getY();*/
-                break;
-            case MotionEvent.ACTION_UP:
-                try {
-                    if (event.getPointerCount() == 1
+                    break;
+                case MotionEvent.ACTION_UP:
+                    try {
+                        if (event.getPointerCount() == 1
 						/* mExtTime!=-1&&System.currentTimeMillis()-mExtTime>LONGTIME
 						 * &&Math.abs(event.getX()-xposition)<5
 						 * &&Math.abs(event.getY()-yposition)<5
 						 */) {
-                        // 长按
-                        super.onTouch(v, event);
-                        mExtTime = -1;
-                        PointF pF = new PointF(event.getX() * mRate, event.getY()
-                                * mRate);
-                        IPoint selGeo = mBuddyControl.ToWorldPoint(new PointF(pF.x,
-                                pF.y));
+                            // 长按
+                            super.onTouch(v, event);
+                            mExtTime = -1;
+                            PointF pF = new PointF(event.getX() * mRate, event.getY()
+                                    * mRate);
+                            IPoint selGeo = mBuddyControl.ToWorldPoint(new PointF(pF.x,
+                                    pF.y));
 
 
-                        if (mCurrentPoint != null
-                                && Math.abs(mCurrentPoint.x - pF.x) < DisLongTouch
-                                && Math.abs(mCurrentPoint.y - pF.y) < DisLongTouch) {
+                            if (mCurrentPoint != null
+                                    && Math.abs(mCurrentPoint.x - pF.x) < DisLongTouch
+                                    && Math.abs(mCurrentPoint.y - pF.y) < DisLongTouch) {
 
-                            // 在一个点位，此时才算“长点击”
-                            List<Integer> sels = mLayer.getDBSourceManager().selectOnly(
-                                    selGeo,
-                                    SearchType.Intersect,
-                                    mScreenDisplay.ToMapDistance(Dis),
-                                    null);
-                            IFillElement SELECTEDElement = null;
-                            Integer index = -1;
-                            if (sels != null && sels.size() > 0) {
-                                mExtTime = -1;
-                                IGeometry geo  = null;
-                                if (IsOnlyOneTime) {
-                                    geos.clear();
-                                    indexs.clear();
-                                }
-                                for(int i=0;i<sels.size();i++) {
-                                    index = sels.get(i);
-                                    // 查询图层中选中点所对应的geo
-                                    geo = mLayer.getDBSourceManager().getGeoByIndex(index);
-                                    if (indexs != null && indexs.size() > 0) {
-                                        if (indexs.contains(sels.get(i))) {
-                                            indexs.remove(sels.get(i));
-                                            geos.remove(geo);
+                                // 在一个点位，此时才算“长点击”
+                                List<Integer> sels = mLayer.getDBSourceManager().selectOnly(
+                                        selGeo,
+                                        SearchType.Intersect,
+                                        mScreenDisplay.ToMapDistance(Dis),
+                                        null);
+                                IFillElement SELECTEDElement = null;
+                                Integer index = -1;
+                                if (sels != null && sels.size() > 0) {
+                                    mExtTime = -1;
+                                    IGeometry geo = null;
+                                    if (IsOnlyOneTime) {
+                                        geos.clear();
+                                        indexs.clear();
+                                    }
+                                    for (int i = 0; i < sels.size(); i++) {
+                                        index = sels.get(i);
+                                        // 查询图层中选中点所对应的geo
+                                        geo = mLayer.getDBSourceManager().getGeoByIndex(index);
+                                        if (indexs != null && indexs.size() > 0) {
+                                            if (indexs.contains(sels.get(i))) {
+                                                indexs.remove(sels.get(i));
+                                                geos.remove(geo);
+                                            } else {
+                                                indexs.add(sels.get(i));
+                                                geos.add(geo);
+                                            }
                                         } else {
                                             indexs.add(sels.get(i));
                                             geos.add(geo);
                                         }
-                                    } else {
-                                        indexs.add(sels.get(i));
-                                        geos.add(geo);
+                                        if (IsOnlyOneSelect)
+                                            break;//如果仅仅选择一个，则直接跳出
                                     }
-                                    if(IsOnlyOneSelect)
-                                        break;//如果仅仅选择一个，则直接跳出
-                                }
-                                currentIndex = index;
+                                    currentIndex = index;
 
-                                mBuddyControl.getElementContainer().ClearElement();
-                                if(geo!=null&&geo instanceof IPolygon) {
-                                    for (int i = 0; i < indexs.size(); i++) {
-                                        IFillElement fillElement = new FillElement();
-                                        fillElement.setGeometry(geos.get(i));
-                                        fillElement.setSymbol(srs.Display.Setting.SelectPolygonFeatureStyle);
-                                        mBuddyControl.getElementContainer().AddElement(fillElement);
+                                    mBuddyControl.getElementContainer().ClearElement();
+                                    if (geo != null && geo instanceof IPolygon) {
+                                        for (int i = 0; i < indexs.size(); i++) {
+                                            IFillElement fillElement = new FillElement();
+                                            fillElement.setGeometry(geos.get(i));
+                                            fillElement.setSymbol(srs.Display.Setting.SelectPolygonFeatureStyle);
+                                            mBuddyControl.getElementContainer().AddElement(fillElement);
+                                        }
+                                    } else if (geo != null && geo instanceof IPoint) {
+                                        Bitmap bit = BitmapFactory.decodeResource(
+                                                mBuddyControl.getContext().getResources(), R.drawable.target);
+                                        for (int i = 0; i < indexs.size(); i++) {
+                                            IPicElement picElement = new PicElement();
+                                            picElement.setGeometry(geos.get(i));
+                                            picElement.setPic(bit,
+                                                    -bit.getWidth() / 2,
+                                                    -bit.getHeight());
+                                            mBuddyControl.getElementContainer().AddElement(picElement);
+                                        }
                                     }
-                                }else if(geo!=null&&geo instanceof IPoint){
-                                    Bitmap bit = BitmapFactory.decodeResource(
-                                            mBuddyControl.getContext().getResources(),R.drawable.target);
-                                    for (int i = 0; i < indexs.size(); i++) {
-                                        IPicElement picElement = new PicElement();
-                                        picElement.setGeometry(geos.get(i));
-                                        picElement.setPic(bit,
-                                                -bit.getWidth()/2,
-                                                -bit.getHeight());
-                                        mBuddyControl.getElementContainer().AddElement(picElement);
+                                    if (zoom2Selected != null) {
+                                        zoom2Selected.doEventSettingsChanged(indexs);
                                     }
-                                }
-                                if (zoom2Selected != null) {
-                                    zoom2Selected.doEventSettingsChanged(indexs);
-                                }
-                                mBuddyControl.PartialRefresh();
-                                /**
-                                 * 搜索成功后不需要平移地图，返回true，销毁操作事件
-                                 */
-                                return true;
-                            } /*else {
+                                    mBuddyControl.PartialRefresh();
+                                    /**
+                                     * 搜索成功后不需要平移地图，返回true，销毁操作事件
+                                     */
+                                    return true;
+                                } /*else {
                                 *//** 设置地图为未选中任何对象
                                  *//*
                                 if(SELECTEDElement!=null
@@ -292,18 +302,29 @@ public class TouchLongToolMultipleDB extends BaseTool {
                                 }
                                 mBuddyControl.PartialRefresh();
                             }*/
-                        }
+                            }
 					    /*修改 20150820  李忠义
 					    * 为了让地图能刷新，啥时候都要返回false*/
-                        return false;
+                            return false;
+                        }
+                    } catch (Exception e) {
+                        Log.e("MAP", "点选DB中的目标，action_up:" + e.getMessage());
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    Log.e("MAP","点选DB中的目标，action_up:"+e.getMessage());
-                    e.printStackTrace();
+                    mExtTime = -1;
+                    mCurrentPoint = null;
+                    break;
+            }
+        }else{
+            //选择无效
+            if (zoom2Selected != null) {
+                try {
+                    zoom2Selected.doEventSettingsChanged(null);
+                } catch (IOException e) {
+                    Log.e("TouchSelect",e.getMessage());
                 }
-                mExtTime = -1;
-                mCurrentPoint = null;
-                break;
+            }
+            return true;
         }
         return false;
     }
@@ -330,5 +351,19 @@ public class TouchLongToolMultipleDB extends BaseTool {
         mBuddyControl = null;
         mBitExMap = null;
         mLayer = null;
+    }
+
+    /**
+     * 选择是否有效
+     */
+    public boolean getSelectAvailable() {
+        return mSelectAvailable;
+    }
+
+    /**
+     * 选择是否有效
+     */
+    public void setSelectAvailable(boolean selectAvailable) {
+        this.mSelectAvailable = selectAvailable;
     }
 }

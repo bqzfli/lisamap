@@ -138,7 +138,26 @@ public class MapDBManager {
                 isOnlyOneSelect,
                 distanceBuffer);
         mToolMultipleDB.zoom2Selected = listener;
+    }
 
+    /**
+     * 设置点击是否有效
+     * @param avalable
+     */
+    public static void setSelectAvailable(boolean avalable){
+        if(mToolMultipleDB!=null) {
+               mToolMultipleDB.setSelectAvailable(avalable);
+        }
+    }
+
+    /**
+     * 获取点击是否有效
+     */
+    public static boolean getSelectAvailable(){
+        if(mToolMultipleDB!=null) {
+            return mToolMultipleDB.getSelectAvailable();
+        }
+        return false;
     }
 
     /**

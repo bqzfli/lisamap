@@ -76,6 +76,7 @@ public class DBSourceManager {
 
 	/**
 	 * 选中对象的外包矩形
+	 * 若目标类型为点图层，会使用defaultDistance向外扩展。否则直接向外扩展1/10
 	 * @param defaultDistance  若选中对象为一个单独的点，默认缩放的尺寸是多少
 	 * @return 				提取选中对象的范围
 	 */

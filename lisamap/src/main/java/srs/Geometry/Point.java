@@ -252,7 +252,7 @@ public class Point extends Geometry implements IPoint  {
 		part.AddPoint(new Point(_X+distance, _Y-distance));
 		part.AddPoint(new Point(_X-distance, _Y-distance));
 		part.AddPoint(new Point(_X-distance, _Y+distance));
-		
+
 		return new Polygon(part);
 	}
 
