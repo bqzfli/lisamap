@@ -57,17 +57,9 @@ public class TouchDBActivity extends Activity {
     /*** 图层数据 */
     private IDBLayer mLAYER = null;
     /**任务包路径 */
-    private String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Immigrant/dibinbin/1222/0101510122双流县V2/";;
+    private String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Immigrant/wucuiling/1457/0204510122双流县V1/";
     /**图层在地图中的顺序号 */
     private int ID_LayerDB = -1;
-    /** 地图控件*/
-    private MapControl mMapControl = null;
-    /** 地图点选操作*/
-    private TouchLongToolMultipleDB mToolMultipleDB = null;
-    /**地图刷新数据时使用的进度条*/
-    private ProgressDialog mProgressDialog = null;
-    private Toast mToast = null;
-
     /**筛选字段*/
     private String mFilterField = "F_PID";
     /**筛选值*/
@@ -81,6 +73,14 @@ public class TouchDBActivity extends Activity {
             "F_RENDER",
             "F_WKT"
     };
+    /** 地图控件*/
+    private MapControl mMapControl = null;
+    /** 地图点选操作*/
+    private TouchLongToolMultipleDB mToolMultipleDB = null;
+    /**地图刷新数据时使用的进度条*/
+    private ProgressDialog mProgressDialog = null;
+    private Toast mToast = null;
+
 
 
     @Override
@@ -155,6 +155,25 @@ public class TouchDBActivity extends Activity {
                     showToast(e.getMessage());
                 }
                 refreshData(mFilterField,mFilterValue);
+            }
+        });
+
+        Button btClearSelect = (Button)findViewById(R.id.bt_clear_map);
+        btClearSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mLAYER==null){
+                    return;
+                }
+                try {
+                    if(mToolMultipleDB!=null) {
+                        mToolMultipleDB.ClearSelect();
+                        mMapControl.PartialRefresh();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showToast(e.getMessage());
+                }
             }
         });
     }
@@ -358,7 +377,6 @@ public class TouchDBActivity extends Activity {
             mToolMultipleDB.ClearSelect();
             mMapControl.ClearDrawTool();
             mToolMultipleDB.dispose();
-
         }
     }
 
