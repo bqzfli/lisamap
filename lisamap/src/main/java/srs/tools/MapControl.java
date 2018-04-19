@@ -168,7 +168,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 								DrawTileImage(key,myHandler);
 								DrawTrackLayer();
 							}
-							if(TileLayer.IsDrawnEnd()){
+							if(TileLayer.isDrawnEnd()){
 								DrawTrackLayer();
 								Log.i("LEVEL-ROW-COLUMN", "图层："
 										+ String.valueOf(Map.INDEXDRAWLAYER)
@@ -493,7 +493,7 @@ public class MapControl extends BaseControl implements ContentChangedListener {
 	}
 
 	public void DrawTileImage(String key,Handler handler){
-		TileLayer.DrawImageFromURL(key,handler);
+		TileLayer.drawImageFromURL(key,handler);
 	}
 
 	/**将缓冲区中Layer部分的视图绘制到控件上    

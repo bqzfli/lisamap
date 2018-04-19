@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 
 import srs.Utility.Log;
+import srs.Utility.WMTS;
 
 public class ImageDownLoader {
 
@@ -105,7 +106,7 @@ public class ImageDownLoader {
 							//保存在SD卡或者手机目录
 							try {
 								ImageUtils.SaveBitmap(bitmap,key);
-								Log.i("WMTSLOAD", "瓦片机身获取、保存成功" + key);
+								Log.i("WMTSLOAD", "瓦片SD卡保存成功， 从SD卡获取" + key);
 								Message msg = new Message();
 								msg.arg1 = ImageUtils.DOWNLOAD_TILE_SUCCESS;
 								msg.getData().putString("KEY", key);
@@ -144,6 +145,85 @@ public class ImageDownLoader {
 		return ;
 	}
 
+
+	/**
+	 * 根据url从服务器下载多个瓦片
+	 * @param urls 瓦片下载地址
+	 * @param keys 瓦片保存位置
+	 * @param handler
+	 * @return
+	 */
+	public void downloadImages(final List<String> urls, final List<String> keys, final Handler handler){
+
+		getThreadPool().execute(new Runnable() {
+
+			@Override
+			public void run() {
+				ImageDownLoader.StartThread();
+				if (urls.size() == 0 || keys.size() == 0 || urls.size() != keys.size()) {
+					Log.i("LEVEL-ROW-COLUMN", "下载清单为0无需下载");
+					return;
+				}
+				String url = "";//下载地址
+				String key = "";//存储位置
+				for (int i = 0; i < urls.size(); i++) {
+					if(!ImageDownLoader.IsStop()) {
+						url = urls.get(i);
+						key = keys.get(i);
+						Bitmap bitmap = getBitmapFormUrl(url, 0);
+						if (key != null && bitmap != null) {
+							//保存在SD卡或者手机目录
+							try {
+								ImageUtils.SaveBitmap(bitmap, key);
+								Log.i("LEVEL-ROW-COLUMN", key + "：瓦片下载成功、保存成功");
+							} catch (Exception e) {
+								Log.e("LEVEL-ROW-COLUMN", key + "：瓦片获取成功，  机身保存失败");
+								e.printStackTrace();
+							}
+							Message msg = new Message();
+							msg.arg1 = WMTS.H_DOWNLOADING;
+							msg.getData().putString(WMTS.H_DOWNLOAD_TILE_KEY, key);
+							msg.getData().putInt(WMTS.H_DOWNLOAD_PROGRESS, i);
+							msg.getData().putInt(WMTS.H_DOWNLOAD_SUM, urls.size());
+							handler.sendMessage(msg);
+							try {
+								Thread.sleep(1);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						} else if (key != null && bitmap == null) {
+							Message msg = new Message();
+							msg.arg1 = WMTS.H_DOWNLOADING;
+							msg.getData().putString(WMTS.H_DOWNLOAD_TILE_KEY, key);
+							msg.getData().putInt(WMTS.H_DOWNLOAD_PROGRESS, i);
+							msg.getData().putInt(WMTS.H_DOWNLOAD_SUM, urls.size());
+							handler.sendMessage(msg);
+							Log.i("LEVEL-ROW-COLUMN", key + "：瓦片获取失败！");
+							try {
+								Thread.sleep(1);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}else{
+						Log.i("LEVEL-ROW-COLUMN", "瓦片下载被中途取消！");
+						Message msg = new Message();
+						msg.arg1 = WMTS.H_DOWNLOAD_CANCEL;
+						msg.getData().putInt(WMTS.H_DOWNLOAD_PROGRESS, i-1);
+						msg.getData().putInt(WMTS.H_DOWNLOAD_SUM, urls.size());
+						handler.sendMessage(msg);
+						return;
+					}
+				}
+				Message msg = new Message();
+				msg.arg1 = WMTS.H_DOWNLOAD_COMPLETE;
+				handler.sendMessage(msg);
+				Log.i("LEVEL-ROW-COLUMN", "瓦片全部下载完成！");
+				ImageDownLoader.StopThread();
+			}
+		});
+		return ;
+	}
 
 	/**
 	 * 先从内存缓存中获取Bitmap,如果没有就从SD卡或者手机缓存中获取，SD卡或者手机缓存

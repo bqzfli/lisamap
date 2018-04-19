@@ -1,5 +1,7 @@
 package srs.Layer;
 
+import android.os.Handler;
+
 import srs.Layer.wmts.TileInfo;
 
 /**切片图层
@@ -17,4 +19,24 @@ public interface ITileLayer extends ILayer {
 	 * @return
 	 */
 	public void setTileInfo(TileInfo value);
+
+	/**
+	 * 下载指定区域的全部瓦片至SD卡
+	 * @param xmin  左（坐标）
+	 * @param ymax  顶（坐标）
+	 * @param xmax  右（坐标）
+	 * @param ymin  底（坐标）
+	 * @param handler
+	 * @return
+	 */
+	public boolean downloadWMTSAll(
+			double xmin,double ymin, double xmax, double ymax,
+			Handler handler);
+
+	/**
+	 * 停止瓦片下载
+	 * @return
+	 */
+	public void stopDownloadWMTSAll();
+
 }

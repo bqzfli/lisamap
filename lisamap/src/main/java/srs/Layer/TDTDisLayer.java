@@ -107,6 +107,16 @@ public class TDTDisLayer extends Layer implements ITileLayer {
 		this.mTileInfo=value;
 	}
 
+	@Override
+	public boolean downloadWMTSAll(double xmin, double ymin, double xmax, double ymax, Handler handler) {
+		return false;
+	}
+
+	@Override
+	public void stopDownloadWMTSAll() {
+
+	}
+
 	/* 画图层
 	 * @see Layer.Layer#DrawLayer(Show.IScreenDisplay, int)
 	 */

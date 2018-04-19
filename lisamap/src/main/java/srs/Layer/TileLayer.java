@@ -12,7 +12,9 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -97,7 +99,7 @@ public class TileLayer extends Layer implements ITileLayer {
     /**是否绘制完所有瓦片
      * @return
      */
-    public static boolean IsDrawnEnd(){
+    public static boolean isDrawnEnd(){
         return mURLRect.isEmpty();
     }
 
@@ -131,7 +133,7 @@ public class TileLayer extends Layer implements ITileLayer {
 		/*  if(lod.Level<11)
             url = this.Source() + "&X=" + col + "&" + "Y=" + row + "&" + "L=" + lod.Level;
         else*/
-		/*url = lod.Url + "&X=" + col + "&" + "Y=" + row + "&" + "L=" + lod.Level;*/
+        /*url = lod.Url + "&X=" + col + "&" + "Y=" + row + "&" + "L=" + lod.Level;*/
         url = lod.Url;
         url = url.replace("?????L", String.valueOf(lod.Level));
         url = url.replace("?????X", String.valueOf(col));
@@ -168,7 +170,7 @@ public class TileLayer extends Layer implements ITileLayer {
                              IEnvelope extent,
                              FromMapPointDelegate Delegate,
                              Handler handler) throws IOException{
-        MergeImage(display.getCache(),display,
+        mergeImage(display.getCache(),display,
                 extent.XMin(),extent.YMax(), extent.XMax(),extent.YMin(),
                 (int)display.getDeviceExtent().Width(),(int)display.getDeviceExtent().Height(),
                 handler);
@@ -212,8 +214,8 @@ public class TileLayer extends Layer implements ITileLayer {
      */
     private void calculateURL2LOD(LOD lod,double XMin, double YMax, double XMax, double YMin,int imgWidth,int imgHeight){
         //获取左上角和右下角坐标
-        int[] startRowCol = GetColAndRow(lod, XMin, YMax);
-        int[] lastRowCol = GetColAndRow(lod, XMax, YMin);
+        int[] startRowCol = getColAndRow(lod, XMin, YMax);
+        int[] lastRowCol = getColAndRow(lod, XMax, YMin);
         //切片水平、垂直方向数目
         int horzImgCount = Math.max(imgWidth / lod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
         int vertImgCount = Math.max(imgHeight / lod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
@@ -255,6 +257,85 @@ public class TileLayer extends Layer implements ITileLayer {
                 + "已经下载"+ String.valueOf(countExist) + "个瓦片");
     }
 
+    public void stopDownloadWMTSAll(){
+        ImageDownLoader.StopThread();
+
+    }
+
+    /**
+     * 下载指定区域的全部瓦片至SD卡
+     * @param xmin  左（坐标）
+     * @param ymax  顶（坐标）
+     * @param xmax  右（坐标）
+     * @param ymin  底（坐标）
+     * @param handler
+     * @return
+     */
+    public boolean downloadWMTSAll(
+            double xmin,double ymin, double xmax, double ymax,
+            final Handler handler){
+        mSDCardFiles.clear();
+        mURLs.clear();
+        boolean status = false;
+        int row,col;
+        String tileURL = "";        //瓦片的下载地址
+        String catheKey = "";       //瓦片缓存关键字
+        String tileName = mName;    //瓦片名前缀
+
+        if (mTileInfo.LODs == null) {
+            //瓦片级别参数定义错误
+            Log.e("LEVEL-ROW-COLUMN", "瓦片级别参数定义错误");
+            return status;
+        }
+        //获取需要下载的瓦片
+        for(LOD clod : mTileInfo.LODs){
+            //获取当前层级左上角和右下角坐标
+            int[] startRowCol = getColAndRow(clod, xmin, ymax);
+            int[] lastRowCol = getColAndRow(clod, xmax, ymin);
+            //切片水平、垂直方向数目
+            int horzImgCount = lastRowCol[1] - startRowCol[1] + 1;
+            int vertImgCount = lastRowCol[0] - startRowCol[0] + 1;
+            //提取需要下载的瓦片
+            for (int i = 0; i < vertImgCount; i++){
+                for (int j = 0; j < horzImgCount; j++){
+                    row = startRowCol[0] + i;
+                    col = startRowCol[1] + j;
+                    catheKey = tileName + "_" +String.valueOf(clod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
+                    Log.i("LEVEL-ROW-COLUMN","---------------------------\r\n"
+                            + "drawFromSDCARD:" + "开始获取瓦片：" + catheKey + " LEVEL"
+                            +String.valueOf(clod.Level)
+                            +"，ROW"+ String.valueOf(row)
+                            +"，COL"+ String.valueOf(col));
+
+                    tileURL = getTileUrl(row, col, clod);
+                    mURLs.add(tileURL);
+                    mSDCardFiles.add(catheKey);
+                }
+            }
+        }
+
+        //启动一个线程 开始下载
+        if(mURLs.size()>0) {
+            Log.i("LEVEL-ROW-COLUMN",
+                    "*********************\r\n"
+                            +"开始下载瓦片");
+            ImageDownLoader.creatThreadPool(1);
+            mImages.downloadImages(mURLs, mSDCardFiles, handler);
+            status = true;
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Log.i("LEVEL-ROW-COLUMN",
+                    "*********************\n\r"
+                            +"无需要下载的瓦片"
+                            +"\r\n***************************");
+        }
+        return status;
+    }
+
     /**切片融合并显示
      * @param canvas 图片
      * @param XMin 左
@@ -267,7 +348,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @throws IOException
      */
     @SuppressLint("UseValueOf")
-    public final Bitmap MergeImage(Bitmap canvas,IScreenDisplay display,
+    public final Bitmap mergeImage(Bitmap canvas,IScreenDisplay display,
                                    double XMin, double YMax, double XMax, double YMin,
                                    int imgWidth,int imgHeight,
                                    Handler handler) throws IOException{
@@ -295,14 +376,14 @@ public class TileLayer extends Layer implements ITileLayer {
         if (new Double(rLod.Resolution).equals(0.0))
             return canvas;
 
-        //获取左上角和右下角坐标
-        int[] startRowCol = GetColAndRow(rLod, XMin, YMax);
-        int[] lastRowCol = GetColAndRow(rLod, XMax, YMin);
+        //获取左上角和右下角行列坐标
+        int[] startRowCol = getColAndRow(rLod, XMin, YMax);
+        int[] lastRowCol = getColAndRow(rLod, XMax, YMin);
         //切片水平、垂直方向数目
         int horzImgCount = Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
         int vertImgCount = Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
         //获取拼接后的实际地理坐标范围
-        IEnvelope leftTop = GetMapExtent(startRowCol[0],startRowCol[1],rLod);
+        IEnvelope leftTop = getMapExtent(startRowCol[0],startRowCol[1],rLod);
         //比率 “画面尺寸/实际尺寸”
         float rate = (float) (rLod.Resolution/display.getRate());
         int left=0,top=0;
@@ -328,19 +409,19 @@ public class TileLayer extends Layer implements ITileLayer {
         //逐个瓦片获取并画到画布上
         Log.i("LEVEL-ROW-COLUMN", "级别："+String.valueOf(rLod.Level)+"\n\r--------------------");
 
-        getURLTiles(rectTileDraw,
+        drawTilesFromURL(rectTileDraw,
                 handler);
 
         return canvas;
     }
 
     /**整理切片列表，并将LRU与sd卡上的tile画在屏幕上
-     * @param left
-     * @param top
-     * @param rate
-     * @param rLod
-     * @param vertImgCount
-     * @param horzImgCount
+     * @param left  左上角点瓦片的行序号
+     * @param top   左上角点瓦片的列序号
+     * @param rate  比例尺
+     * @param rLod  瓦片的描述级别
+     * @param vertImgCount  纵向瓦片数量
+     * @param horzImgCount  横向瓦片数量
      * @param startRowCol
      * @param handler
      */
@@ -453,11 +534,11 @@ public class TileLayer extends Layer implements ITileLayer {
     }
 
     /**获取web瓦片获取并画到画布上
-     * @param rectTileDraw
-     * @param handler
+     * @param rectTileDraw  绘制范围
+     * @param handler       绘制控制器
      */
-    private void getURLTiles(RectF rectTileDraw,
-                             Handler handler){
+    private void drawTilesFromURL(RectF rectTileDraw,
+                                  Handler handler){
 
         String catheKey = "";
         String tileURL = "";
@@ -482,6 +563,7 @@ public class TileLayer extends Layer implements ITileLayer {
                             +"\r\n***************************");
         }
 
+
 		/*if(System.currentTimeMillis()-dateStart>250){
 			//每绘制一个图层发送一次消息
 			Message message=new Message();
@@ -500,7 +582,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @param key 瓦片名
      * @param handler
      */
-    public static void DrawImageFromURL(String key,Handler handler){
+    public static void drawImageFromURL(String key,Handler handler){
         if(key!=null&&key.equalsIgnoreCase(SDCARDIMAGE)){
             Log.i("LEVEL-ROW-COLUMN",
                     " ----------------\n\r" +"机身存储屏幕刷新开始");
@@ -516,7 +598,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 tileBmp.recycle();*/
             }else if(tileBmp==null&&rect!=null){
                 //此处无图，不做处理
-                Log.e("LEVEL-ROW-COLUMN", "!!!!!!!!!!!!\n\r此处无法获取瓦片，不做处理！\n\r!!!!!!!!!!!!"+ key);
+                Log.e("LEVEL-ROW-COLUMN", "!!!!!!!!!!!!\n\r此地区无法获取瓦片，不做处理！\n\r!!!!!!!!!!!!"+ key);
             }
             mURLRect.remove(key);
         }
@@ -529,7 +611,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @param lod 级别信息
      * @return
      */
-    public IEnvelope GetMapExtent(int rowIndex, int colIndex, LOD lod){
+    public IEnvelope getMapExtent(int rowIndex, int colIndex, LOD lod){
         //空间坐标
         IEnvelope env = null;
         //使用分辨率得到一张图片代表的实际地理范围
@@ -552,7 +634,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @param dy y坐标
      * @return 行列号的数组，0：行号，1：列号
      */
-    public int[] GetColAndRow(LOD lod,double dx,double dy){
+    public int[] getColAndRow(LOD lod,double dx,double dy){
         double imgWidth = lod.Resolution * lod.Width;
         double imgHeight = lod.Resolution * lod.Height;
 
@@ -580,46 +662,31 @@ public class TileLayer extends Layer implements ITileLayer {
     }
 
 
-
-    /**设置瓦片级别
-     * @param tiles
+    /**
+     * 设置需要显示的最深级别
+     * @param Maxlevel 最深级别，从0级开始，默认最深18级别；
      */
-	/*private void setTileMatix(List<Element> tiles,String url){
-		int size = tiles.size();
-		LOD[] lodArray = new LOD[size];
-		Element cele = null;
-		String[] strpoints=null;
-		double arg1 = 0;
-		double arg2 = 0;
-		for(int i=0;i<tiles.size();i++){
-			cele = tiles.get(i);
-			LOD clod = new LOD();
-			clod.Level = Integer.valueOf(cele.element("Identifier").getStringValue());
-			clod.Resolution = 156543.0339279999/Math.pow(2, clod.Level);
-			clod.ScaleDenominator = Double.valueOf(cele.element("ScaleDenominator").getStringValue());
-			clod.Url = url;
-			strpoints = cele.element("TopLeftCorner").getStringValue().split(" ");
-			arg1 = Double.valueOf(strpoints[0]);
-			arg2 = Double.valueOf(strpoints[1]);
-			if(arg1>0){
-				clod.Origin = new Point(arg2,arg1);				
-			}else{
-				clod.Origin = new Point(arg1,arg2);
-			}
-			clod.Width = Integer.valueOf(cele.element("TileWidth").getStringValue());
-			clod.Height = Integer.valueOf(cele.element("TileHeight").getStringValue());
-			lodArray[i] = clod;
-		}
-		mTileInfo.LODs = lodArray;
-	}*/
-
+    public void setLodMaxLevels(int Maxlevel){
+        if(Maxlevel<0||Maxlevel>18){
+            Log.i("WMTSLEVEL:","超出限制"+ String.valueOf(Maxlevel));
+            return;
+        }else{
+            /* LOD[] temps = new LOD[Maxlevel];
+            for(int i=0;i<Maxlevel;i++){
+                temps[i]=mTileInfo.LODs[i];
+            }
+            mTileInfo.LODs = temps;*/
+            mTileInfo.LODs = Arrays.copyOf(mTileInfo.LODs, Maxlevel);
+        }
+    }
 
 
     /**设置TileInfo
-     * @param urlGetCatability 服务URL
+     * @param urlGetCatability 服务URL，通过url来解析wmts服务的相关参数
+     * @param urlGetTile 服务标题，用来设置wmts图层的标题
      */
-    public void setTileInfo(String urlGetCatability,String urlGetTile){
-		/*this.setLods(urlGetCatability);*/
+    public void setTileInfo(String urlGetCatability, String urlGetTile){
+        /*this.setLods(urlGetCatability);*/
         URLGetCapabilitis = urlGetCatability;
         URLGetTile = urlGetTile;
         setLods(urlGetTile);
@@ -710,8 +777,6 @@ public class TileLayer extends Layer implements ITileLayer {
 	};*/
 
 
-
-
     /**设置图层信息
      * @param layer
      */
@@ -749,22 +814,39 @@ public class TileLayer extends Layer implements ITileLayer {
 	}*/
 
 
-    /**
-     * 设置最深级别
-     * @param Maxlevel 最深级别，从0级开始，默认最深18级别；
+
+    /**设置瓦片级别
+     * @param tiles
      */
-    public void setLodMaxLevels(int Maxlevel){
-        if(Maxlevel<0||Maxlevel>18){
-            Log.i("WMTSLEVEL:","超出限制"+ String.valueOf(Maxlevel));
-            return;
-        }else{
-            LOD[] temps = new LOD[Maxlevel];
-            for(int i=0;i<Maxlevel;i++){
-                temps[i]=mTileInfo.LODs[i];
-            }
-            mTileInfo.LODs = temps;
-        }
-    }
+	/*private void setTileMatix(List<Element> tiles,String url){
+		int size = tiles.size();
+		LOD[] lodArray = new LOD[size];
+		Element cele = null;
+		String[] strpoints=null;
+		double arg1 = 0;
+		double arg2 = 0;
+		for(int i=0;i<tiles.size();i++){
+			cele = tiles.get(i);
+			LOD clod = new LOD();
+			clod.Level = Integer.valueOf(cele.element("Identifier").getStringValue());
+			clod.Resolution = 156543.0339279999/Math.pow(2, clod.Level);
+			clod.ScaleDenominator = Double.valueOf(cele.element("ScaleDenominator").getStringValue());
+			clod.Url = url;
+			strpoints = cele.element("TopLeftCorner").getStringValue().split(" ");
+			arg1 = Double.valueOf(strpoints[0]);
+			arg2 = Double.valueOf(strpoints[1]);
+			if(arg1>0){
+				clod.Origin = new Point(arg2,arg1);
+			}else{
+				clod.Origin = new Point(arg1,arg2);
+			}
+			clod.Width = Integer.valueOf(cele.element("TileWidth").getStringValue());
+			clod.Height = Integer.valueOf(cele.element("TileHeight").getStringValue());
+			lodArray[i] = clod;
+		}
+		mTileInfo.LODs = lodArray;
+	}*/
+
 
     /**设置默认级别
      *
