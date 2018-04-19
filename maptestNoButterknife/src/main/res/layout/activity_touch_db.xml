@@ -10,6 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <Button
+            android:id="@+id/bt_download_wmts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="154dp"
+            android:text="瓦片下载\n(显示范围)" />
     </srs.tools.MapControl>
 
     <LinearLayout
