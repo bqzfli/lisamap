@@ -217,6 +217,8 @@ public class ImageDownLoader {
 				}
 				Message msg = new Message();
 				msg.arg1 = WMTS.H_DOWNLOAD_COMPLETE;
+				msg.getData().putInt(WMTS.H_DOWNLOAD_PROGRESS, urls.size());
+				msg.getData().putInt(WMTS.H_DOWNLOAD_SUM, urls.size());
 				handler.sendMessage(msg);
 				Log.i("LEVEL-ROW-COLUMN", "瓦片全部下载完成！");
 				ImageDownLoader.StopThread();
