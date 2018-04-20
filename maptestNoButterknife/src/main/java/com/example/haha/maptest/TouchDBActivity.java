@@ -2,7 +2,6 @@ package com.example.haha.maptest;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -27,6 +26,7 @@ import com.lisa.datamanager.map.MapWMTSManager;
 import com.lisa.datamanager.map.MapsManager;
 import com.lisa.datamanager.map.MapsUtil;
 import com.lisa.datamanager.set.DisplaySettings;
+import srs.tools.DownLoadWMTS;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,11 +44,9 @@ import srs.Geometry.IEnvelope;
 import srs.Geometry.srsGeometryType;
 import srs.Layer.DBLayer;
 import srs.Layer.IDBLayer;
-import srs.Layer.TileLayer;
 import srs.Rendering.CommonUniqueRenderer;
 import srs.Rendering.IRenderer;
 import srs.Utility.Log;
-import srs.Utility.WMTS;
 import srs.Utility.sRSException;
 import srs.tools.Event.MultipleItemChangedListener;
 import srs.tools.MapBaseTool;
@@ -84,49 +82,6 @@ public class TouchDBActivity extends Activity {
     private ProgressDialog mProgressDialog = null;
     private Toast mToast = null;
 
-    private static ProgressDialog mDilalog;
-
-    Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int progress = 0;
-            int sum = 100;
-            switch (msg.arg1){
-                case WMTS.H_DOWNLOAD_COMPLETE:
-                    //下载完成
-                    progress =  msg.getData().getInt(WMTS.H_DOWNLOAD_PROGRESS);
-                    sum = msg.getData().getInt(WMTS.H_DOWNLOAD_SUM);
-                    mDilalog.setProgress(progress);
-                    mDilalog.setMax(sum);
-                    mDilalog.setTitle("下载WMTS瓦片数据");
-                    mDilalog.setMessage("下载完成");
-                    break;
-                case WMTS.H_DOWNLOADING:
-                    //下载中
-                    progress =  msg.getData().getInt(WMTS.H_DOWNLOAD_PROGRESS);
-                    sum = msg.getData().getInt(WMTS.H_DOWNLOAD_SUM);
-                    String tileKey = msg.getData().getString(WMTS.H_DOWNLOAD_TILE_KEY);
-                    mDilalog.setTitle("下载WMTS瓦片数据");
-                    mDilalog.setMessage(String.format("瓦片“ %s ”下载完成", tileKey));
-                    mDilalog.setProgress(progress);
-                    mDilalog.setMax(sum);
-                    break;
-                case WMTS.H_DOWNLOAD_CANCEL:
-                    //取消下载
-                    progress =  msg.getData().getInt(WMTS.H_DOWNLOAD_PROGRESS);
-                    sum = msg.getData().getInt(WMTS.H_DOWNLOAD_SUM);
-                    mDilalog.setCanceledOnTouchOutside(true);
-                    mDilalog.setCancelable(true);
-                    mDilalog.setTitle("下载WMTS瓦片数据");
-                    mDilalog.setMessage(String.format("瓦片下载完成被取消，已完成 %s ", String.valueOf(progress/sum))+"%！");
-                    mDilalog.setProgress(progress);
-                    mDilalog.setMax(sum);
-                    mDilalog.show();
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,25 +122,8 @@ public class TouchDBActivity extends Activity {
      * 下载瓦片数据
      */
     private void downloadAllTiles(){
-        IEnvelope mapExtent = mMapControl.getMap().getExtent();
-        //设置弹窗
-        mDilalog = new ProgressDialog(this);
-        mDilalog.setCanceledOnTouchOutside(true);
-        mDilalog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // 设置为矩形进度条
-        mDilalog.setCancelable(true);
-        mDilalog.setTitle("下载WMTS瓦片数据");
-        mDilalog.setMessage("开始下载瓦片");
-        mDilalog.show();
-        mDilalog.setProgress(0);
-        mDilalog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                MapWMTSManager.LAYER_TDT.stopDownloadWMTSAll();
-            }
-        });
-        MapWMTSManager.LAYER_TDT.downloadWMTSAll(
-                mapExtent.XMin(),mapExtent.YMin(),mapExtent.XMax(),mapExtent.YMax(),
-                mHandler);
+        DownLoadWMTS downLoadWMTS = new DownLoadWMTS();
+        downLoadWMTS.start(this,MapWMTSManager.LAYER_TDT,mMapControl.getMap().getExtent());
     }
 
     /**
