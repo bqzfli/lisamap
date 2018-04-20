@@ -1,5 +1,6 @@
 package srs.Layer;
 
+import android.content.Context;
 import android.os.Handler;
 
 import srs.Layer.wmts.TileInfo;
@@ -22,6 +23,7 @@ public interface ITileLayer extends ILayer {
 
 	/**
 	 * 下载指定区域的全部瓦片至SD卡
+	 * @param context
 	 * @param xmin  左（坐标）
 	 * @param ymax  顶（坐标）
 	 * @param xmax  右（坐标）
@@ -29,7 +31,7 @@ public interface ITileLayer extends ILayer {
 	 * @param handler
 	 * @return
 	 */
-	public boolean downloadWMTSAll(
+	public void downloadWMTSAll(Context context,
 			double xmin,double ymin, double xmax, double ymax,
 			Handler handler);
 

@@ -1,6 +1,7 @@
 package srs.Layer;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
@@ -29,6 +30,7 @@ import srs.Layer.wmts.ImageDownLoader;
 import srs.Layer.wmts.ImageUtils;
 import srs.Layer.wmts.LOD;
 import srs.Layer.wmts.TileInfo;
+import srs.Utility.WMTS;
 import srs.Utility.sRSException;
 import srs.convert.Convert;
 import srs.Utility.Log;
@@ -264,6 +266,7 @@ public class TileLayer extends Layer implements ITileLayer {
 
     /**
      * 下载指定区域的全部瓦片至SD卡
+     * @param context
      * @param xmin  左（坐标）
      * @param ymax  顶（坐标）
      * @param xmax  右（坐标）
@@ -271,69 +274,81 @@ public class TileLayer extends Layer implements ITileLayer {
      * @param handler
      * @return
      */
-    public boolean downloadWMTSAll(
-            double xmin,double ymin, double xmax, double ymax,
-            final Handler handler){
-        mSDCardFiles.clear();
-        mURLs.clear();
-        boolean status = false;
-        int row,col;
-        String tileURL = "";        //瓦片的下载地址
-        String catheKey = "";       //瓦片缓存关键字
-        String tileName = mName;    //瓦片名前缀
+    public void downloadWMTSAll(final Context context,
+                                final double xmin, final double ymin, final double xmax, final double ymax,
+                                final Handler handler){
 
-        if (mTileInfo.LODs == null) {
-            //瓦片级别参数定义错误
-            Log.e("LEVEL-ROW-COLUMN", "瓦片级别参数定义错误");
-            return status;
-        }
-        //获取需要下载的瓦片
-        for(LOD clod : mTileInfo.LODs){
-            //获取当前层级左上角和右下角坐标
-            int[] startRowCol = getColAndRow(clod, xmin, ymax);
-            int[] lastRowCol = getColAndRow(clod, xmax, ymin);
-            //切片水平、垂直方向数目
-            int horzImgCount = lastRowCol[1] - startRowCol[1] + 1;
-            int vertImgCount = lastRowCol[0] - startRowCol[0] + 1;
-            //提取需要下载的瓦片
-            for (int i = 0; i < vertImgCount; i++){
-                for (int j = 0; j < horzImgCount; j++){
-                    row = startRowCol[0] + i;
-                    col = startRowCol[1] + j;
-                    catheKey = tileName + "_" +String.valueOf(clod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
-                    Log.i("LEVEL-ROW-COLUMN","---------------------------\r\n"
-                            + "drawFromSDCARD:" + "开始获取瓦片：" + catheKey + " LEVEL"
-                            +String.valueOf(clod.Level)
-                            +"，ROW"+ String.valueOf(row)
-                            +"，COL"+ String.valueOf(col));
+        //启动一个线程
+        ImageDownLoader.creatThreadPool(1);
+        ImageDownLoader.getThreadPool().execute(new Runnable(){
+            @Override
+            public void run() {
+                ImageDownLoader.StartThread();
+                mSDCardFiles.clear();
+                mURLs.clear();
+                int row,col;
+                String tileURL = "";        //瓦片的下载地址
+                String catheKey = "";       //瓦片缓存关键字
+                String tileName = mName;    //瓦片名前缀
 
-                    tileURL = getTileUrl(row, col, clod);
-                    mURLs.add(tileURL);
-                    mSDCardFiles.add(catheKey);
+                if (mTileInfo.LODs == null) {
+                    //瓦片级别参数定义错误
+                    Log.e("LEVEL-ROW-COLUMN", "瓦片级别参数定义错误");
+                    Message msg = new Message();
+                    msg.arg1 = WMTS.H_DOWNLOAD_CONFIGERROR;
+                    handler.sendMessage(msg);
+                    ImageDownLoader.StopThread();
+                    return;
                 }
-            }
-        }
+                //获取需要下载的瓦片
+                for(LOD clod : mTileInfo.LODs){
+                    //获取当前层级左上角和右下角坐标
+                    int[] startRowCol = getColAndRow(clod, xmin, ymax);
+                    int[] lastRowCol = getColAndRow(clod, xmax, ymin);
+                    //切片水平、垂直方向数目
+                    int horzImgCount = lastRowCol[1] - startRowCol[1] + 1;
+                    int vertImgCount = lastRowCol[0] - startRowCol[0] + 1;
+                    //提取需要下载的瓦片
+                    for (int i = 0; i < vertImgCount; i++){
+                        for (int j = 0; j < horzImgCount; j++){
+                            row = startRowCol[0] + i;
+                            col = startRowCol[1] + j;
+                            catheKey = tileName + "_" +String.valueOf(clod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
+                            Log.i("LEVEL-ROW-COLUMN","---------------------------\r\n"
+                                    + "drawFromSDCARD:" + "开始获取瓦片：" + catheKey + " LEVEL"
+                                    +String.valueOf(clod.Level)
+                                    +"，ROW"+ String.valueOf(row)
+                                    +"，COL"+ String.valueOf(col));
 
-        //启动一个线程 开始下载
-        if(mURLs.size()>0) {
-            Log.i("LEVEL-ROW-COLUMN",
-                    "*********************\r\n"
-                            +"开始下载瓦片");
-            ImageDownLoader.creatThreadPool(1);
-            mImages.downloadImages(mURLs, mSDCardFiles, handler);
-            status = true;
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                            tileURL = getTileUrl(row, col, clod);
+                            mURLs.add(tileURL);
+                            mSDCardFiles.add(catheKey);
+                        }
+                    }
+                }
+
+                if(mURLs.size()>0
+                        &&mSDCardFiles.size()>0
+                        &&mSDCardFiles.size()==mURLs.size()) {
+                    Log.i("LEVEL-ROW-COLUMN",
+                            "*********************\r\n"
+                                    +"开始下载瓦片");
+
+                    mImages.downloadImages(context, mURLs, mSDCardFiles, handler);
+                }else{
+                    Log.i("LEVEL-ROW-COLUMN",
+                            "*********************\n\r"
+                                    +"无需要下载的瓦片"
+                                    +"\r\n***************************");
+                }
+                ImageDownLoader.StopThread();
             }
-        }else{
-            Log.i("LEVEL-ROW-COLUMN",
-                    "*********************\n\r"
-                            +"无需要下载的瓦片"
-                            +"\r\n***************************");
+        });
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        return status;
     }
 
     /**切片融合并显示

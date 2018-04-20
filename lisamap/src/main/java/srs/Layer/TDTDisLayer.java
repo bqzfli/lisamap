@@ -17,6 +17,7 @@ import srs.Layer.wmts.TileInfo;
 import srs.convert.Convert;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -108,8 +109,7 @@ public class TDTDisLayer extends Layer implements ITileLayer {
 	}
 
 	@Override
-	public boolean downloadWMTSAll(double xmin, double ymin, double xmax, double ymax, Handler handler) {
-		return false;
+	public void  downloadWMTSAll(Context context, double xmin, double ymin, double xmax, double ymax, Handler handler) {
 	}
 
 	@Override
