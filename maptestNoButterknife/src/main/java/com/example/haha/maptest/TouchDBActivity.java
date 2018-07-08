@@ -26,6 +26,11 @@ import com.lisa.datamanager.map.MapWMTSManager;
 import com.lisa.datamanager.map.MapsManager;
 import com.lisa.datamanager.map.MapsUtil;
 import com.lisa.datamanager.set.DisplaySettings;
+
+import srs.Layer.ILayer;
+import srs.Layer.TDTTpye;
+import srs.Rendering.CommonRenderer;
+import srs.Rendering.SimpleRenderer;
 import srs.tools.DownLoadWMTS;
 
 import java.io.IOException;
@@ -57,14 +62,14 @@ public class TouchDBActivity extends Activity {
 
     /*** 图层数据 */
     private IDBLayer mLAYER = null;
+    /***自然地块底图  */
+    private IDBLayer mLayer_ZRDK = null;
     /**任务包路径 */
-    private String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/statistics/qujunjie/1536/0204361128鄱阳V2/";
+    private String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + "/statistics/wucuiling/1570_1/0204511421仁寿V6/";
     /**图层在地图中的顺序号 */
     private int ID_LayerDB = -1;
     /**筛选字段*/
     private String mFilterField = "F_PID";
-    /**筛选值*/
-    private String mFilterValue = "44";
     /**数据表中有用的字段*/
     private String[] mFieldsNeed = new String[]{
             "PK_ID",
@@ -74,6 +79,8 @@ public class TouchDBActivity extends Activity {
             "F_RENDER",
             "F_WKT"
     };
+    /**筛选值*/
+    private String mFilterValue = "44";
     /** 地图控件*/
     private MapControl mMapControl = null;
     /** 地图点选操作*/
@@ -95,9 +102,16 @@ public class TouchDBActivity extends Activity {
             MapsManager.getMap().setGeoProjectType(ProjCSType.ProjCS_WGS1984_WEBMERCATOR);
             //添加底图
             MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Map/WMTS";                //wmts缓存路径
+            //todo 四川测试用，网址需要替换
+            MapWMTSManager.TDT_TYPE = TDTTpye.GEO_URL_REST;   //设置天地图接口类型
+            MapWMTSManager.IP_TDT = "http://www.scgis.net.cn/imap/imapserver/defaultrest/services/newtianditudom";    //设置内网天地图地址
+//            MapWMTSManager.FUNCTION_TDT = "DataServer";     //设置内网天地图地址访问函数名称
             MapWMTSManager.init();
             MapWMTSManager.loadMap(this,MapWMTSManager.LAYER_TDT);            //获取WMTS数据
             //以上的部分属于Map初始设置，若是从其他界面传递过来的Map，可以忽略
+
+            /**  * 添加自然地块作为底图，提供更详细的显示内容 */
+            addZRDKLayerToMap();
 
             //Todo 此函数为功能核心代码
             /**设置点击工具*/
@@ -499,5 +513,56 @@ public class TouchDBActivity extends Activity {
         }
     };
 
+
+
+    /**
+     * 将DB图层添加至地图中
+     *
+     * @throws IOException
+     */
+    public void addZRDKLayerToMap() {
+        try {
+            /**创建表图层*/
+            mLayer_ZRDK = new DBLayer("zrdk");
+            /**添加到地图中*/
+            MapsManager.getMap().AddLayer(mLayer_ZRDK);
+            /**设置基础信息*/
+            //todo 设置为 你需要的数据库
+            mLayer_ZRDK.initInfos(
+                    dirWorkSpace + "DATA.db",   //DB数据库路径
+                    "TB_GEO_NATUREBLOCK", //自然地块表名称
+                    new String[]{"F_UUID","F_FILTER","F_GEO_DKBH","F_GEO"},                         //后期解算需要用到的字段
+                    new String[]{"F_GEO_DKBH"},          //需要显示为LABEL的字段,   r如：地块编号
+                    new String[]{"F_UUID"},           //作为唯一值、分段渲染所需要的字段，如COMPLETE等
+                    "F_GEO",                   //作为矢量（空间）信息的字段名
+                    srsGeometryType.Polygon,             //矢量的数据类型：点、线、面
+                    new Envelope(),                      //图层范围
+                    null);            //图层数据的坐标系
+            /**设置标注样式*/
+            // todo 自己替换label的字号、颜色……此处只是示例
+            DisplaySettings.SetLayerLabel(
+                    mLayer_ZRDK,
+                    10,
+                    Color.rgb(255, 0, 0),
+                    Typeface.create("Times New Roman", Typeface.BOLD),
+                    1 / 666.666,
+                    null);
+            /**设置是否可见*/
+            mLayer_ZRDK.setDisplayLabel(true);
+            mLayer_ZRDK.initData("F_FILTER", "");
+
+            // todo 自己替换getTargetRender(),此处只是示例
+            ((CommonRenderer)mLayer_ZRDK.getRenderer()).setSymbol(
+                            new SimpleFillSymbol(
+                                    Color.argb(0, 255, 255, 128),
+                                    new SimpleLineSymbol(Color.YELLOW, 1, SimpleLineStyle.Solid),
+                                    SimpleFillStyle.Hollow
+                            )
+            );
+        } catch (Exception e) {
+            android.util.Log.e("SC", "addZRDKLayerToMap: 添加图层失败！");
+            e.printStackTrace();
+        }
+    }
 
 }
