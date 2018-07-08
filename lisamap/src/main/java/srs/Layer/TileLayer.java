@@ -49,9 +49,9 @@ public class TileLayer extends Layer implements ITileLayer {
     public String URLGetTile="";
     protected TileInfo mTileInfo;
 
-    private static List<String> mURLs = new ArrayList<String>();
-    private static List<String> mSDCardFiles = new ArrayList<String>();
-    private static HashMap<String,RectF> mURLRect = new HashMap<String,RectF>();
+    protected static List<String> mURLs = new ArrayList<String>();
+    protected static List<String> mSDCardFiles = new ArrayList<String>();
+    protected static HashMap<String,RectF> mURLRect = new HashMap<String,RectF>();
 
     protected ImageDownLoader mImages = null;
 
@@ -59,7 +59,7 @@ public class TileLayer extends Layer implements ITileLayer {
      *
      */
     protected static Rect RectTileSize = new Rect();
-    private static Canvas G = null;
+    protected static Canvas G = null;
 
 
     @CallSuper
@@ -363,7 +363,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @throws IOException
      */
     @SuppressLint("UseValueOf")
-    public final Bitmap mergeImage(Bitmap canvas,IScreenDisplay display,
+    public Bitmap mergeImage(Bitmap canvas,IScreenDisplay display,
                                    double XMin, double YMax, double XMax, double YMin,
                                    int imgWidth,int imgHeight,
                                    Handler handler) throws IOException{
@@ -430,7 +430,7 @@ public class TileLayer extends Layer implements ITileLayer {
         return canvas;
     }
 
-    /**整理切片列表，并将LRU与sd卡上的tile画在屏幕上
+    /**整理切片列表，并将URL与sd卡上的tile画在屏幕上
      * @param left  左上角点瓦片的行序号
      * @param top   左上角点瓦片的列序号
      * @param rate  比例尺
@@ -441,7 +441,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @param handler
      */
     @UiThread
-    private void drawFromSDCARD(int left,int top, float rate,
+    protected void drawFromSDCARD(int left,int top, float rate,
                                 LOD rLod, int vertImgCount, int horzImgCount,
                                 int[] startRowCol,
                                 Handler handler){
@@ -552,7 +552,7 @@ public class TileLayer extends Layer implements ITileLayer {
      * @param rectTileDraw  绘制范围
      * @param handler       绘制控制器
      */
-    private void drawTilesFromURL(RectF rectTileDraw,
+    protected void drawTilesFromURL(RectF rectTileDraw,
                                   Handler handler){
 
         String catheKey = "";
@@ -866,12 +866,14 @@ public class TileLayer extends Layer implements ITileLayer {
     /**设置默认级别
      *
      */
-    private void setLods(String Url){
+    public void setLods(String Url){
 		/*mTileInfo.Height = 256;
 		mTileInfo.Width = 256;
 		mTileInfo.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);*/
         Log.a("Theards","Ready to set LOD");
+
         LOD[] lodArray = new LOD[18];
+
         LOD lod1 = new LOD();
         lod1.Level = 1;
         lod1.Resolution = 78271.51696399994;
@@ -879,8 +881,9 @@ public class TileLayer extends Layer implements ITileLayer {
         lod1.Url = Url;
         lod1.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
         lod1.Height = 256;
-        lod1.Width =256;
+        lod1.Width = 256;
         lodArray[0] = lod1;
+
         LOD lod2 = new LOD();
         lod2.Level = 2;
         lod2.Resolution = 39135.75848200009;
@@ -890,6 +893,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod2.Height = 256;
         lod2.Width =256;
         lodArray[1] = lod2;
+
         LOD lod3 = new LOD();
         lod3.Level = 3;
         lod3.Resolution = 19567.87924099992;
@@ -899,6 +903,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod3.Height = 256;
         lod3.Width =256;
         lodArray[2] = lod3;
+
         LOD lod4 = new LOD();
         lod4.Level = 4;
         lod4.Resolution = 9783.93962049996;
@@ -908,6 +913,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod4.Height = 256;
         lod4.Width =256;
         lodArray[3] = lod4;
+
         LOD lod5 = new LOD();
         lod5.Level = 5;
         lod5.Resolution = 4891.96981024998;
@@ -917,6 +923,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod5.Height = 256;
         lod5.Width =256;
         lodArray[4] = lod5;
+
         LOD lod6 = new LOD();
         lod6.Level = 6;
         lod6.Resolution = 2445.98490512499;
@@ -926,6 +933,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod6.Height = 256;
         lod6.Width =256;
         lodArray[5] = lod6;
+
         LOD lod7 = new LOD();
         lod7.Level = 7;
         lod7.Resolution = 1222.992452562495;
@@ -935,6 +943,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod7.Height = 256;
         lod7.Width =256;
         lodArray[6] = lod7;
+
         LOD lod8 = new LOD();
         lod8.Level = 8;
         lod8.Resolution = 611.4962262813797;
@@ -944,6 +953,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod8.Height = 256;
         lod8.Width =256;
         lodArray[7] = lod8;
+
         LOD lod9 = new LOD();
         lod9.Level = 9;
         lod9.Resolution = 305.74811314055756;
@@ -953,6 +963,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod9.Height = 256;
         lod9.Width =256;
         lodArray[8] = lod9;
+
         LOD lod10 = new LOD();
         lod10.Level = 10;
         lod10.Resolution = 152.87405657041106;
@@ -962,6 +973,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod10.Height = 256;
         lod10.Width =256;
         lodArray[9] = lod10;
+
         LOD lod11 = new LOD();
         lod11.Level = 11;
         lod11.Resolution =  76.43702828507324;
@@ -971,6 +983,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod11.Height = 256;
         lod11.Width =256;
         lodArray[10] = lod11;
+
         LOD lod12 = new LOD();
         lod12.Level = 12;
         lod12.Resolution = 38.21851414253662;
@@ -980,6 +993,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod12.Height = 256;
         lod12.Width =256;
         lodArray[11] = lod12;
+
         LOD lod13 = new LOD();
         lod13.Level = 13;
         lod13.Resolution = 19.10925707126831;
@@ -989,6 +1003,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod13.Height = 256;
         lod13.Width =256;
         lodArray[12] = lod13;
+
         LOD lod14 = new LOD();
         lod14.Level = 14;
         lod14.Resolution = 9.554628535634155;
@@ -998,6 +1013,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod14.Height = 256;
         lod14.Width =256;
         lodArray[13] = lod14;
+
         LOD lod15 = new LOD();
         lod15.Level = 15;
         lod15.Resolution = 4.77731426794937;
@@ -1007,6 +1023,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod15.Height = 256;
         lod15.Width =256;
         lodArray[14] = lod15;
+
         LOD lod16 = new LOD();
         lod16.Level = 16;
         lod16.Resolution = 2.388657133974685;
@@ -1016,6 +1033,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod16.Height = 256;
         lod16.Width =256;
         lodArray[15] = lod16;
+
         LOD lod17 = new LOD();
         lod17.Level = 17;
         lod17.Resolution = 1.1943285668550503;
@@ -1025,6 +1043,7 @@ public class TileLayer extends Layer implements ITileLayer {
         lod17.Height = 256;
         lod17.Width =256;
         lodArray[16] = lod17;
+
         LOD lod18 = new LOD();
         lod18.Level = 18;
         lod18.Resolution = 0.5971642835598172;

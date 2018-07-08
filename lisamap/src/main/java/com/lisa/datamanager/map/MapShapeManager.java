@@ -70,7 +70,7 @@ public class MapShapeManager {
     public static void loadTCF(String taskPath) throws Exception {
         File file = new File(taskPath);
         if (file.exists()
-                && taskPath.substring(taskPath.indexOf("")).equalsIgnoreCase(
+                && taskPath.substring(taskPath.lastIndexOf(".")).toUpperCase().equalsIgnoreCase(
                 ".TCF")) {
             mTASK = new WholeTask();
             try {

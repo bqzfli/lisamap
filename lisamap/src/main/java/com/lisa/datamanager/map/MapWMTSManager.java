@@ -3,12 +3,14 @@ package com.lisa.datamanager.map;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Switch;
 
 import java.io.IOException;
 
 import srs.Layer.Factory.TDTLayerFactory;
 import srs.Layer.ILayer;
 import srs.Layer.ITileLayer;
+import srs.Layer.TDTTpye;
 import srs.Layer.TileLayer;
 import srs.Layer.wmts.ImageUtils;
 import srs.Utility.UTILTAG;
@@ -19,6 +21,26 @@ import srs.Utility.sRSException;
  */
 public class MapWMTSManager {
 
+    /***
+     * 天地图类型
+     * 默认为0
+     */
+    public static TDTTpye TDT_TYPE = TDTTpye.WEB_DEFAULT;
+    /**
+     * 设置天地图的网址，
+     * 如：
+     * http://t4.tianditu.com/cva_w/wmts?request=GetCapabilities&service=wmts
+     * 四川：
+     * 10.151.10.196:28
+     * 10.151.10.198:28
+     * 10.151.10.200:28
+     * 10.151.10.199:28
+     *
+     *
+     * 中的t4.tianditu.com
+     */
+//    public static String IP_TDT = "t4.tianditu.com"
+    public static String IP_TDT = "http://www.scgis.net.cn/imap/imapserver/defaultrest/services/newtianditudom";
     public static ITileLayer LAYER_TDT;
     public static ITileLayer LAYER_ChinaOnlineCommunity;
     public static ITileLayer LAYER_World_Physical_Map;
@@ -26,11 +48,30 @@ public class MapWMTSManager {
     public static ITileLayer LAYER_World_Shaded_Relief;
     public static ITileLayer LAYER_World_Terrain_Base;
 
+
     /**
      * 设置创建瓦片地图信息
      */
     public static void init(){
-        LAYER_TDT = TDTLayerFactory.TDTSat();
+        switch (TDT_TYPE){
+            case WEB_DEFAULT:
+                LAYER_TDT = TDTLayerFactory.TDTSat();
+                break;
+            case WEB_URL:
+                LAYER_TDT = TDTLayerFactory.TDTSat(IP_TDT);
+                break;
+            case WEB_URL_REST:
+                LAYER_TDT = TDTLayerFactory.TDTSatREST(IP_TDT);
+                break;
+            case GEO_URL:
+                LAYER_TDT = TDTLayerFactory.TDTSatGeo(IP_TDT);
+                break;
+            case GEO_URL_REST:
+                LAYER_TDT = TDTLayerFactory.TDTSatGeoREST(IP_TDT);
+                break;
+            default:
+                LAYER_TDT = TDTLayerFactory.TDTSat();
+        }
         LAYER_ChinaOnlineCommunity = TDTLayerFactory.ChinaOnlineCommunityLayer();
         LAYER_World_Physical_Map = TDTLayerFactory.World_Physical_MapLayer();
         LAYER_World_Imagery = TDTLayerFactory.World_ImageryLayer();

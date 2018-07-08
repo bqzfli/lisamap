@@ -42,43 +42,43 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
-public class OffSetActivity extends Activity{
+/*public class OffSetActivity extends Activity{
 	private static final String TAG = "OffSetActivity";
-	/**标题栏尺寸,
+	*//**标题栏尺寸,
 	 * 默认值为90，请输入合适的尺寸
-	 */
+	 *//*
 	public static int HEIGHTTITLE = 90;
 	private static int mScreenHight = 0;
 	private static int mScreenWidth = 0;
-	/**机器设备序列号
+	*//**机器设备序列号
 	 * 
-	 */
+	 *//*
 	private static String DEVICE_ID = "";
-	/**requestCode
+	*//**requestCode
 	 * 
-	 */
+	 *//*
 	public static final int TAGCallBack = 666;
 	private MapControl mMapControl = null;
-	/**地图
+	*//**地图
 	 * 
-	 */
+	 *//*
 	public static IMap MAP = null;
-	/**地图范围
+	*//**地图范围
 	 * 
-	 */
+	 *//*
 	public static IEnvelope ENV = null;
 	public static double x;
 	public static double y;
 	public static double lot;
 	public static double lat;
 
-	/**经度返回值的key
+	*//**经度返回值的key
 	 * 
-	 */
+	 *//*
 	public static final String KEY_OFFSETX = "offsetX";
-	/**维度返回值的key
+	*//**维度返回值的key
 	 * 
-	 */
+	 *//*
 	public static final String KEY_OFFSETY = "offsetY";
 	public static double offSetX;
 	public static double offSetY;
@@ -101,9 +101,9 @@ public class OffSetActivity extends Activity{
 		((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(screenSize);
 		mScreenHight = screenSize.y;
 		mScreenWidth = screenSize.x;
-		/*mScreenWidth = ((WindowManager) this
+		*//*mScreenWidth = ((WindowManager) this
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
-				.getWidth();*/
+				.getWidth();*//*
 		HEIGHTTITLE = (mScreenWidth<mScreenHight?mScreenWidth:mScreenHight)* 19 / 240;
 
 		//获取设备ID
@@ -123,18 +123,18 @@ public class OffSetActivity extends Activity{
 
 	}
 
-	/**界面设置
+	*//**界面设置
 	 * 
-	 */
+	 *//*
 	private void initView(){
-		/* 设置画布布局 */
+		*//* 设置画布布局 *//*
 		RelativeLayout basicll = new RelativeLayout(this);
 		ViewGroup.LayoutParams paramsBasic=new ViewGroup.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT, 
 				LinearLayout.LayoutParams.MATCH_PARENT);
 		setContentView(basicll, paramsBasic);	
 
-		/* 标题栏布局 */
+		*//* 标题栏布局 *//*
 		RelativeLayout ll = new RelativeLayout(this);
 		RelativeLayout.LayoutParams paramsll=new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT, HEIGHTTITLE);
@@ -142,7 +142,7 @@ public class OffSetActivity extends Activity{
 		ll.setBackgroundColor(Color.BLACK);
 		basicll.addView(ll,paramsll);
 
-		/* 标题栏文字设计 */
+		*//* 标题栏文字设计 *//*
 		TextView tv_Title = new TextView(this);
 		RelativeLayout.LayoutParams paramsTitle=new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT, 
@@ -153,7 +153,7 @@ public class OffSetActivity extends Activity{
 		tv_Title.setTextColor(Color.WHITE);
 		tv_Title.setBackgroundColor(Color.TRANSPARENT);
 
-		/* 返回按钮设计 */
+		*//* 返回按钮设计 *//*
 		backButton = new Button(this);
 		RelativeLayout.LayoutParams paramsBack=new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT, 
@@ -172,7 +172,7 @@ public class OffSetActivity extends Activity{
 			}
 		});
 
-		/* 保存修正按钮设计 */
+		*//* 保存修正按钮设计 *//*
 		saveButton = new Button(this);
 		RelativeLayout.LayoutParams paramsSave=new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT, 
@@ -187,13 +187,13 @@ public class OffSetActivity extends Activity{
 		saveButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/* 更新GPSControl里的偏移量 */
+				*//* 更新GPSControl里的偏移量 *//*
 				GPSControl.getInstance().GPSLatitudeOffset = offSetY;
 				GPSControl.getInstance().GPSLongitudeOffset = offSetX;
 			}
 		});		
 
-		/* 实例化mMapControl控件 */
+		*//* 实例化mMapControl控件 *//*
 		mMapControl = new MapControl(this);
 		RelativeLayout.LayoutParams paramsMap=new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT, 
@@ -201,7 +201,7 @@ public class OffSetActivity extends Activity{
 		paramsMap.setMargins(0, HEIGHTTITLE, 0, 0);
 		basicll.addView(mMapControl, paramsMap);
 
-		/* GPS定位提示信息*/
+		*//* GPS定位提示信息*//*
 		TextView tv_GPS = new TextView(this);
 		RelativeLayout.LayoutParams paramsGPS=new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT, 
@@ -212,7 +212,7 @@ public class OffSetActivity extends Activity{
 		tv_GPS.setTextColor(Color.BLACK);
 		tv_GPS.setGravity(Gravity.CENTER);
 
-		/* 帮助提示信息Tips设计 */
+		*//* 帮助提示信息Tips设计 *//*
 		tv_Help = new TextView(this);
 		RelativeLayout.LayoutParams paramsHelp = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT, 
@@ -225,7 +225,7 @@ public class OffSetActivity extends Activity{
 		tv_Help.setBackgroundColor(Color.argb(128, 255, 255, 255));
 		tv_Help.setText("请选择修参考点：\n请在地图上点击您所在的位置，并走到下一个修正点");
 
-		/* 当前位置居中按钮 */
+		*//* 当前位置居中按钮 *//*
 		RelativeLayout.LayoutParams sp_paramsLocation = new RelativeLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
@@ -249,7 +249,7 @@ public class OffSetActivity extends Activity{
 		});
 
 		try {
-			/* 设置GPS定位模块参数，开启GPS定位 */
+			*//* 设置GPS定位模块参数，开启GPS定位 *//*
 			factory = new FactoryGPS(tv_GPS, null, null, null,
 					mMapControl);
 			FactoryGPS.NaviStart = false;
@@ -261,7 +261,7 @@ public class OffSetActivity extends Activity{
 
 		try {
 			// GPS修正采样点工具的设置
-			touchTool = new GPSModifyTool(/*MAP.getActiveLayer(),*/this);
+			touchTool = new GPSModifyTool(*//*MAP.getActiveLayer(),*//*this);
 			mMapControl.ClearDrawTool();
 			touchTool.setBuddyControl(mMapControl);// mapControl为操作的地图控件
 			touchTool.onClick(mMapControl);
@@ -308,7 +308,7 @@ public class OffSetActivity extends Activity{
 		}
 		
 		try{
-			/* 设置Map */
+			*//* 设置Map *//*
 			if (MAP != null) {
 				mMapControl.getActiveView().FocusMap(MAP);
 				MAP.setDeviceExtent(new Envelope(0, 0, mMapControl.getWidth(),
@@ -324,14 +324,14 @@ public class OffSetActivity extends Activity{
 				MAP = new Map(new Envelope(0, 0, 100,
 						100));
 				mMapControl.getActiveView().FocusMap(MAP);
-				/*读取测试底图
+				*//*读取测试底图
 				 * 尽量放置测试人所在位置的底图，
-				 */	
+				 *//*
 				final ILayer tif = new RasterLayer(Environment
 						.getExternalStorageDirectory().getAbsolutePath()
 						+ "/test/科技园.tif");
 				MAP.AddLayer(tif);	
-				/*更新底图的实际显示区域*/	
+				*//*更新底图的实际显示区域*//*
 				if(ENV==null){
 					ENV=tif.getExtent();
 				}
@@ -347,11 +347,11 @@ public class OffSetActivity extends Activity{
 		mMapControl.Refresh();
 	}
 
-	/**
+	*//**
 	 * 设置当前位置屏幕局中
 	 * 
 	 * add 杨宗仁
-	 */
+	 *//*
 	public static void SetLocationCenter(MapControl mapControl) {
 
 		IEnvelope mapEnv = mapControl.getActiveView().FocusMap().getExtent();
@@ -379,9 +379,9 @@ public class OffSetActivity extends Activity{
 		mMapControl.Refresh();
 	}
 
-	/**退出此Activity
+	*//**退出此Activity
 	 * 
-	 */
+	 *//*
 	private void goBack(){
 		try {
 			MAP.getElementContainer().ClearElement();
@@ -410,4 +410,4 @@ public class OffSetActivity extends Activity{
 	public void onConfigurationChanged(Configuration newConfig){
 
 	}
-}
+}*/

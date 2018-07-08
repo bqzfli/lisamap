@@ -1,6 +1,7 @@
 package srs.Layer.Factory;
 
 import srs.Layer.TileLayer;
+import srs.Layer.TileLayerGEO;
 import srs.Layer.ZY3Layer;
 
 public class TDTLayerFactory {
@@ -128,6 +129,31 @@ public class TDTLayerFactory {
 	}
 
 
+	/***
+	 * 根据IP创建天地图服务
+	 * @param ip 服务地址
+	 * @param functionName   瓦片访问函数名
+	 * @return
+	 */
+	public static TileLayer TDTSat(String ip, String functionName){
+		TileLayer layer = new TileLayer();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDT");
+		layer.setTileInfo("http://"+ip+"/cva_w/wmts?request=GetCapabilities&service=wmts",
+				"http://"+ip+"/"+functionName+"?T=img_w&X=?????X&Y=?????Y&L=?????L");
+		layer.mUseAble=true;
+
+		return layer;
+	}
+
+
+	/**
+	 * 天地图标准服务
+	 * http://t4.tianditu.com/DataServer?T=img_w&X=?????X&Y=?????Y&L=?????L
+	 * @return
+	 */
 	public static TileLayer TDTSat(){
 		TileLayer layer = new TileLayer();
 //		layer.setName("天地图");
@@ -138,6 +164,84 @@ public class TDTLayerFactory {
 				"http://t4.tianditu.com/DataServer?T=img_w&X=?????X&Y=?????Y&L=?????L");
 		layer.mUseAble=true;
 
+		return layer;
+	}
+
+
+	/***
+	 * 根据URL创建天地图服务
+	 * 参数格式 /tile/?????L/?????Y/?????X
+	 * @param URL 服务地址
+	 * @return
+	 */
+	public static TileLayer TDTSatREST(String URL){
+		TileLayer layer = new TileLayer();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDT");
+		layer.setTileInfo(URL,
+				URL+"/tile/?????L/?????Y/?????X");
+		layer.mUseAble=true;
+		return layer;
+	}
+
+
+	/***
+	 * 根据URL创建天地图服务
+	 * 地理坐标系计算
+	 * 参数格式 /tile/?????L/?????Y/?????X
+	 * @param URL 服务地址
+	 * @return
+	 */
+	public static TileLayer TDTSatGeoREST(String URL){
+		TileLayerGEO layer = new TileLayerGEO();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDT");
+		layer.setTileInfo(URL,
+				URL+"/tile/?????L/?????Y/?????X");
+		layer.mUseAble=true;
+		return layer;
+	}
+
+
+	/***
+	 * 根据URL创建天地图服务
+	 * 参数格式 ?T=img_w&X=?????X&Y=?????Y&L=?????L
+	 * @param URL 服务地址
+	 * @return
+	 */
+	public static TileLayer TDTSat(String URL){
+		TileLayer layer = new TileLayer();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDT");
+		layer.setTileInfo(URL,
+				URL+"?T=img_w&X=?????X&Y=?????Y&L=?????L");
+		layer.mUseAble=true;
+		return layer;
+	}
+
+
+	/***
+	 * 根据URL创建天地图服务
+	 * 参数格式 ?T=img_w&X=?????X&Y=?????Y&L=?????L
+	 * 地理坐标系计算
+	 * @param URL 服务地址
+	 * @return
+	 */
+	public static TileLayer TDTSatGeo(String URL){
+		TileLayerGEO layer = new TileLayerGEO();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDT");
+		layer.setTileInfo(URL,
+				URL+"?T=img_w&X=?????X&Y=?????Y&L=?????L");
+		layer.mUseAble=true;
 		return layer;
 	}
 
