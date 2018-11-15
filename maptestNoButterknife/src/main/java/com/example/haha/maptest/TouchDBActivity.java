@@ -111,7 +111,7 @@ public class TouchDBActivity extends Activity {
             //以上的部分属于Map初始设置，若是从其他界面传递过来的Map，可以忽略
 
             /**  * 添加自然地块作为底图，提供更详细的显示内容 */
-            addZRDKLayerToMap();
+            //addZRDKLayerToMap();
 
             //Todo 此函数为功能核心代码
             /**设置点击工具*/

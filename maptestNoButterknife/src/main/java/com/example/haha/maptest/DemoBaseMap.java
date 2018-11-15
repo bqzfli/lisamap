@@ -32,12 +32,9 @@ import android.widget.Toast;
 import com.Factory.FactoryGPS;
 import com.lisa.datamanager.map.MapDBManager;
 import com.lisa.datamanager.map.MapLocationManager;
-import com.lisa.datamanager.map.MapRasterManager;
-import com.lisa.datamanager.map.MapShapeManager;
 import com.lisa.datamanager.map.MapWMTSManager;
 import com.lisa.datamanager.map.MapsManager;
 import com.lisa.datamanager.map.MapsUtil;
-//import com.lisa.map.app.TouchForLocationActivity;
 import com.lisa.utils.TAGUTIL;
 import com.tool.location.TouchForLocationActivity;
 import com.tool.location.UTIL;
@@ -45,9 +42,6 @@ import com.tool.location.UTIL;
 import java.io.IOException;
 import java.util.List;
 
-/*import butterknife.BindBitmap;
-import butterknife.BindView;
-import butterknife.ButterKnife;*/
 import srs.CoordinateSystem.ProjCSType;
 import srs.Display.Symbol.ISimpleFillSymbol;
 import srs.Display.Symbol.ISimpleLineSymbol;
@@ -55,21 +49,22 @@ import srs.Display.Symbol.SimpleFillStyle;
 import srs.Display.Symbol.SimpleFillSymbol;
 import srs.Display.Symbol.SimpleLineStyle;
 import srs.Display.Symbol.SimpleLineSymbol;
-import srs.Display.Symbol.SimplePointStyle;
-import srs.Display.Symbol.SimplePointSymbol;
 import srs.GPS.GPSConvert;
 import srs.Geometry.IEnvelope;
-import srs.Geometry.IPoint;
 import srs.Geometry.Point;
-import srs.Geometry.srsGeometryType;
 import srs.Rendering.CommonUniqueRenderer;
 import srs.tools.Event.MultipleItemChangedListener;
 import srs.tools.MapControl;
 import srs.tools.ZoomInCommand;
 import srs.tools.ZoomOutCommand;
 
+//import com.lisa.map.app.TouchForLocationActivity;
+/*import butterknife.BindBitmap;
+import butterknife.BindView;
+import butterknife.ButterKnife;*/
 
-public class MainActivity extends AppCompatActivity
+
+public class DemoBaseMap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MultipleItemChangedListener {
     //    @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -95,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_demo_basemap);
 //        ButterKnife.bind(this);
 
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -150,17 +145,9 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        try {
-            //刷新DB数据
-            refreshDBData("-1");
-            IEnvelope env = MapDBManager.getInstance().getEnvelope(20);
-            MapsManager.getMap().setExtent(env);
-
-            /*IEnvelope env  = MapsManager.getMap().getLayers().get(5).getExtent();
-            MapsManager.getMap().setExtent(env);*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        double[] cpd= GPSConvert.GEO2PROJECT(108,37,ProjCSType.ProjCS_WGS1984_WEBMERCATOR);
+        IEnvelope env  = (IEnvelope)(new Point(cpd[0],cpd[1])).Buffer(20000);
+        MapsManager.getMap().setExtent(env);
 
         //设置GPS相关
         setGPSConfig();
@@ -228,7 +215,7 @@ public class MainActivity extends AppCompatActivity
                     search_edit_frame.setPressed(false);
                     String value = v.getText().toString();
                     //TODO 对所有数据进行查找，通过"F_CAPTION"字段进行查找
-                    RefreshDBDataByField("F_CAPTION", value);
+//                    RefreshDBDataByField("F_CAPTION", value);
                     return true;
                 }
                 return false;
@@ -254,60 +241,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * 通过某一字段，进行全局查找，并进行地图定位
-     *
-     * @param FieldName  过滤字段
-     * @param FeildValue 过滤值
-     */
-    private void RefreshDBDataByField(String FieldName, String FeildValue) {
-        Log.i("WRAP_TEST", "'" + FieldName + "':'" + FeildValue + "'");
-        String feildFilter = MapsUtil.FIELD_DB_FILTER;
-        try {
-            MapsUtil.FIELD_DB_FILTER = FieldName;
-            refreshDBData(FeildValue);
-            IEnvelope env = MapDBManager.getInstance().getEnvelope(40);
-            if (env != null) {
-                MapsManager.getMap().setExtent(env);
-            } else {
-                Log.i("WrapTest", "无数据");
-                Toast.makeText(this, "未找到数据！", Toast.LENGTH_SHORT).show();
-            }
-            //清除点选记录
-            mMapView.getElementContainer().ClearElement();
-            //刷新地图视图
-            mMapView.Refresh();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        MapsUtil.FIELD_DB_FILTER = feildFilter;
-    }
-
-    /**
-     * 显示某层级所有目标
-     *
-     * @param value 过滤层级
-     */
-    private void RefreshDBDataByLevel(String value) {
-        Log.i("WRAP_TEST", value);
-        String feildFilter = MapsUtil.FIELD_DB_FILTER;
-        try {
-            MapsUtil.FIELD_DB_FILTER = "FK_SURVEY_LEVEL";
-            refreshDBData(value);
-            IEnvelope env = MapDBManager.getInstance().getEnvelope(40);
-            if (env != null) {
-                MapsManager.getMap().setExtent(env);
-            } else {
-                Log.i("WrapTest", "无数据");
-                Toast.makeText(this, "未找到数据！", Toast.LENGTH_SHORT).show();
-            }
-            mMapView.getElementContainer().ClearElement();
-            mMapView.Refresh();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        MapsUtil.FIELD_DB_FILTER = feildFilter;
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -327,7 +260,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.touch_location) {
             TouchForLocationActivity.TAGCallBack = 123; //根据业务需求替换
-            Toast.makeText(MainActivity.this, "点选获取位置", Toast.LENGTH_LONG).show();
+            Toast.makeText(DemoBaseMap.this, "点选获取位置", Toast.LENGTH_LONG).show();
             TouchForLocationActivity.MAP = MapsManager.getMap();
             TouchForLocationActivity.HEIGHTTITLE = 100;
             Log.e("66666", String.valueOf(TouchForLocationActivity.MAP != null));
@@ -340,7 +273,7 @@ public class MainActivity extends AppCompatActivity
 //            Intent intent = new Intent("TouchForLocation");
             Intent intent = new Intent("TouchForLocation_APP");
             startActivityForResult(intent, TouchForLocationActivity.TAGCallBack);
-        } else if (id == R.id.db_all) {
+        } /*else if (id == R.id.db_all) {
             String value = "null";
             Log.i("WRAP_TEST", value);
             RefreshDBDataByLevel(value);
@@ -356,7 +289,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.house) {
             String value = "7";
             RefreshDBDataByLevel(value);
-        } else if (id == R.id.TDTSAT) {
+        }*/ else if (id == R.id.TDTSAT) {
             try {
                 MapWMTSManager.ChangeBaseMap(MapWMTSManager.LAYER_TDT);
 //                MapWMTSManager.AddMapLabel(MapWMTSManager.LAYER_TDT_LABEL);
@@ -434,19 +367,9 @@ public class MainActivity extends AppCompatActivity
      * @throws Exception
      */
     private void configMapData() throws Exception {
-//        String pathCurrent = "/Immigrant/dibinbin/999/0101510503纳溪区V2/";
-//        String pathCurrent = "/Immigrant/zhaoyiye/910/0101333082520901红光村V10/";
-//        String pathCurrent = "/Immigrant/dibinbin/247/01073302831030101排溪自然村V1/";
-//        String pathCurrent = "/vector/";
-//        String pathCurrent = "/Immigrant/dibinbin/1232/0101511421仁寿县V4/";
-
-        String pathCurrent = "/Immigrant/dibinbin/1222/0101510122双流县V2/";
-        //任务包路径
-        String dirWorkSpace = Environment.getExternalStorageDirectory().getAbsolutePath() + pathCurrent;
-
         //设置不可操作数据路径
 //		MapsUtil.URLs_WMTS		= null;
-        MapsUtil.DIR_WMTS_CACHE = dirWorkSpace + "Map/WMTS";                //wmts缓存路径
+        MapsUtil.DIR_WMTS_CACHE = Environment.getExternalStorageDirectory().getAbsolutePath() + "/tiles"; //wmts缓存路径
 //        MapsUtil.DIR_RASTER = dirWorkSpace + "Map/RASTER/";                //raster文件路径
 //        MapsUtil.PATH_TCF_SHAPE = dirWorkSpace + "Map/VECTOR/RENDER.tcf";    //SHAPE数据路径
 
@@ -456,126 +379,6 @@ public class MainActivity extends AppCompatActivity
         MapWMTSManager.loadMap(this,MapWMTSManager.LAYER_TDT);            //获取WMTS数据
 //        MapRasterManager.loadDataFromDir();                                //获取RASTER数据
 //        MapShapeManager.loadDataFromTCF();                                //获取SHAPE数据
-
-        //DB中地图数据设置
-        MapsUtil.PATH_DB_NAME = dirWorkSpace + "DATA.db";    //DB数据库路径
-        MapsUtil.TABLENAME_DB = "VW_BIZ_SURVEY_DATA";                    //调查对象表名称
-        MapsUtil.FIELDS_DB_TARGET = new String[]{
-                "PK_ID",
-                "F_PID",
-                "F_CODE",
-                "F_CAPTION",
-                "FK_SURVEY",
-                "FK_SURVEY_NAME",
-                "FK_SURVEY_LEVEL",
-                "F_CENTER",
-                "F_WKT",
-                "F_MIN_SCALE",
-                "F_MAX_SCALE"
-        };    //调查对象表字段
-        MapsUtil.FIELD_DB_LABEL = new String[]{"F_CAPTION"};        //需要显示为LABEL的字段
-        MapsUtil.FIELD_DB_EXTRACT_LATER = new String[]{"FK_SURVEY_NAME"};        //作为唯一值、分段渲染所需要的字段，如COMPLETE等
-        MapsUtil.FEILD_DB_GEO = "F_WKT";                        //作为矢量（空间）信息的字段名
-        MapsUtil.TYPE_GEO_DB_TABLE = srsGeometryType.Polygon;            //矢量的数据类型：点、线、面
-        MapsUtil.FIELD_DB_FILTER = "F_PID";							/*设置通过哪个字段控在数据表中过滤出需要显示的内容
-                                                                        浙江项目建议：对应浙江项目的"PID"*/
-        //DB数据的渲染方式设置
-        MapsUtil.RENDER_DB = GetTargetRender();
-        MapDBManager.getInstance().addLayerToMap();
-        MapDBManager.getInstance().setLayerConfig();
-        MapDBManager.getInstance().setTouchTool(
-                mMapView,            //地图控件
-                true,                    //是否为连续选择
-                false,                    //是否为单选
-                this,                    //选中对象后要触发的监听
-                30.0f                      //捕捉距离
-        );
-
-    }
-
-
-    /**
-     * 刷新DB数据时调用
-     *
-     * @param FIELD_DB_FILTER_VALUE ：MapsUtil.FIELD_DB_FILTER 所设置字段的筛选值
-     *                              注意：		若需要显示全部记录，直接赋值为null
-     *                              例如：
-     *                              统计   若需要显示CUNMC 为“立新村委会”的数据，则设置为“立新村委会”
-     *                              浙江
-     *                              1.每次点击列表，先提取点击记录的F_CODE值，标记为 a
-     *                              2.将 MapsUtil.FIELD_DB_FILTER_VALUE 的值设置为   a
-     *                              则地图上会显示所有 PID 为 a 的对象 *
-     */
-    private void refreshDBData(String FIELD_DB_FILTER_VALUE) throws Exception {
-		/*
-		FIXME：浙江项目修改建议
-		1.每次点击列表，先提取点击记录的F_CODE值，标记为 a
-		2.将 MapsUtil.FIELD_DB_FILTER_VALUE 的值设置为   a
-		则地图上会显示所有 PID 为 a 的对象
-		*/
-        MapsUtil.FIELD_DB_FILTER_VALUE = FIELD_DB_FILTER_VALUE;
-        MapDBManager.getInstance().refreshData();
-    }
-
-
-    /**
-     * 获取唯一值渲染的方法
-     *
-     * @return
-     */
-    public CommonUniqueRenderer GetTargetRender() {
-        //实例化对象
-        CommonUniqueRenderer renderRargetCommon = new CommonUniqueRenderer();
-
-
-        //数据是点
-        //设置默认样式
-        /*renderRargetCommon.setDefaultSymbol(new SimplePointSymbol(Color.DKGRAY, 64, SimplePointStyle.Square));
-		*//*FIXME
-		针对数据，设置每种特殊颜色样式
-		若MapUtil中的样式不满足需求，可自行定义
-		*//*
-        renderRargetCommon.AddUniqValue(
-                "自然村",
-                "自然村",
-                (new SimplePointSymbol(Color.YELLOW, 8, SimplePointStyle.Square))
-                        .setPic(PicVillage, -PicVillage.getWidth() / 2, -PicVillage.getHeight() / 2));
-        renderRargetCommon.AddUniqValue(
-                "农户",
-                "农户",
-                (new SimplePointSymbol(Color.GREEN, 8, SimplePointStyle.Circle))
-                        .setPic(PicPerson, -PicPerson.getWidth() / 2, -PicPerson.getHeight() / 2));
-        renderRargetCommon.AddUniqValue(
-                "农户房屋",
-                "农户房屋",
-                (new SimplePointSymbol(Color.BLUE, 8, SimplePointStyle.Diamond))
-                        .setPic(PicHouse, -PicHouse.getWidth() / 2, -PicHouse.getHeight() / 2));
-        renderRargetCommon.AddUniqValue(
-                "村民小组",
-                "村民小组",
-                (new SimplePointSymbol(Color.BLUE, 8, SimplePointStyle.Cross))
-                        .setPic(PicPeople, -PicPeople.getWidth() / 2, -PicPeople.getHeight() / 2));*/
-
-
-        ISimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(Color.YELLOW, 4, SimpleLineStyle.Solid);
-        ISimpleFillSymbol fillSymbolDefault = new SimpleFillSymbol(Color.argb(0, 255, 255, 128), simpleLineSymbol, SimpleFillStyle.Hollow);
-        ISimpleFillSymbol fillSymbolXIAN = fillSymbolDefault;
-        ISimpleFillSymbol fillSymbolCUN = new SimpleFillSymbol(Color.argb(0, 255, 255, 128), new SimpleLineSymbol(Color.RED, 2, SimpleLineStyle.Solid), SimpleFillStyle.Hollow);
-        ISimpleFillSymbol fillSymbolYF = new SimpleFillSymbol(Color.argb(0, 255, 255, 128), new SimpleLineSymbol(Color.RED, 2, SimpleLineStyle.Solid), SimpleFillStyle.Hollow);
-        ISimpleFillSymbol fillSymbolZRDK = new SimpleFillSymbol(Color.argb(0, 255, 255, 128), new SimpleLineSymbol(Color.YELLOW, 1, SimpleLineStyle.Solid), SimpleFillStyle.Hollow);
-
-
-        //数据是面
-        /*FIXME
-        针对数据，设置每种特殊颜色样式
-        若MapUtil中的样式不满足需求，可自行定义*/
-        renderRargetCommon.setDefaultSymbol(fillSymbolDefault);
-        renderRargetCommon.AddUniqValue("县","县",fillSymbolXIAN);
-        renderRargetCommon.AddUniqValue("样本村","样本村",fillSymbolCUN);
-        renderRargetCommon.AddUniqValue("样方","样方",fillSymbolYF);
-        renderRargetCommon.AddUniqValue("自然地块","自然地块",fillSymbolZRDK);
-
-        return renderRargetCommon;
     }
 
     @Override
@@ -725,7 +528,7 @@ public class MainActivity extends AppCompatActivity
                 public boolean onTouch(View arg0, MotionEvent arg1) {
                     boolean isLocation = MapLocationManager.SetLocationCenter(mMapView);
                     if (!isLocation) {
-                        Toast.makeText(MainActivity.this, "未收到定位信号", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DemoBaseMap.this, "未收到定位信号", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 }

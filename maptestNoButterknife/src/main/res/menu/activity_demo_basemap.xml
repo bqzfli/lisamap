@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Show DB DATA">
+    <item android:title="业务数据">
         <menu>
             <group android:checkableBehavior="single">
                 <item
@@ -12,10 +12,6 @@
                     android:id="@+id/village"
                     android:icon="@drawable/pic_village_32_green"
                     android:title="自然村" />
-                <item
-                    android:id="@+id/people"
-                    android:icon="@drawable/pic_people_32_green"
-                    android:title="村民小组" />
                 <item
                     android:id="@+id/house"
                     android:icon="@drawable/pic_house_32_blue"
@@ -28,13 +24,17 @@
         </menu>
     </item>
 
-    <item android:title="BASEMAP">
+    <item android:title="基础底图">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/TDTSAT"
                     android:icon="@drawable/pic_china_64_gray"
                     android:title="卫星影像（天地图）" />
+                <item
+                    android:id="@+id/World_Imagery"
+                    android:icon="@drawable/pic_world_64_gray"
+                    android:title="卫星影像（ESRI）" />
                 <item
                     android:id="@+id/TDTV"
                     android:icon="@drawable/pic_china_64_gray"
@@ -43,16 +43,6 @@
                     android:id="@+id/ChinaOnlineCommunity"
                     android:icon="@drawable/pic_china_64_gray"
                     android:title="街区图（ESRI）" />
-
-                <item
-                    android:id="@+id/World_Physical_Map"
-                    android:icon="@drawable/pic_world_64_gray"
-                    android:title="World_Physical_Map" />
-                <item
-                    android:id="@+id/World_Imagery"
-                    android:icon="@drawable/pic_world_64_gray"
-                    android:title="卫星影像（ESRI）" />
-
                 <item
                     android:id="@+id/World_Shaded_Relief"
                     android:icon="@drawable/pic_world_64_gray"
@@ -65,7 +55,7 @@
         </menu>
     </item>
 
-    <item android:title="FUNCTION">
+    <item android:title="功能">
         <menu>
             <item
                 android:id="@+id/touch_location"
@@ -90,7 +80,7 @@
         </menu>
     </item>
 
-    <item android:title="Communicate">
+    <item android:title="分享">
         <menu>
             <item
                 android:id="@+id/nav_share"
