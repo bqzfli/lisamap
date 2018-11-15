@@ -27,6 +27,8 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Handler;
 
+import static srs.Layer.wmts.ImageUtils.TILE_FORMAT;
+
 public class TDTDisLayer extends Layer implements ITileLayer {
 
 
@@ -343,7 +345,7 @@ public class TDTDisLayer extends Layer implements ITileLayer {
 
 
 	public Bitmap GetBitmapFromFile(int level,int row,int col){
-		String file=mfolder + String.valueOf(level) + "_" + String.valueOf(row) + "_" + String.valueOf(col) + ".png";
+		String file=mfolder + String.valueOf(level) + "_" + String.valueOf(row) + "_" + String.valueOf(col) + TILE_FORMAT;
 		return BitmapFactory.decodeFile(file);
 	}
 

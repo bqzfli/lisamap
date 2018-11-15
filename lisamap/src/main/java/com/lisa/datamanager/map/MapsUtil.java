@@ -100,6 +100,10 @@ public class MapsUtil {
      */
     public static int LayerID_WMTS = 0;
     /**
+     * 标注类型的WMTS图层的ID号
+     */
+    public static int LayerID_WMTS_LABEL = 1;
+    /**
      * RASTER图层的ID列表
      */
     public static ArrayList<Integer> LayerIDs_RASTER = new ArrayList<Integer>();

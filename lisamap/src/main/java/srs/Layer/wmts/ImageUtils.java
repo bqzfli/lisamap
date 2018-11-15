@@ -14,6 +14,11 @@ import srs.Utility.Log;
 
 public class ImageUtils {
 
+	/**
+	 * 瓦片保存格式
+	 */
+	public final static String TILE_FORMAT = ".png";
+
 	/**当前线程中瓦片下载完成
 	 */
 	public final static int DOWNLOAD_THREAD_SUCCESS = 1;
@@ -81,7 +86,7 @@ public class ImageUtils {
 	@WorkerThread
 	public static void SaveBitmap(Bitmap bitmap,String fileName) throws Exception{
 		FileOutputStream outStream = new FileOutputStream(CacheDir + File.separator + fileName);
-		bitmap.compress(CompressFormat.JPEG, 75, outStream);
+		bitmap.compress(CompressFormat.PNG, 100, outStream);
 		outStream.flush();
 		outStream.close();
 	}

@@ -168,7 +168,7 @@ public class DBImportUtil {
 
         if(fields == null || fields.length == 0){
             fstr = " * ";
-            return null;
+            return list;
         }else{
             for (String str : fields) {
                 fstr += " "+str + ",";

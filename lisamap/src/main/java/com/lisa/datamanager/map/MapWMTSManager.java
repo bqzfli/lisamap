@@ -2,6 +2,7 @@ package com.lisa.datamanager.map;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.MaskFilter;
 import android.util.Log;
 import android.widget.Switch;
 
@@ -13,6 +14,7 @@ import srs.Layer.ITileLayer;
 import srs.Layer.TDTTpye;
 import srs.Layer.TileLayer;
 import srs.Layer.wmts.ImageUtils;
+import srs.Map.Map;
 import srs.Utility.UTILTAG;
 import srs.Utility.sRSException;
 
@@ -39,9 +41,11 @@ public class MapWMTSManager {
      *
      * 中的t4.tianditu.com
      */
-//    public static String IP_TDT = "t4.tianditu.com"
-    public static String IP_TDT = "http://www.scgis.net.cn/imap/imapserver/defaultrest/services/newtianditudom";
+    public static String IP_TDT = "t4.tianditu.com";
+//    public static String IP_TDT = "http://www.scgis.net.cn/imap/imapserver/defaultrest/services/newtianditudom";
     public static ITileLayer LAYER_TDT;
+    public static ITileLayer LAYER_TDT_V;
+    public static ITileLayer LAYER_TDT_LABEL;
     public static ITileLayer LAYER_ChinaOnlineCommunity;
     public static ITileLayer LAYER_World_Physical_Map;
     public static ITileLayer LAYER_World_Imagery;
@@ -56,6 +60,8 @@ public class MapWMTSManager {
         switch (TDT_TYPE){
             case WEB_DEFAULT:
                 LAYER_TDT = TDTLayerFactory.TDTSat();
+                LAYER_TDT_V = TDTLayerFactory.TDTV();
+                LAYER_TDT_LABEL = TDTLayerFactory.TDTLABEL();
                 break;
             case WEB_URL:
                 LAYER_TDT = TDTLayerFactory.TDTSat(IP_TDT);
@@ -71,6 +77,8 @@ public class MapWMTSManager {
                 break;
             default:
                 LAYER_TDT = TDTLayerFactory.TDTSat();
+                LAYER_TDT_V = TDTLayerFactory.TDTV();
+                LAYER_TDT_LABEL = TDTLayerFactory.TDTLABEL();
         }
         LAYER_ChinaOnlineCommunity = TDTLayerFactory.ChinaOnlineCommunityLayer();
         LAYER_World_Physical_Map = TDTLayerFactory.World_Physical_MapLayer();
@@ -147,6 +155,54 @@ public class MapWMTSManager {
             MapsManager.getMap().ChangeLayer(MapsUtil.LayerID_WMTS, layer);
         }
         return MapsUtil.LayerID_WMTS;
+    }
+
+    /**
+     * 切换标注类型地图
+     * @param layer 标注图层
+     * @return 标注图层的顺序号
+     * @throws IOException
+     */
+    public static int ChangeMapLabel(ITileLayer layer) throws IOException {
+        if(layer!=null) {
+            MapsManager.getMap().ChangeLayer(MapsUtil.LayerID_WMTS_LABEL, layer);
+        }
+        return MapsUtil.LayerID_WMTS_LABEL;
+    }
+
+
+    /**
+     * 添加标注类型地图
+     * @param layer 标注图层
+     * @return 标注图层的顺序号
+     * @throws IOException
+     */
+    public static int AddMapLabel(ITileLayer layer) throws IOException {
+        if(layer!=null) {
+            MapsManager.getMap().AddLayer(MapsUtil.LayerID_WMTS_LABEL, layer);
+            if(MapsManager.getMap().getLayers().size()<= MapsUtil.LayerID_WMTS_LABEL||
+                    MapsManager.getMap().getLayers().get(MapsUtil.LayerID_WMTS_LABEL) != layer){
+                MapsManager.getMap().getLayers().remove(MapsUtil.LayerID_WMTS_LABEL);
+            }else {
+                MapsManager.getMap().ChangeLayer(MapsUtil.LayerID_WMTS_LABEL, layer);
+            }
+        }
+        return MapsUtil.LayerID_WMTS_LABEL;
+    }
+
+
+    /**
+     * 删除标注类型地图
+     * @param layer 标注图层
+     * @throws IOException
+     */
+    public static  void RemoveMapLabel(ITileLayer layer) {
+        if(layer!=null) {
+            if(MapsManager.getMap().getLayers().size()>MapsUtil.LayerID_WMTS_LABEL&&
+                    MapsManager.getMap().getLayers().get(MapsUtil.LayerID_WMTS_LABEL) == layer) {
+                MapsManager.getMap().getLayers().remove(MapsUtil.LayerID_WMTS_LABEL);
+            }
+        }
     }
 
 

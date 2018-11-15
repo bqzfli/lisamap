@@ -25,6 +25,8 @@ import srs.Layer.wmts.LOD;
 import srs.Utility.Log;
 import srs.convert.Convert;
 
+import static srs.Layer.wmts.ImageUtils.TILE_FORMAT;
+
 /***
  * 四川天地图服务
  * 地图的坐标系是地理坐标系
@@ -198,7 +200,7 @@ public class TileLayerGEO extends TileLayer {
                 }
                 row = startRowCol[0] + i;
                 col = startRowCol[1] + j;
-                catheKey = tileName + "_" +String.valueOf(rLod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
+                catheKey = tileName + "_" +String.valueOf(rLod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+TILE_FORMAT;
                 Log.i("LEVEL-ROW-COLUMN","---------------------------\r\n"
                         + "drawFromSDCARD:" + "开始获取瓦片：" + catheKey + " LEVEL"
                         +String.valueOf(rLod.Level)

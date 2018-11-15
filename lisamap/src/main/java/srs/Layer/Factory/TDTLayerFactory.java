@@ -88,8 +88,8 @@ public class TDTLayerFactory {
 		TileLayer layer = new TileLayer();
 		layer.setName("街区图");
 		layer.setTileInfo(
-				"http://www.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
-				,"http://www.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/?????L/?????Y/?????X");
+				"http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"
+				,"http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/?????L/?????Y/?????X");
 		layer.setName("ChinaOnlineCommunity");
 		layer.mUseAble = true;
 		return layer;
@@ -150,7 +150,7 @@ public class TDTLayerFactory {
 
 
 	/**
-	 * 天地图标准服务
+	 * 天地图影像标准服务
 	 * http://t4.tianditu.com/DataServer?T=img_w&X=?????X&Y=?????Y&L=?????L
 	 * @return
 	 */
@@ -159,7 +159,7 @@ public class TDTLayerFactory {
 //		layer.setName("天地图");
 //		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
 		//layer.TileMatrixSet = "c";
-		layer.setName("TDT");
+		layer.setName("TDTSAT");
 		layer.setTileInfo("http://t4.tianditu.com/cva_w/wmts?request=GetCapabilities&service=wmts",
 				"http://t4.tianditu.com/DataServer?T=img_w&X=?????X&Y=?????Y&L=?????L");
 		layer.mUseAble=true;
@@ -167,6 +167,42 @@ public class TDTLayerFactory {
 		return layer;
 	}
 
+	/**
+	 * 天地图矢量标准服务
+	 * http://t4.tianditu.com/DataServer?T=img_w&X=?????X&Y=?????Y&L=?????L
+	 * @return
+	 */
+	public static TileLayer TDTV(){
+		TileLayer layer = new TileLayer();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDTV");
+		layer.setTileInfo("http://t4.tianditu.com/cva_w/wmts?request=GetCapabilities&service=wmts",
+				"http://t3.tianditu.gov.cn/DataServer?T=vec_w&x=?????X&y=?????Y&l=?????L");
+
+		layer.mUseAble=true;
+
+		return layer;
+	}
+
+
+	/**
+	 * 天地图标注标准服务
+	 * http://t4.tianditu.com/DataServer?T=img_w&X=?????X&Y=?????Y&L=?????L
+	 * @return
+	 */
+	public static TileLayer TDTLABEL(){
+		TileLayer layer = new TileLayer();
+//		layer.setName("天地图");
+//		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
+		//layer.TileMatrixSet = "c";
+		layer.setName("TDTLABEL");
+		layer.setTileInfo("http://t4.tianditu.com/cva_w/wmts?request=GetCapabilities&service=wmts",
+				"http://t4.tianditu.gov.cn/DataServer?T=cva_w&x=?????X&y=?????Y&l=?????L");
+		layer.mUseAble=true;
+		return layer;
+	}
 
 	/***
 	 * 根据URL创建天地图服务
@@ -179,7 +215,7 @@ public class TDTLayerFactory {
 //		layer.setName("天地图");
 //		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
 		//layer.TileMatrixSet = "c";
-		layer.setName("TDT");
+		layer.setName("TDTSAT");
 		layer.setTileInfo(URL,
 				URL+"/tile/?????L/?????Y/?????X");
 		layer.mUseAble=true;
@@ -199,7 +235,7 @@ public class TDTLayerFactory {
 //		layer.setName("天地图");
 //		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
 		//layer.TileMatrixSet = "c";
-		layer.setName("TDT");
+		layer.setName("TDTSAT");
 		layer.setTileInfo(URL,
 				URL+"/tile/?????L/?????Y/?????X");
 		layer.mUseAble=true;
@@ -218,7 +254,7 @@ public class TDTLayerFactory {
 //		layer.setName("天地图");
 //		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
 		//layer.TileMatrixSet = "c";
-		layer.setName("TDT");
+		layer.setName("TDTSAT");
 		layer.setTileInfo(URL,
 				URL+"?T=img_w&X=?????X&Y=?????Y&L=?????L");
 		layer.mUseAble=true;
@@ -238,7 +274,7 @@ public class TDTLayerFactory {
 //		layer.setName("天地图");
 //		layer.TileInfo = SetTileInfo("http://t0.tianditu.com/img_c/wmts");
 		//layer.TileMatrixSet = "c";
-		layer.setName("TDT");
+		layer.setName("TDTSAT");
 		layer.setTileInfo(URL,
 				URL+"?T=img_w&X=?????X&Y=?????Y&L=?????L");
 		layer.mUseAble=true;

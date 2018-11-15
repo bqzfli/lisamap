@@ -35,6 +35,8 @@ import srs.Utility.sRSException;
 import srs.convert.Convert;
 import srs.Utility.Log;
 
+import static srs.Layer.wmts.ImageUtils.TILE_FORMAT;
+
 /**瓦片地图图层
  * @author 李忠义
  * 20120313
@@ -236,7 +238,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 }
                 row = startRowCol[0] + i;
                 col = startRowCol[1] + j;
-                catheKey = tileName + "_" +String.valueOf(lod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
+                catheKey = tileName + "_" +String.valueOf(lod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+TILE_FORMAT;
                 if(!ImageUtils.isBitmapSDCardExist(catheKey)){
                     Log.i("WMTSLOAD", "瓦片需要下载：" + catheKey + " LEVEL"
                             +String.valueOf(lod.Level)
@@ -261,7 +263,6 @@ public class TileLayer extends Layer implements ITileLayer {
 
     public void stopDownloadWMTSAll(){
         ImageDownLoader.StopThread();
-
     }
 
     /**
@@ -313,7 +314,7 @@ public class TileLayer extends Layer implements ITileLayer {
                         for (int j = 0; j < horzImgCount; j++){
                             row = startRowCol[0] + i;
                             col = startRowCol[1] + j;
-                            catheKey = tileName + "_" +String.valueOf(clod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
+                            catheKey = tileName + "_" +String.valueOf(clod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+TILE_FORMAT;
                             Log.i("LEVEL-ROW-COLUMN","---------------------------\r\n"
                                     + "drawFromSDCARD:" + "开始获取瓦片：" + catheKey + " LEVEL"
                                     +String.valueOf(clod.Level)
@@ -462,7 +463,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 }
                 row = startRowCol[0] + i;
                 col = startRowCol[1] + j;
-                catheKey = tileName + "_" +String.valueOf(rLod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+".jpg";
+                catheKey = tileName + "_" +String.valueOf(rLod.Level) + "_" + String.valueOf(row) + "_" + String.valueOf(col)+TILE_FORMAT;
                 Log.i("LEVEL-ROW-COLUMN","---------------------------\r\n"
                         + "drawFromSDCARD:" + "开始获取瓦片：" + catheKey + " LEVEL"
                         +String.valueOf(rLod.Level)
