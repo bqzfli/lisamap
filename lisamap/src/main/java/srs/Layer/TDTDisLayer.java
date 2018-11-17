@@ -187,11 +187,11 @@ public class TDTDisLayer extends Layer implements ITileLayer {
 		int[] lastRowCol = GetColAndRow(rLod, XMax, YMin);
 
 		//切片水平、垂直方向数目
-		int horzImgCount = Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
-		int vertImgCount = Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
+		int horzImgCount = (int)Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
+		int vertImgCount = (int)Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
 
 		//创建合并的bitmap，将瓦片画在其上
-		Bitmap mergeMap = Bitmap.createBitmap(horzImgCount * rLod.Width, vertImgCount * rLod.Height,Config.ARGB_8888);
+		Bitmap mergeMap = Bitmap.createBitmap(horzImgCount * (int)rLod.Width, vertImgCount * (int)rLod.Height,Config.ARGB_8888);
 		Canvas g = new Canvas(mergeMap);
 		g.drawColor(0x00ffffff);
 

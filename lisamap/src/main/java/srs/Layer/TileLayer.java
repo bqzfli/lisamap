@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -221,8 +222,8 @@ public class TileLayer extends Layer implements ITileLayer {
         int[] startRowCol = getColAndRow(lod, XMin, YMax);
         int[] lastRowCol = getColAndRow(lod, XMax, YMin);
         //切片水平、垂直方向数目
-        int horzImgCount = Math.max(imgWidth / lod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
-        int vertImgCount = Math.max(imgHeight / lod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
+        int horzImgCount = (int)Math.max(imgWidth / lod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
+        int vertImgCount = (int)Math.max(imgHeight / lod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
 
         String catheKey = "";
         String tileURL = "";
@@ -396,8 +397,8 @@ public class TileLayer extends Layer implements ITileLayer {
         int[] startRowCol = getColAndRow(rLod, XMin, YMax);
         int[] lastRowCol = getColAndRow(rLod, XMax, YMin);
         //切片水平、垂直方向数目
-        int horzImgCount = Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
-        int vertImgCount = Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
+        int horzImgCount = (int)Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
+        int vertImgCount = (int)Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
         //获取拼接后的实际地理坐标范围
         IEnvelope leftTop = getMapExtent(startRowCol[0],startRowCol[1],rLod);
         //比率 “画面尺寸/实际尺寸”
@@ -412,7 +413,7 @@ public class TileLayer extends Layer implements ITileLayer {
                 top = Convert.toInt((leftTop.YMax() - YMax) / rLod.Resolution*rate);
             }
         }
-        RectTileSize = new Rect(0,0,rLod.Width,rLod.Height);
+        RectTileSize = new Rect(0,0,(int)rLod.Width,(int)rLod.Height);
         RectF rectTileDraw = new RectF();
 
         //创建合并的bitmap，将瓦片画在其上
@@ -499,7 +500,12 @@ public class TileLayer extends Layer implements ITileLayer {
                             +"，ROW"+ String.valueOf(row)
                             +"，COL"+ String.valueOf(col));
                     try{
-                        G.drawBitmap(tileBmp,
+                        // 定义矩阵对象
+                        Matrix matrix = new Matrix();
+                        // 缩放原图
+                        matrix.postScale(LOD.POWER, LOD.POWER);
+                        Bitmap tempBmp = Bitmap.createBitmap(tileBmp,0,0,tileBmp.getWidth(),tileBmp.getHeight(),matrix,true);
+                        G.drawBitmap(tempBmp,
                                 RectTileSize,
                                 setDrawEnvelope(rLod,rectTileDraw,rate,left,top,i,j),
                                 null);
@@ -607,7 +613,12 @@ public class TileLayer extends Layer implements ITileLayer {
             RectF rect = mURLRect.get(key);
             if(tileBmp!=null){
                 if(rect!=null) {
-                    G.drawBitmap(tileBmp, RectTileSize, rect, null);
+                    // 定义矩阵对象
+                    Matrix matrix = new Matrix();
+                    // 缩放原图
+                    matrix.postScale(LOD.POWER, LOD.POWER);
+                    Bitmap tempBmp = Bitmap.createBitmap(tileBmp,0,0,tileBmp.getWidth(),tileBmp.getHeight(),matrix,true);
+                    G.drawBitmap(tempBmp, RectTileSize, rect, null);
                     Log.i( "LEVEL-ROW-COLUMN", " URL 瓦片已经绘制完毕！" + key);
                 }
                 /*ImageUtils.Caches.remove(key);
@@ -874,185 +885,132 @@ public class TileLayer extends Layer implements ITileLayer {
         Log.a("Theards","Ready to set LOD");
 
         LOD[] lodArray = new LOD[18];
+        float power = LOD.POWER;
 
-        LOD lod1 = new LOD();
-        lod1.Level = 1;
-        lod1.Resolution = 78271.51696399994;
-        lod1.ScaleDenominator = 2.95828763795777E8;
+        LOD lod1 = new LOD(1,78271.51696399994, 2.95828763795777E8);
         lod1.Url = Url;
         lod1.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod1.Height = 256;
-        lod1.Width = 256;
+        lod1.Height = 256 * power;
+        lod1.Width = 256 * power;
         lodArray[0] = lod1;
 
-        LOD lod2 = new LOD();
-        lod2.Level = 2;
-        lod2.Resolution = 39135.75848200009;
-        lod2.ScaleDenominator =  1.47914381897889E8;
+        LOD lod2 = new LOD(2,39135.75848200009,1.47914381897889E8);
         lod2.Url = Url;
         lod2.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod2.Height = 256;
-        lod2.Width =256;
+        lod2.Height = 256 * power;
+        lod2.Width =256 * power;
         lodArray[1] = lod2;
 
-        LOD lod3 = new LOD();
-        lod3.Level = 3;
-        lod3.Resolution = 19567.87924099992;
-        lod3.ScaleDenominator = 7.3957190948944E7;
+        LOD lod3 = new LOD(3,19567.87924099992,7.3957190948944E7);
         lod3.Url = Url;
         lod3.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod3.Height = 256;
-        lod3.Width =256;
+        lod3.Height = 256 * power;
+        lod3.Width = 256 * power;
         lodArray[2] = lod3;
 
-        LOD lod4 = new LOD();
-        lod4.Level = 4;
-        lod4.Resolution = 9783.93962049996;
-        lod4.ScaleDenominator = 3.6978595474472E7;
+        LOD lod4 = new LOD(4,9783.93962049996,3.6978595474472E7);
         lod4.Url = Url;
         lod4.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod4.Height = 256;
-        lod4.Width =256;
+        lod4.Height = 256  * power;
+        lod4.Width = 256 * power;
         lodArray[3] = lod4;
 
-        LOD lod5 = new LOD();
-        lod5.Level = 5;
-        lod5.Resolution = 4891.96981024998;
-        lod5.ScaleDenominator = 1.8489297737236E7;
+        LOD lod5 = new LOD(5, 4891.96981024998,1.8489297737236E7);
         lod5.Url = Url;
         lod5.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod5.Height = 256;
-        lod5.Width =256;
+        lod5.Height = 256 * power;
+        lod5.Width = 256 * power;
         lodArray[4] = lod5;
 
-        LOD lod6 = new LOD();
-        lod6.Level = 6;
-        lod6.Resolution = 2445.98490512499;
-        lod6.ScaleDenominator = 9244667.357955175;
+        LOD lod6 = new LOD(6,2445.98490512499,9244667.357955175);
         lod6.Url = Url;
         lod6.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod6.Height = 256;
-        lod6.Width =256;
+        lod6.Height = 256 * power;
+        lod6.Width = 256 * power;
         lodArray[5] = lod6;
 
-        LOD lod7 = new LOD();
-        lod7.Level = 7;
-        lod7.Resolution = 1222.992452562495;
-        lod7.ScaleDenominator = 4622324.434309;
+        LOD lod7 = new LOD(7,1222.992452562495,4622324.434309);
         lod7.Url = Url;
         lod7.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod7.Height = 256;
-        lod7.Width =256;
+        lod7.Height = 256 * power;
+        lod7.Width = 256 * power;
         lodArray[6] = lod7;
 
-        LOD lod8 = new LOD();
-        lod8.Level = 8;
-        lod8.Resolution = 611.4962262813797;
-        lod8.ScaleDenominator = 2311162.217155;
+        LOD lod8 = new LOD(8,611.4962262813797,2311162.217155);
         lod8.Url = Url;
         lod8.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod8.Height = 256;
-        lod8.Width =256;
+        lod8.Height = 256 * power;
+        lod8.Width = 256 * power;
         lodArray[7] = lod8;
 
-        LOD lod9 = new LOD();
-        lod9.Level = 9;
-        lod9.Resolution = 305.74811314055756;
-        lod9.ScaleDenominator = 1155581.108577;
+        LOD lod9 = new LOD(9,305.74811314055756,1155581.108577);
         lod9.Url = Url;
         lod9.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod9.Height = 256;
-        lod9.Width =256;
+        lod9.Height = 256 * power;
+        lod9.Width = 256 * power;
         lodArray[8] = lod9;
 
-        LOD lod10 = new LOD();
-        lod10.Level = 10;
-        lod10.Resolution = 152.87405657041106;
-        lod10.ScaleDenominator = 577790.554289;
+        LOD lod10 = new LOD(10,152.87405657041106,577790.554289);
         lod10.Url = Url;
         lod10.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod10.Height = 256;
-        lod10.Width =256;
+        lod10.Height = 256 * power;
+        lod10.Width = 256 * power;
         lodArray[9] = lod10;
 
-        LOD lod11 = new LOD();
-        lod11.Level = 11;
-        lod11.Resolution =  76.43702828507324;
-        lod11.ScaleDenominator = 288895.277144;
+        LOD lod11 = new LOD(11,76.43702828507324,288895.277144);
         lod11.Url = Url;
         lod11.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod11.Height = 256;
-        lod11.Width =256;
+        lod11.Height = 256 * power;
+        lod11.Width = 256 * power;
         lodArray[10] = lod11;
 
-        LOD lod12 = new LOD();
-        lod12.Level = 12;
-        lod12.Resolution = 38.21851414253662;
-        lod12.ScaleDenominator = 144447.638572;
+        LOD lod12 = new LOD(12,38.21851414253662,144447.638572);
         lod12.Url = Url;
         lod12.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod12.Height = 256;
-        lod12.Width =256;
+        lod12.Height = 256 * power;
+        lod12.Width = 256 * power;
         lodArray[11] = lod12;
 
-        LOD lod13 = new LOD();
-        lod13.Level = 13;
-        lod13.Resolution = 19.10925707126831;
-        lod13.ScaleDenominator = 72223.819286;
+        LOD lod13 = new LOD(13,19.10925707126831,72223.819286);
         lod13.Url = Url;
         lod13.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod13.Height = 256;
-        lod13.Width =256;
+        lod13.Height = 256 * power;
+        lod13.Width = 256 * power;
         lodArray[12] = lod13;
 
-        LOD lod14 = new LOD();
-        lod14.Level = 14;
-        lod14.Resolution = 9.554628535634155;
-        lod14.ScaleDenominator =  36111.909643;
+        LOD lod14 = new LOD(14,9.554628535634155,36111.909643);
         lod14.Url = Url;
         lod14.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod14.Height = 256;
-        lod14.Width =256;
+        lod14.Height = 256 * power;
+        lod14.Width = 256 * power;
         lodArray[13] = lod14;
 
-        LOD lod15 = new LOD();
-        lod15.Level = 15;
-        lod15.Resolution = 4.77731426794937;
-        lod15.ScaleDenominator = 18055.954822;
+        LOD lod15 = new LOD(15,4.77731426794937,18055.954822);
         lod15.Url = Url;
         lod15.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod15.Height = 256;
-        lod15.Width =256;
+        lod15.Height = 256 * power;
+        lod15.Width = 256 * power;
         lodArray[14] = lod15;
 
-        LOD lod16 = new LOD();
-        lod16.Level = 16;
-        lod16.Resolution = 2.388657133974685;
-        lod16.ScaleDenominator = 9027.977411;
+        LOD lod16 = new LOD(16,2.388657133974685,9027.977411);
         lod16.Url = Url;
         lod16.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod16.Height = 256;
-        lod16.Width =256;
+        lod16.Height = 256 * power;
+        lod16.Width = 256 * power;
         lodArray[15] = lod16;
 
-        LOD lod17 = new LOD();
-        lod17.Level = 17;
-        lod17.Resolution = 1.1943285668550503;
-        lod17.ScaleDenominator = 4513.988705;
+        LOD lod17 = new LOD(17,1.1943285668550503,4513.988705);
         lod17.Url = Url;
         lod17.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod17.Height = 256;
-        lod17.Width =256;
+        lod17.Height = 256 * power;
+        lod17.Width = 256 * power;
         lodArray[16] = lod17;
 
-        LOD lod18 = new LOD();
-        lod18.Level = 18;
-        lod18.Resolution = 0.5971642835598172;
-        lod18.ScaleDenominator = 2256.994353;
+        LOD lod18 = new LOD(18,0.5971642835598172,2256.994353);
         lod18.Url = Url;
         lod18.Origin = new Point(-2.0037508342787E7, 2.0037508342787E7);
-        lod18.Height = 256;
-        lod18.Width =256;
+        lod18.Height = 256 * power;
+        lod18.Width = 256 * power;
         lodArray[17] = lod18;
 		/*mTileInfo.Origin = new Point(-180.0, 90.0);
 		LOD[] lodArray = new LOD[18];

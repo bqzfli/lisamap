@@ -102,8 +102,8 @@ public class TileLayerGEO extends TileLayer {
 		int[] startRowCol = getColAndRow(rLod, XMin, YMax);
 		int[] lastRowCol = getColAndRow(rLod, XMax, YMin);
 		//切片水平、垂直方向数目
-		int horzImgCount = Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
-		int vertImgCount = Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
+		int horzImgCount = (int)Math.max(imgWidth / rLod.Width + 2, lastRowCol[1] - startRowCol[1] + 1);
+		int vertImgCount = (int)Math.max(imgHeight / rLod.Height + 2, lastRowCol[0] - startRowCol[0] + 1);
 		//获取拼接后的实际地理坐标范围
 		IEnvelope leftTop = getMapExtent(startRowCol[0],startRowCol[1],rLod);
 		//比率 “画面尺寸/实际尺寸”
@@ -125,7 +125,7 @@ public class TileLayerGEO extends TileLayer {
 				top = Convert.toInt((leftTop.YMax() - YMax) / rLod.Resolution*rateXY[1]);
 			}
 		}
-		RectTileSize = new Rect(0,0,rLod.Width,rLod.Height);
+		RectTileSize = new Rect(0,0,(int)rLod.Width,(int)rLod.Height);
 		RectF rectTileDraw = new RectF();
 
 		//创建合并的bitmap，将瓦片画在其上

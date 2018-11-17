@@ -8,13 +8,17 @@ import srs.Geometry.IPoint;
  */
 public class LOD {
 
+	/**
+	 * 瓦片显示的缩放倍数
+	 */
+	public static float POWER = 2.0f;
 
 	/**每个切片的高度 */
-	public int Height = 254;
+	public float Height = 254 * POWER;
 
 
 	/**每个切片的宽度 */
-	public int Width = 254;
+	public float Width = 254 * POWER;
 
 	/** 级别 */
 	public int Level;
@@ -41,8 +45,8 @@ public class LOD {
 	 */
 	public LOD(int level,double resolution,double scale,String url){
 		this.Level=level;
-		this.Resolution=resolution;
-		this.ScaleDenominator=scale;
+		this.Resolution=resolution/POWER;
+		this.ScaleDenominator=scale/POWER;
 		this.Url=url;
 	}
 
@@ -53,8 +57,8 @@ public class LOD {
 	 */
 	public LOD(int level,double resolution,double scale){
 		this.Level=level;
-		this.Resolution=resolution;
-		this.ScaleDenominator=scale;
+		this.Resolution=resolution/POWER;
+		this.ScaleDenominator=scale/POWER;
 	}
 
 }

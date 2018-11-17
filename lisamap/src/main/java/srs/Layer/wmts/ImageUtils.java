@@ -7,6 +7,7 @@ import java.io.IOException;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Environment;
 import android.support.annotation.WorkerThread;
 import android.util.LruCache;
