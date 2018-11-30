@@ -231,11 +231,43 @@ public class ShapeFile{
 		}
 	}
 
-	/** 
+	/**
+	 写一条记录
+
+	 @param geometry 对象
+	 * @throws IOException
+	 */
+	public void WriteRecord(IGeometry geometry)
+			throws IOException{
+		RandomAccessFile shpWriter = new RandomAccessFile(mShpFile,"rw");
+		RandomAccessFile shxWriter = new RandomAccessFile(mShxFile,"rw");
+
+		long shpFileLength = shpWriter.length();
+		long shxFileLength = shxWriter.length();
+		shpWriter.seek(shpFileLength);
+		shxWriter.seek(shxFileLength);
+
+		mHeader.recordCount++;
+
+		mHeader.envelope = (IEnvelope)((ISpatialOperator)((mHeader.envelope instanceof ISpatialOperator) ? mHeader.envelope : null)).Union(geometry.Extent());
+		byte[] buffer = ((IGeoInterOperator)((geometry instanceof IGeoInterOperator) ? geometry : null)).ExportToESRI();
+
+		//shx
+		shxWriter.writeInt(TypeConvert.SwapByteOrder((int)(shxWriter.getFilePointer() / 2)));
+		shxWriter.writeInt(TypeConvert.SwapByteOrder(buffer.length / 2));
+		shxWriter.close();
+		//shp
+		shpWriter.writeInt(TypeConvert.SwapByteOrder(mHeader.recordCount));
+		shpWriter.writeInt(TypeConvert.SwapByteOrder(buffer.length / 2));
+		shpWriter.write(buffer);
+		shpWriter.close();
+	}
+
+	/**
 	 读取所有对象范围
 
 	 @return 范围
-	 * @throws IOException 
+	  * @throws IOException
 	 */
 	public List<IEnvelope> ReadAllEnvelope()
 			throws IOException{
@@ -281,38 +313,6 @@ public class ShapeFile{
 		}catch (IOException e){
 			throw new IOException("1015");
 		}
-	}
-
-	/** 
-	 写一条记录
-
-	 @param geometry 对象
-	 * @throws IOException 
-	 */
-	public void WriteRecord(IGeometry geometry) 
-			throws IOException{
-		RandomAccessFile shpWriter = new RandomAccessFile(mShpFile,"rw");
-		RandomAccessFile shxWriter = new RandomAccessFile(mShxFile,"rw");
-
-		long shpFileLength = shpWriter.length();
-		long shxFileLength = shxWriter.length();
-		shpWriter.seek(shpFileLength);
-		shxWriter.seek(shxFileLength);
-
-		mHeader.recordCount++;
-
-		mHeader.envelope = (IEnvelope)((ISpatialOperator)((mHeader.envelope instanceof ISpatialOperator) ? mHeader.envelope : null)).Union(geometry.Extent());
-		byte[] buffer = ((IGeoInterOperator)((geometry instanceof IGeoInterOperator) ? geometry : null)).ExportToESRI();
-
-		//shx
-		shxWriter.writeInt(TypeConvert.SwapByteOrder((int)(shxWriter.getFilePointer() / 2)));
-		shxWriter.writeInt(TypeConvert.SwapByteOrder(buffer.length / 2));
-		shxWriter.close();
-		//shp
-		shpWriter.writeInt(TypeConvert.SwapByteOrder(mHeader.recordCount));
-		shpWriter.writeInt(TypeConvert.SwapByteOrder(buffer.length / 2));
-		shpWriter.write(buffer);
-		shpWriter.close();
 	}
 
 	/** 

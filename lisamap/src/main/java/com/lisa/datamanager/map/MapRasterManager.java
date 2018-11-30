@@ -8,6 +8,8 @@ import org.dom4j.DocumentException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import srs.Layer.ILayer;
 import srs.Layer.IRasterLayer;
@@ -55,11 +57,32 @@ public class MapRasterManager {
         //若路径存在、是文件夹、并且子文件不为0，则读取其中的底图数据添加至地图中
         if(basicLayerDir!=null&&basicLayerDir.isDirectory()&&basicLayerDir.list().length>0){
             File[] files = basicLayerDir.listFiles();
+
+            List<File> filesC = new ArrayList();
+            int layerIndex;
+            for(layerIndex = 4; layerIndex > 0; --layerIndex) {
+                for(int v7 = 0; v7 < files.length; ++v7) {
+                    File f = files[v7];
+                    if (f.isFile() && f.getName().endsWith(".tif")) {
+                        if (!f.getName().contains("_") && !filesC.contains(f)) {
+                            filesC.add(f);
+                        }
+                        if (f.getName().endsWith("_" + String.valueOf(layerIndex) + ".tif")) {
+                            filesC.add(0, f);
+                        }
+                    }
+                }
+            }
+
+
             for (int i = 0; i < files.length; i++) {
                 if(files[i].isFile()&&files[i].getName().endsWith(".tif")){
                     IRasterLayer layer = new RasterLayer(files[i].getAbsolutePath());
                     layer.setName(files[i].getName().replace(".tif",""));
                     if (layer != null) {
+                        if(layer.getName().contains("_1")){
+                            layer.setMinimumScale(100000);
+                        }
                         if(layer.getName().contains("_2")){
                             layer.setMaximumScale(100000);
                         }

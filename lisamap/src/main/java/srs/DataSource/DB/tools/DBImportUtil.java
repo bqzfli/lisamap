@@ -46,20 +46,54 @@ public class DBImportUtil {
             String filterValue) throws Exception {
         // 获取数据库中当前层级的下级数据列表
         try {
-            List<java.util.Map<String, String>> dataList = new ArrayList<java.util.Map<String, String>>();
             DBImportUtil.openDatabase(dbPath);
             if (filterFeild == null||filterValue==null) {
-                dataList = DBImportUtil.listData(tableName, feilds, null, null);
+                List<java.util.Map<String, String>> dataList = DBImportUtil.listData(tableName, feilds, null, null);
+                return dataList;
             } else {
-                dataList = DBImportUtil.listData(tableName, feilds, filterFeild, filterValue);
+                List<java.util.Map<String, String>> dataList = DBImportUtil.listData(tableName, feilds, filterFeild, filterValue);
+                return dataList;
             }
-            return dataList;
         } catch (Exception e) {
             Log.e(UTILTAG.TAGDB, "DBImportUtil"+":getData"+"DB数据提取出错:");
             e.printStackTrace();
             throw new Exception(e.getMessage() );
         }
     }
+
+    /**  从DB库中提取满足条件的记录
+     * @param dbPath 数据库路径
+     * @param tableName 表名
+     * @param feild 所有需要的字段
+     * @param filterFeild 过滤字段
+     * @param filterValue 过滤值
+     * @return 查找到的数据集合
+     * @throws Exception
+     */
+    public static List<byte[]> getBLOB(
+            String dbPath,
+            String tableName,
+            String feild,
+            String filterFeild,
+            String filterValue) throws Exception {
+        // 获取数据库中当前层级的下级数据列表
+        try {
+            DBImportUtil.openDatabase(dbPath);
+            if (filterFeild == null||filterValue==null) {
+                List<byte[]> dataList = DBImportUtil.listBlob(tableName, feild, null, null);
+                return dataList;
+            } else {
+                List<byte[]> dataList = DBImportUtil.listBlob(tableName, feild, filterFeild, filterValue);
+                return dataList;
+            }
+        } catch (Exception e) {
+            Log.e(UTILTAG.TAGDB, "DBImportUtil"+":getData"+"DB数据提取出错:");
+            e.printStackTrace();
+            throw new Exception(e.getMessage() );
+        }
+    }
+
+
 
     /**
      * 打开外部db数据库
@@ -198,6 +232,41 @@ public class DBImportUtil {
         return list;
     }
 
+
+    /**
+     * 获取Blob数据列表
+     *
+     * @param table 表名
+     * @param field 搜索的字段名数组
+     * @param key 搜索条件对应的字段名
+     * @param value 搜索条件对应的值
+     */
+    public static List<byte[]> listBlob(String table,String field,String key,String value){
+        List<byte[]> list = new ArrayList<byte[]>();
+
+        if(field == null || field.length() == 0){
+            return list;
+        }
+
+        String wstr = "";
+        if(StringUtil.isNotEmpty(key) && StringUtil.isNotEmpty(value)){
+            wstr = " WHERE "+key + " = '"+value+"'";
+        }
+
+        String sql = "SELECT "+ field + " FROM "+table + " "+wstr;
+        Log.i("DBImportUtil","###sql:"+sql);
+
+        Cursor c = db.rawQuery(sql, null);
+
+        int index_field = c.getColumnIndex(field);
+        while(c.moveToNext()){
+            list.add(c.getBlob(index_field));
+        }
+        c.close();
+        db.close();
+        return list;
+    }
+
     /**
      * 获取数据
      *
@@ -309,6 +378,45 @@ public class DBImportUtil {
             db.close();
         }
         return true;
+    }
+
+
+    /**
+     * 保存地块数据
+     * @param datas
+     * @param tableName
+     * @param fieldGeo  空间信息所属字段
+     * @param blobs 空间信息
+     */
+    public static boolean add(List<Map<String, String>> datas,String tableName, String fieldGeo, List<byte[]> blobs){
+        boolean flag = true;
+        db.beginTransaction();
+        String[] keys = getColumnNames(tableName);
+        try{
+            if(datas==null||datas.size()==0
+                    ||blobs==null||blobs.size()==0
+                    ||fieldGeo==null||fieldGeo.length()==0){
+                // 数据一致性存在问题，不允许添加
+                flag = false;
+                db.setTransactionSuccessful();
+            }else {
+                for (int i = 0; i < datas.size(); i++) {
+                    Map<String, String> map = datas.get(i);
+                    ContentValues cv = new ContentValues();
+                    for (String key : keys) {
+                        if (map.containsKey(key)) {
+                            cv.put(key, map.get(key));
+                        }
+                    }
+                    db.insert(tableName, "", cv);
+                }
+                db.setTransactionSuccessful();
+            }
+        }finally{
+            db.endTransaction();
+            db.close();
+        }
+        return flag;
     }
 
     /**

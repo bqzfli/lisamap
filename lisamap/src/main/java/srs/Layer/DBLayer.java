@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import srs.CoordinateSystem.ICoordinateSystem;
+import srs.CoordinateSystem.ProjCSType;
 import srs.DataSource.DB.DBSourceManager;
 import srs.Display.FromMapPointDelegate;
 import srs.Display.IScreenDisplay;
@@ -42,31 +43,35 @@ import srs.Utility.Log;
 */
 public class DBLayer  extends Layer implements IDBLayer{
 
-	private DBSourceManager mDBSourceManager = null;
+	protected DBSourceManager mDBSourceManager = null;
 			
 
 	/** 是否显示标注 */
-	private boolean mDisplayLabel;
+	protected boolean mDisplayLabel;
 	
 
 	/**
 	 * 要显示的对象下标
 	 */
-	private List<Integer> mSelectionOfDisplay = null;
+	protected List<Integer> mSelectionOfDisplay = null;
 
 	/**
 	 * 正在显示的fid
 	 */
-	private List<Integer> mDisplayList = null;
-	
-	
-	private LabelDB mLabel = null;
+	protected List<Integer> mDisplayList = null;
+
+
+	protected LabelDB mLabel = null;
 
 
 	public DBSourceManager getDBSourceManager(){
 		return mDBSourceManager;
 	}
-	
+
+	protected DBLayer(){
+		super();
+	}
+
 	public DBLayer(String layerName) {
 		super();
 		mName = layerName;	
@@ -76,6 +81,36 @@ public class DBLayer  extends Layer implements IDBLayer{
 		mDisplayList = new ArrayList<Integer>();
 		mSelectionOfDisplay = new ArrayList<Integer>();
 		mDBSourceManager = new DBSourceManager();
+	}
+
+
+	/**
+	 * 数据的坐标系
+	 */
+	public ProjCSType getDataCoordinateType(){
+		return mDBSourceManager.getDataCoordinateType();
+	}
+	/** 数据的坐标系
+	 * @param value 坐标系
+	 */
+	public void setDataCoordinateType(ProjCSType value){
+		mDBSourceManager.setDataCoordinateType(value);
+	}
+
+
+
+	/**
+	 * 地图显示的坐标系
+	 */
+	public ProjCSType getMapCoordinateType(){
+		return mDBSourceManager.getMapCoordinateType();
+	}
+
+	/** 地图显示的坐标系
+	 * @param value 坐标系
+	 */
+	public void setMapCoordinateType(ProjCSType value){
+		mDBSourceManager.setMapCoordinateType(value);
 	}
 
 		

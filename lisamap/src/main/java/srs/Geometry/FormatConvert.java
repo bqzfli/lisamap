@@ -63,6 +63,33 @@ public class FormatConvert {
 		}
 	}
 
+
+
+	/**
+	 * DB中的Blob 转为点对象
+	 * @param blob
+	 * @return
+	 * @throws IOException
+	 */
+	public static IPoint BlobWKBToPoint(byte[] blob) throws IOException
+	{
+		InputStream stream=new ByteArrayInputStream(blob);
+		DataInputStream br=new DataInputStream(stream);
+
+		br.skip(4);
+
+		byte[] tmpVal = new byte[8];
+		br.read(tmpVal);
+		double x = TypeConvert.ByteArrayToDouble(tmpVal);
+		br.read(tmpVal);
+		double y = TypeConvert.ByteArrayToDouble(tmpVal);
+
+		br.close();
+		stream.close();
+
+		return new Point(x, y);
+	}
+
 	/**
 	 * shpfile转为点对象
 	 * @param esri
@@ -206,6 +233,38 @@ public class FormatConvert {
 			return null;
 	}
 
+
+	public static IPolygon BlobWKBToPolygon(byte[] blob) throws IOException{
+		InputStream stream = new ByteArrayInputStream(blob);
+		DataInputStream br = new DataInputStream(stream);
+		List<IPart> parts = new ArrayList<IPart>();
+		IPart part;
+
+		br.skip(1);
+		int type = br.readInt();
+		if(type == 3) {
+			// 单环
+			// parts
+			int numParts = br.readInt();
+			int tolalPoints = br.readInt();
+			if (numParts > 0 || tolalPoints > 0) {
+				part = new Part();
+				for (int j = 0; j < tolalPoints; j++) {
+					double x = br.readDouble();
+					double y = br.readDouble();
+					part.AddPoint(new Point(x, y));
+				}
+				br.close();
+				stream.close();
+				IPolygon polygon = new Polygon(part);
+				return polygon;
+			}
+		}else if(type ==5 ){
+			// 多环
+			// fixme
+		}
+		return null;
+	}
 
 	/**将Point Feature转化为Shp，含Record Header
 	 * @param x x坐标

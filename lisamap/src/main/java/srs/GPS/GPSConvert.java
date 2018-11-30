@@ -44,6 +44,26 @@ public final class GPSConvert {
 			for(i = 0; i < parts.length; ++i) {
 				result.AddPart(parts[i], goeSource.isExterior(i));
 			}
+		}else if (typeSource == null&&typeResult!=null){
+			// 大地坐标（经纬度）转地图投影坐标（米）
+			IPart[] parts = new IPart[goeSource.Parts().length];
+
+			int i;
+			for(i = 0; i < parts.length; ++i) {
+				IPart partSource = goeSource.Parts()[i];
+				parts[i] = new Part();
+
+				for(int j = 0; j < partSource.Points().length; ++j) {
+					IPoint pSource = partSource.Points()[j];
+					double[] xyPro = GEO2PROJECT(pSource.X(), pSource.Y(), typeResult);
+					IPoint pResult = new Point(xyPro[0], xyPro[1]);
+					parts[i].AddPoint(pResult);
+				}
+			}
+
+			for(i = 0; i < parts.length; ++i) {
+				result.AddPart(parts[i], goeSource.isExterior(i));
+			}
 		}
 		return result;
 	}

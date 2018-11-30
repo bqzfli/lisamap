@@ -3,6 +3,7 @@ package srs.Layer;
 import java.util.List;
 
 import srs.CoordinateSystem.ICoordinateSystem;
+import srs.CoordinateSystem.ProjCSType;
 import srs.DataSource.DB.DBSourceManager;
 import srs.Display.Symbol.ITextSymbol;
 import srs.Geometry.IEnvelope;
@@ -73,5 +74,26 @@ public interface IDBLayer  extends ILayer{
 			srsGeometryType geoType,
 			IEnvelope layerEnvelope,
 			ICoordinateSystem coordinateSystem);
+
+
+	/**
+	 * 数据的坐标系
+	 */
+	ProjCSType getDataCoordinateType();
+
+	/** 数据的投影系  大地坐标系（经纬度坐标系）设置为null
+	 * @param value 坐标系
+	 */
+	void setDataCoordinateType(ProjCSType value);
+
+	/**
+	 * 地图显示的坐标系
+	 */
+	ProjCSType getMapCoordinateType();
+
+	/** 地图显示的坐标系 大地坐标系（经纬度坐标系）设置为null
+	 * @param value 坐标系
+	 */
+	void setMapCoordinateType(ProjCSType value);
 
 }

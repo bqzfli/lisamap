@@ -615,8 +615,7 @@ public class DBManagerUtil {
 	 * 修改满足条件的所有记录，
 	 * 修改feilds字段中的所有值，
 	 * 要修改的记录的feild值相同
-	 * 
-	 * @param dbPath    数据库完整路径
+	 *
 	 * @param table  	表名
 	 * @param fieldNames 字段集合
 	 * @param map 		数据对象
@@ -658,10 +657,8 @@ public class DBManagerUtil {
 	 * 修改一条记录,地图新增，编辑专用
 	 * FIXME 有问题，不能用
 	 * @param table  表名
-	 * @param pId 为主键
 	 * @param fieldList key值
 	 * @param table 表名
-	 * @param key 主键字段名
 	 * @return
 	 */
 	public boolean updateByIdForGeo(
@@ -1157,7 +1154,7 @@ public class DBManagerUtil {
 	 * 
 	 * @param table
 	 * @param kv
-	 * @param filer
+	 * @param filter
 	 * @param path
 	 */
 	public List<KeyValueBean> getListDatas(String table, KeyValueBean kv, String filter, String path) {
@@ -1639,7 +1636,7 @@ public class DBManagerUtil {
 	 * 
 	 * @param table
 	 * @param kv
-	 * @param filer
+	 * @param filter
 	 * @param path
 	 */
 	public List<KeyValueBean> getZWDatas(String table, KeyValueBean kv, String filter, String path) {

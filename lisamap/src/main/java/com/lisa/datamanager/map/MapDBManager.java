@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import srs.CoordinateSystem.ProjCSType;
 import srs.DataSource.DB.tools.DBImportUtil;
 import srs.Geometry.Envelope;
 import srs.Geometry.IEnvelope;
@@ -39,7 +40,7 @@ public class MapDBManager {
     /**
      * 地图点选操作
      */
-    private static TouchLongToolMultipleDB mToolMultipleDB = null;
+    protected static TouchLongToolMultipleDB mToolMultipleDB = null;
 
     /*private List<IElement> surveyedElements = null;*/
 
@@ -58,7 +59,7 @@ public class MapDBManager {
     /**
      * 自然地块图层
      */
-    private IDBLayer mLAYER = null;
+    protected IDBLayer mLAYER = null;
 
 
     /**从地图中移除DK图层
@@ -113,6 +114,18 @@ public class MapDBManager {
                 MapsUtil.TYPE_GEO_DB_TABLE,
                 new Envelope(),
                 null);
+    }
+
+    /**
+     * 将DB图层添加至地图中
+     * 当数据与地图的投影系不同时，使用此方法
+     * @param dataType      数据的投影系  大地坐标系（经纬度坐标系）设置为null
+     * @param mapType       地图的投影系
+     */
+    public void addLayerToMap(ProjCSType dataType, ProjCSType mapType) throws IOException {
+        addLayerToMap();
+        mLAYER.setDataCoordinateType(dataType);
+        mLAYER.setMapCoordinateType(mapType);
     }
 
     /**

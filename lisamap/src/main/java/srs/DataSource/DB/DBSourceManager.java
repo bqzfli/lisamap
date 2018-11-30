@@ -11,21 +11,28 @@ import java.util.Map;
 
 import android.content.ContentValues;
 import android.util.Log;
+
+import srs.CoordinateSystem.ICoordinateSystem;
+import srs.CoordinateSystem.IGeographicCoordinateSystem;
+import srs.CoordinateSystem.IProjectedCoordinateSystem;
+import srs.CoordinateSystem.ProjCSType;
 import srs.DataSource.DB.tools.DBImportUtil;
 import srs.DataSource.DB.tools.DBManagerUtil;
 import srs.DataSource.DB.util.StringUtil;
 import srs.DataSource.Vector.Indexing;
 import srs.DataSource.Vector.SearchType;
+import srs.GPS.GPSConvert;
 import srs.Geometry.FormatConvert;
 import srs.Geometry.IEnvelope;
 import srs.Geometry.IGeometry;
+import srs.Geometry.IPolygon;
 import srs.Geometry.IRelationalOperator;
 import srs.Geometry.srsGeometryType;
 import srs.Rendering.CommonRenderer;
 import srs.Utility.UTILTAG;
 
 /**
- * @ClassName: DBSource
+ * @ClassName: DBSourceManager
  * @Description: TODO 管理DB数据库中 的“空间、属性”信息
  * @Version: V1.0.0.0
  * @author lisa
@@ -42,27 +49,36 @@ public class DBSourceManager {
 	 */
 	public String LABEL_EMPTY = "无值";
 
-	private srsGeometryType mGeoType = null;
-	private String mDBPath="";
-	private String mTableName="";
-	private String[] mFeildNames = null;
-	private String FeildNameGeo = "GEO";
-	private String[] mFeildNamesLabels= null;
-	private String[] mFeildNamesDestine = null;
+	protected srsGeometryType mGeoType = null;
+	protected String mDBPath="";
+	protected String mTableName="";
+	protected String[] mFeildNames = null;
+	protected String mFeildNameGeo = "GEO";
+	protected String[] mFeildNamesLabels= null;
+	protected String[] mFeildNamesDestine = null;
 
 	/** 原始数据 */
-	private List<java.util.Map<String, String>> mDataList = new ArrayList<java.util.Map<String, String>>();
+	protected List<java.util.Map<String, String>> mDataList = new ArrayList<java.util.Map<String, String>>();
 	/** 空间信息需要显示的标注 */
-	private List<String> mDisplayLableValues = new ArrayList<String>();
+	protected List<String> mDisplayLableValues = new ArrayList<String>();
 	/** 设定要取出的属性数据 */
-	private List<String> mDestineValues = new ArrayList<String>();
+	protected List<String> mDestineValues = new ArrayList<String>();
 
 	/** 空间信息 */
-	private List<IGeometry> mGeometries = new ArrayList<IGeometry>();
+	protected List<IGeometry> mGeometries = new ArrayList<IGeometry>();
 	/** 空间范围	 */
-	private List<IEnvelope> mEnvelopes = new ArrayList<IEnvelope>();
+	protected List<IEnvelope> mEnvelopes = new ArrayList<IEnvelope>();
 	/** 空间索引  */
-	private Indexing mIndexTree = null;
+	protected Indexing mIndexTree = null;
+
+	/**
+	 * 数据的投影
+	 */
+	private ProjCSType mDataProjectType = null;
+	/**
+	 * 地图显示的投影
+	 */
+	private ProjCSType mMapProjectType = null;
 
 
 	public DBSourceManager(){}
@@ -145,6 +161,35 @@ public class DBSourceManager {
 		return mGeometries.get(index);
 	}
 
+
+	/**
+	 * 数据的坐标系
+	 */
+	public ProjCSType getDataCoordinateType(){
+		return mDataProjectType;
+	}
+	/** 数据的坐标系
+	 * @param value 坐标系
+	 */
+	public void setDataCoordinateType(ProjCSType value){
+		mDataProjectType = value;
+	}
+
+
+
+	/**
+	 * 地图显示的坐标系
+	 */
+	public ProjCSType getMapCoordinateType(){
+		return mMapProjectType;
+	}
+	/** 地图显示的坐标系
+	 * @param value 坐标系
+	 */
+	public void setMapCoordinateType(ProjCSType value){
+		mMapProjectType = value;
+	}
+
 	/**获取全部标注信息
 	 * @return
 	 */
@@ -201,7 +246,7 @@ public class DBSourceManager {
 		mDBPath= dbPath;
 		mTableName= tableName;
 		mFeildNames = feildNames;
-		FeildNameGeo = feildNameGeo;
+		mFeildNameGeo = feildNameGeo;
 		mFeildNamesLabels= feildNamesLabels;
 		mFeildNamesDestine = feildDestine;
 		mGeoType = geoType;
@@ -248,14 +293,16 @@ public class DBSourceManager {
 	}
 
 	/**从数据库中提取信息并更新
-	 * @param filterFeild 过滤字段
-	 * @param filterValue 过滤值
+	 * @param filterFeild 过滤字段 无需过滤可填null
+	 * @param filterValue 过滤值	无需过滤或此次不过滤可填null
 	 * @throws Exception
 	 */
 	public void initData(String filterFeild ,String filterValue) throws Exception{
 		try {
 			mDataList.clear();
-			if(Arrays.asList(mFeildNames).contains(filterFeild)){
+			if(filterFeild!=null&&filterFeild.trim().length()>0
+					&&filterValue!=null&&filterValue.trim().length()>0
+					&&Arrays.asList(mFeildNames).contains(filterFeild)){
 				mDataList = DBImportUtil.getData(mDBPath,mTableName, mFeildNames, filterFeild, filterValue);
 			}else{
 				mDataList = DBImportUtil.getData(mDBPath,mTableName, mFeildNames, null, null);
@@ -299,7 +346,7 @@ public class DBSourceManager {
 						isFirst = false;
 						mGeometries.clear();
 					}
-					String wkt = map.get(FeildNameGeo);
+					String wkt = map.get(mFeildNameGeo);
 					if (StringUtil.isNotEmpty(wkt)) {
 						if (mGeoType == srsGeometryType.Point) {
 							geo = FormatConvert.WKTToPoint(wkt);
@@ -308,7 +355,7 @@ public class DBSourceManager {
 						}else{
 							break;
 						}
-						mGeometries.add(geo);
+						mGeometries.add(toMapProject(geo));
 					}
 					if(mFeildNamesLabels.length>0){
 						LableID = "";
@@ -755,5 +802,23 @@ public class DBSourceManager {
 		}
 		Collections.sort(searchResult);
 		return searchResult;
+	}
+
+	/**
+	 * 将数据投影转换为Map显示的投影
+	 * @param geo 空间位置数据，目前仅实现了面要素转换
+	 * @return
+	 */
+	protected IGeometry toMapProject(IGeometry geo){
+		if(getMapCoordinateType() == null
+				|| getDataCoordinateType() == getMapCoordinateType()){
+			// 地图投影为空  或  地图与数据投影相同时，不需要转换，直接返回
+			return geo;
+		}
+		if(mGeoType == srsGeometryType.Polygon) {
+			IPolygon geoMap = GPSConvert.PROJECT2PROJECT((IPolygon) geo,getDataCoordinateType(), getMapCoordinateType());
+			return geoMap;
+		}
+		return geo;
 	}
 }
