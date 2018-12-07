@@ -776,7 +776,7 @@ public class FormatConvert {
 				startPoint=null;//每圈画完后要清空起点
 				parts[i].AddPoint(startPoint);
 			}
-			for (int i = 0; i < parts.length; i++){
+				for (int i = 0; i < parts.length; i++){
 				/*polygon.AddPart(parts[i], !parts[i].IsCounterClockwise());*/
 				//目前都按外环算
 				polygon.AddPart(parts[i], true);
@@ -900,9 +900,7 @@ public class FormatConvert {
 				}
 
 			}
-			for (int i = 0; i < parts.length; i++){
-				polyline.Parts(parts);
-			}
+			polyline.Parts(parts);
 		}else{
 			return null;
 		}
